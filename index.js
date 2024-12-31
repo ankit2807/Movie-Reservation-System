@@ -3,6 +3,7 @@ const app = express();
 require('dotenv').config();
 const connection = require('./database/db');
 const adminRouter = require('./routes/adminRoutes');
+const movieRouter = require('./routes/movieRoutes');
 const cors = require('cors');
 const cookieParser = require("cookie-parser");
 
@@ -17,6 +18,7 @@ app.use(cookieParser())
 
 //routes
 app.use('/api/admin', adminRouter);
+app.use('/api/movie', movieRouter);
 
 //port
 const PORT = process.env.PORT || 3000;
