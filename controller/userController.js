@@ -1,4 +1,4 @@
-const Admin = require("../models/adminModel");
+const User = require("../models/userModel");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
@@ -9,19 +9,18 @@ const register = async (req, res) => {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(req.body.password, salt);
 
-        //create new Admin
-        const newUser = new Admin({
+        //create new user
+        const newUser = new User({
             name: req.body.name,
             email: req.body.email,
             password: hashedPassword,
             phone: req.body.phone,
-            isAdmin: req.body.isAdmin
         });
 
-        const admin = await Admin.findOne({ email: req.body.email });
-        if (admin) return res.status(403).json("Email Exists");
+        const user = await User.findOne({ email: req.body.email });
+        if (user) return res.status(403).json("Email Exists");
 
-        //save new Admin
+        //save new user
         await newUser.save();
         return res.status(201).json(newUser);
     } catch (err) {
@@ -32,7 +31,7 @@ const register = async (req, res) => {
 //Login
 const login = async (req, res) => {
     try {
-        const user = await Admin.findOne({ email: req.body.email });
+        const user = await User.findOne({ email: req.body.email });
         if (!user) return res.status(400).json("Wrong credentials!");
 
         const validated = await bcrypt.compare(req.body.password, user.password);
