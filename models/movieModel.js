@@ -5,14 +5,14 @@ const movieSchema = new mongoose.Schema({
         type: String,
         required: true,
         maxLength: [30, "Title name cannot exceed 30 characters"],
-        minLength: [1, "Title name should have more than 1 characters"],
+        minLength: [1, "Title name should have more than 1 characters"]
     },
     description: {
         type: String,
         required: true,
         unique: true,
         maxLength: [100, "Description cannot exceed 100 characters"],
-        minLength: [4, "Description should have more than 4 characters"],
+        minLength: [4, "Description should have more than 4 characters"]
     },
     posterImage: {
         type: String,
@@ -20,7 +20,7 @@ const movieSchema = new mongoose.Schema({
     },
     duration: {
         type: String,
-        required: true,
+        required: true
     },
     genre: {
         type: String,
@@ -28,16 +28,20 @@ const movieSchema = new mongoose.Schema({
     },
     rating: {
         type: String,
-        required: true,
+        required: true
     },
     releaseDate: {
         type: String,
-        required: true,
+        required: true
     },
     certification: {
         type: String,
-        required: true,
-    }
+        required: true
+    },
+    showtimes: [{
+        type: Date,
+        required: true
+    }],
 }, { timestamps: true }
 );
 
