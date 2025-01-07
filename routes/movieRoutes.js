@@ -11,10 +11,10 @@ router.put("/:id", verifyTokenAndAdmin, updateMovie);
 //delete
 router.delete("/:id", verifyTokenAndAdmin, deleteMovie);
 
-//get single products
+//get movie by Id
 router.get("/find/:id", getMovieById);
 
-//get all products
+//get all movies
 router.get("/", getMovies);
 
 module.exports = router;

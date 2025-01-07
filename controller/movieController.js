@@ -2,10 +2,10 @@ const Movie = require('../models/movieModel');
 
 //Create
 const addMovie = async (req, res) => {
-    const newProduct = new Movie(req.body);
+    const newMovie = new Movie(req.body);
     try {
-        const savedProduct = await newProduct.save();
-        return res.status(200).json(savedProduct);
+        const savedMovie = await newMovie.save();
+        return res.status(200).json(savedMovie);
     } catch (err) {
         return res.status(500).json(err);
     }

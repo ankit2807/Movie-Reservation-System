@@ -12,6 +12,7 @@ const createReservation = async (req, res) => {
     }
 };
 
+//get reservations by userId
 const getUserReservations = async (req, res) => {
     try {
         const reservations = await Reservation.find({ user: req.user.id }).populate('movie');

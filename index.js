@@ -6,6 +6,7 @@ const adminRouter = require('./routes/adminRoutes');
 const movieRouter = require('./routes/movieRoutes');
 const userRouter = require('./routes/userRoutes');
 const movieReservationRouter = require('./routes/movieReservationRoutes');
+const showTimeRouter = require('./routes/showTimeRoutes');
 const cors = require('cors');
 const cookieParser = require("cookie-parser");
 
@@ -22,6 +23,7 @@ app.use('/api/admin', adminRouter);
 app.use('/api/movie', movieRouter);
 app.use('/api/user', userRouter);
 app.use('/api/movieReservation', movieReservationRouter);
+app.use('/api/showtimes', showTimeRouter);
 
 //port
 const PORT = process.env.PORT || 3000;
