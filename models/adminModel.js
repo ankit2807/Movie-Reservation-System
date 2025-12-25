@@ -1,53 +1,65 @@
-const mongoose = require('mongoose');
-const validator = require('validator');
+const mongoose = require("mongoose");
+const validator = require("validator");
 
-const adminSchema = new mongoose.Schema({
+/**
+ * Admin schema for Mongoose.
+ * Defines the structure and validations for admin documents.
+ */
+const adminSchema = new mongoose.Schema(
+  {
     name: {
-        type: String,
-        required: true,
-        trim: true,
-        maxLength: [30, "Name cannot exceed 30 characters"],
-        minLength: [4, "Name should have more than 4 characters"],
+      type: String,
+      required: [true, "Name is required"],
+      trim: true,
+      maxLength: [30, "Name cannot exceed 30 characters"],
+      minLength: [4, "Name should have more than 4 characters"],
     },
     email: {
-        type: String,
-        required: true,
-        trim: true,
-        lowercase: true,
-        validate(value) {
-            if (!validator.isEmail(value)) {
-                throw new Error('Invalid Email.')
-            }
-        }
+      type: String,
+      required: [true, "Email is required"],
+      unique: true,
+      trim: true,
+      lowercase: true,
+      validate: {
+        validator: function (value) {
+          return validator.isEmail(value);
+        },
+        message: "Invalid email format",
+      },
     },
     password: {
-        type: String,
-        required: true,
-        minlength: 7,
-        trim: true,
-        validate(value) {
-            if (value.includes('password')) {
-                throw new Error('Cannot use this password')
-            }
-        }
+      type: String,
+      required: [true, "Password is required"],
+      minlength: [7, "Password must be at least 7 characters long"],
+      trim: true,
+      validate: {
+        validator: function (value) {
+          return !value.toLowerCase().includes("password");
+        },
+        message: 'Password cannot contain the word "password"',
+      },
     },
     phone: {
-        type: String,
-        required: true,
-        maxlength: 10,
-        validate: {
-            validator: function (v) {
-                return /^[0-9]{10}/.test(v);
-            },
-            message: '{VALUE} is not a valid 10 digit number!'
-        }
+      type: String,
+      required: [true, "Phone number is required"],
+      validate: {
+        validator: function (v) {
+          return /^\d{10}$/.test(v);
+        },
+        message: "Phone number must be exactly 10 digits",
+      },
     },
     isAdmin: {
-        type: Boolean,
-        default: true
+      type: Boolean,
+      default: true,
     },
-}, {
-    timestamps: true
-});
+  },
+  {
+    timestamps: true,
+  }
+);
+
+// Add index for email uniqueness
+adminSchema.index({ email: 1 });
 
 module.exports = mongoose.model("Admin", adminSchema);

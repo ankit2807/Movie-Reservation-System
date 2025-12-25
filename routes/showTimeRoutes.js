@@ -1,20 +1,26 @@
-const router = require('express').Router();
-const { addShowTime, getShowTimeById, getShowTimes, updateShowTimeById, deleteShowTime } = require("../controller/showTimeController");
-const { verifyTokenAndAdmin } = require('../utils/tokenVerification')
+const router = require("express").Router();
+const {
+  addShowTime,
+  getShowTimeById,
+  getShowTimes,
+  updateShowTimeById,
+  deleteShowTime,
+} = require("../controller/showTimeController");
+const { verifyTokenAndAdmin } = require("../utils/tokenVerification");
 
-//create
+// Add a new showtime (requires admin token)
 router.post("/", verifyTokenAndAdmin, addShowTime);
 
-//update
+// Update a showtime by ID (requires admin token)
 router.put("/:id", verifyTokenAndAdmin, updateShowTimeById);
 
-//delete
+// Delete a showtime by ID (requires admin token)
 router.delete("/:id", verifyTokenAndAdmin, deleteShowTime);
 
-//get showtime by id
+// Get a showtime by ID (public)
 router.get("/find/:id", getShowTimeById);
 
-//get all showtimes
+// Get all showtimes (public)
 router.get("/", getShowTimes);
 
 module.exports = router;

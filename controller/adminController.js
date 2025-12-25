@@ -2,73 +2,118 @@ const Admin = require("../models/adminModel");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
-//register
+/**
+ * Register a new admin.
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ */
 const register = async (req, res) => {
-    try {
-        //hash password
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(req.body.password, salt);
+  try {
+    const { name, email, password, phone, isAdmin } = req.body;
 
-        //create new Admin
-        const newUser = new Admin({
-            name: req.body.name,
-            email: req.body.email,
-            password: hashedPassword,
-            phone: req.body.phone,
-            isAdmin: req.body.isAdmin
-        });
-
-        const admin = await Admin.findOne({ email: req.body.email });
-        if (admin) return res.status(403).json("Email Exists");
-
-        //save new Admin
-        await newUser.save();
-        return res.status(201).json(newUser);
-    } catch (err) {
-        return res.status(500).json(err);
+    // Basic input validation
+    if (!name || !email || !password || !phone) {
+      return res.status(400).json({ message: "All fields are required" });
     }
+
+    // Check if admin already exists
+    const existingAdmin = await Admin.findOne({ email });
+    if (existingAdmin) {
+      return res.status(409).json({ message: "Email already exists" });
+    }
+
+    // Hash password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    // Create new Admin
+    const newAdmin = new Admin({
+      name,
+      email,
+      password: hashedPassword,
+      phone,
+      isAdmin: isAdmin || true,
+    });
+
+    // Save new Admin
+    const savedAdmin = await newAdmin.save();
+    const { password: _, ...adminDetails } = savedAdmin._doc;
+    return res.status(201).json(adminDetails);
+  } catch (err) {
+    console.error("Registration error:", err);
+    return res.status(500).json({ message: "Internal server error" });
+  }
 };
 
-//Login
+/**
+ * Login an admin.
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ */
 const login = async (req, res) => {
-    try {
-        const user = await Admin.findOne({ email: req.body.email });
-        if (!user) return res.status(400).json("Wrong credentials!");
+  try {
+    const { email, password } = req.body;
 
-        const validated = await bcrypt.compare(req.body.password, user.password);
-        if (!validated) return res.status(400).json("Wrong credentials!");
-
-        const token = jwt.sign(
-            { id: user._id, isAdmin: user.isAdmin },
-            process.env.JWT_SECRET);
-
-        const { password, isAdmin, ...otherDetails } = user._doc;
-
-        return res.cookie("access_token", token,
-            { httpOnly: true, }
-        ).status(200).json({ details: { ...otherDetails }, isAdmin });
-
-    } catch (error) {
-        return res.status(500).json(err);
+    if (!email || !password) {
+      return res
+        .status(400)
+        .json({ message: "Email and password are required" });
     }
+
+    const user = await Admin.findOne({ email });
+    if (!user) {
+      return res.status(401).json({ message: "Invalid credentials" });
+    }
+
+    const validated = await bcrypt.compare(password, user.password);
+    if (!validated) {
+      return res.status(401).json({ message: "Invalid credentials" });
+    }
+
+    const token = jwt.sign(
+      { id: user._id, isAdmin: user.isAdmin },
+      process.env.JWT_SECRET,
+      { expiresIn: "1h" } // Add expiration
+    );
+
+    const { password: _, isAdmin, ...otherDetails } = user._doc;
+
+    return res
+      .cookie("access_token", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production", // Secure in production
+        sameSite: "strict",
+      })
+      .status(200)
+      .json({ details: { ...otherDetails }, isAdmin });
+  } catch (err) {
+    console.error("Login error:", err);
+    return res.status(500).json({ message: "Internal server error" });
+  }
 };
 
-//Logout
+/**
+ * Logout an admin.
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ */
 const logout = async (req, res) => {
-    try {
-        const authHeader = req.headers['cookie'];
-        if (!authHeader) return res.sendStatus(204); // No content                                                                                                                   
-        // Clear the cookie by setting it to an expired date
-        res.cookie('token', '', { expires: new Date(0), httpOnly: true, secure: false }); // Set secure: true if using HTTPS
-        return res.json({ message: 'Logged out' });
-    } catch (error) {
-        console.error(error);
-        return res.status(500).json({ message: 'An error occurred during logout' });
-    }
-}
+  try {
+    // Clear the access_token cookie
+    res.clearCookie("access_token", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+    });
+    return res.status(200).json({ message: "Logged out successfully" });
+  } catch (err) {
+    console.error("Logout error:", err);
+    return res.status(500).json({ message: "An error occurred during logout" });
+  }
+};
 
 module.exports = {
-    register,
-    login,
-    logout
-}
+  register,
+  login,
+  logout,
+};

@@ -1,14 +1,14 @@
-const router = require('express').Router();
+const router = require("express").Router();
 const { register, login, logout } = require("../controller/adminController");
-const { verifyTokenAndAdmin } = require('../utils/tokenVerification');
+const { verifyTokenAndAdmin } = require("../utils/tokenVerification");
 
-//Register Route
-router.post('/register', register);
+// Register a new admin
+router.post("/register", register);
 
-//Login Route
+// Login admin
 router.post("/login", login);
 
-//Logout Route
+// Logout admin (requires admin token)
 router.post("/logout", verifyTokenAndAdmin, logout);
 
 module.exports = router;

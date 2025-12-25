@@ -1,14 +1,14 @@
-const router = require('express').Router();
+const router = require("express").Router();
 const { register, login, logout } = require("../controller/userController");
-const { verifyToken } = require('../utils/tokenVerification');
+const { verifyToken } = require("../utils/tokenVerification");
 
-//Register Route
-router.post('/register', register);
+// Register a new user
+router.post("/register", register);
 
-//Login Route
+// Login user
 router.post("/login", login);
 
-//Logout Route
+// Logout user (requires user token)
 router.post("/logout", verifyToken, logout);
 
 module.exports = router;

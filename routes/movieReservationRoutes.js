@@ -1,11 +1,14 @@
-const router = require('express').Router();
-const { createReservation, getUserReservations } = require("../controller/movieReservationController");
-const { verifyToken } = require('../utils/tokenVerification')
+const router = require("express").Router();
+const {
+  createReservation,
+  getUserReservations,
+} = require("../controller/movieReservationController");
+const { verifyToken } = require("../utils/tokenVerification");
 
-//create
+// Create a new reservation (requires user token)
 router.post("/", verifyToken, createReservation);
 
-// get movie by user
+// Get reservations for the logged-in user (requires user token)
 router.get("/", verifyToken, getUserReservations);
 
 module.exports = router;

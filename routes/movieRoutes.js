@@ -1,20 +1,26 @@
-const router = require('express').Router();
-const { addMovie, updateMovie, deleteMovie, getMovieById, getMovies, } = require("../controller/movieController");
-const { verifyTokenAndAdmin } = require('../utils/tokenVerification')
+const router = require("express").Router();
+const {
+  addMovie,
+  updateMovie,
+  deleteMovie,
+  getMovieById,
+  getMovies,
+} = require("../controller/movieController");
+const { verifyTokenAndAdmin } = require("../utils/tokenVerification");
 
-//create
+// Add a new movie (requires admin token)
 router.post("/", verifyTokenAndAdmin, addMovie);
 
-//update
+// Update a movie by ID (requires admin token)
 router.put("/:id", verifyTokenAndAdmin, updateMovie);
 
-//delete
+// Delete a movie by ID (requires admin token)
 router.delete("/:id", verifyTokenAndAdmin, deleteMovie);
 
-//get movie by Id
+// Get a movie by ID (public)
 router.get("/find/:id", getMovieById);
 
-//get all movies
+// Get all movies (public)
 router.get("/", getMovies);
 
 module.exports = router;
