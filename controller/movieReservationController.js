@@ -8,25 +8,41 @@ const ShowTime = require("../models/showTimeModel");
  */
 const createReservation = async (req, res) => {
   try {
-    const { user, movie, showtime, seats } = req.body;
+    const { movie, showtime, seats } = req.body;
+    const user = req.user.id; // Assuming verifyToken sets req.user
+
+    // Parse seats if it's a string
+    let seatsArray = seats;
+    if (typeof seats === "string") {
+      seatsArray = seats.split(",").map((s) => s.replace(/'/g, "").trim());
+    }
 
     // Basic validation
-    if (!user || !movie || !showtime || !seats || seats.length === 0) {
+    if (
+      !user ||
+      !movie ||
+      !showtime ||
+      !seatsArray ||
+      seatsArray.length === 0
+    ) {
       return res
         .status(400)
         .json({ message: "All fields are required and seats cannot be empty" });
     }
 
-    // Check if showtime exists
-    const existingShowtime = await ShowTime.findById(showtime);
+    // Check if showtime exists for the given movie and time
+    const existingShowtime = await ShowTime.findOne({
+      movieId: movie,
+      startAt: showtime,
+    });
     if (!existingShowtime) {
       return res.status(404).json({ message: "Showtime not found" });
     }
 
     // Check for seat conflicts (simplified, in real app use transactions)
     const conflictingReservations = await Reservation.find({
-      showtime,
-      seats: { $in: seats },
+      showtime: existingShowtime._id,
+      seats: { $in: seatsArray },
     });
     if (conflictingReservations.length > 0) {
       return res
@@ -34,7 +50,12 @@ const createReservation = async (req, res) => {
         .json({ message: "Some seats are already reserved" });
     }
 
-    const newReservation = new Reservation(req.body);
+    const newReservation = new Reservation({
+      user,
+      movie,
+      showtime: existingShowtime._id,
+      seats: seatsArray,
+    });
     const savedReservation = await newReservation.save();
     return res.status(201).json(savedReservation);
   } catch (err) {

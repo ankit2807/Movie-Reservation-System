@@ -59,7 +59,4 @@ const adminSchema = new mongoose.Schema(
   }
 );
 
-// Add index for email uniqueness
-adminSchema.index({ email: 1 });
-
 module.exports = mongoose.model("Admin", adminSchema);

@@ -65,7 +65,4 @@ const movieSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Add index for title uniqueness
-movieSchema.index({ title: 1 });
-
 module.exports = mongoose.model("Movie", movieSchema);

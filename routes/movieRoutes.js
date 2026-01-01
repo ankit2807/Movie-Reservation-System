@@ -12,7 +12,7 @@ const { verifyTokenAndAdmin } = require("../utils/tokenVerification");
 router.post("/", verifyTokenAndAdmin, addMovie);
 
 // Update a movie by ID (requires admin token)
-router.put("/:id", verifyTokenAndAdmin, updateMovie);
+router.patch("/:id", verifyTokenAndAdmin, updateMovie);
 
 // Delete a movie by ID (requires admin token)
 router.delete("/:id", verifyTokenAndAdmin, deleteMovie);
