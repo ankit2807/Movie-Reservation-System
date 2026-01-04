@@ -8,7 +8,7 @@ const ShowTime = require("../models/showTimeModel");
  */
 const createReservation = async (req, res) => {
   try {
-    const { movie, showtime, seats } = req.body;
+    const { movie, showtime, seats, date } = req.body;
     const user = req.user.id; // Assuming verifyToken sets req.user
 
     // Parse seats if it's a string
@@ -23,11 +23,17 @@ const createReservation = async (req, res) => {
       !movie ||
       !showtime ||
       !seatsArray ||
+      !date ||
       seatsArray.length === 0
     ) {
-      return res
-        .status(400)
-        .json({ message: "All fields are required and seats cannot be empty" });
+      return res.status(400).json({
+        message: "All fields are required (including date) and seats cannot be empty",
+      });
+    }
+
+    const reservationDate = new Date(date);
+    if (isNaN(reservationDate.getTime())) {
+      return res.status(400).json({ message: "Invalid date format" });
     }
 
     // Check if showtime exists for the given movie and time
@@ -39,15 +45,26 @@ const createReservation = async (req, res) => {
       return res.status(404).json({ message: "Showtime not found" });
     }
 
+    // Validate date is within showtime range
+    if (
+      reservationDate < existingShowtime.startDate ||
+      reservationDate > existingShowtime.endDate
+    ) {
+      return res.status(400).json({
+        message: "Date is outside the available showtime range",
+      });
+    }
+
     // Check for seat conflicts (simplified, in real app use transactions)
     const conflictingReservations = await Reservation.find({
       showtime: existingShowtime._id,
+      date: reservationDate,
       seats: { $in: seatsArray },
     });
     if (conflictingReservations.length > 0) {
       return res
         .status(409)
-        .json({ message: "Some seats are already reserved" });
+        .json({ message: "Some seats are already reserved for this date" });
     }
 
     const newReservation = new Reservation({
@@ -55,6 +72,7 @@ const createReservation = async (req, res) => {
       movie,
       showtime: existingShowtime._id,
       seats: seatsArray,
+      date: reservationDate,
     });
     const savedReservation = await newReservation.save();
     return res.status(201).json(savedReservation);

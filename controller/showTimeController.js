@@ -16,6 +16,17 @@ const addShowTime = async (req, res) => {
       return res.status(404).json({ message: "Movie not found" });
     }
 
+    // Check for duplicate showtime
+    const existingShowtime = await ShowTime.findOne({
+      movieId,
+      startAt: req.body.startAt,
+    });
+    if (existingShowtime) {
+      return res.status(409).json({
+        message: "Details already exists for this movie at this start time",
+      });
+    }
+
     const showtime = new ShowTime(req.body);
     const savedShowtime = await showtime.save();
     return res.status(201).json(savedShowtime);

@@ -1,0 +1,206 @@
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 60px;
+    z-index: 2000;
+    backdrop-filter: blur(2px);
+}
+
+.modal {
+    background: white;
+    width: 800px; /* Reduced to match screenshot tightness */
+    max-width: 95vw;
+    height: auto;
+    max-height: 80vh;
+    border-radius: 4px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.header {
+    padding: 18px 24px;
+    border-bottom: 1px solid #f0f0f0;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.searchIcon {
+    color: #666;
+}
+
+.searchInput {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-size: 15px;
+    color: #333;
+}
+
+.searchInput::placeholder {
+    color: #999;
+}
+
+.closeIcon {
+    cursor: pointer;
+    color: #444;
+}
+
+.body {
+    padding: 24px 32px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.detectLocation {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #DC3558;
+    cursor: pointer;
+    margin-bottom: 40px;
+    font-weight: 500;
+    font-size: 15px;
+}
+
+.detectIconWrapper {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.detectIcon {
+    color: #DC3558;
+}
+
+.spinner {
+    width: 18px;
+    height: 18px;
+    border: 2px solid #eee;
+    border-top-color: #DC3558;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.sectionTitle {
+    font-size: 12px;
+    color: #777;
+    margin-bottom: 24px;
+    text-align: center;
+    letter-spacing: 0.5px;
+    font-weight: 500;
+}
+
+.popularGrid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 40px 16px; /* Row gap increased */
+    margin: 0 auto 32px auto;
+    max-width: 100%;
+    padding: 0;
+}
+
+.viewAllBtn {
+    color: #DC3558;
+    text-align: center;
+    font-size: 14px;
+    margin-bottom: 16px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.popularCityItem {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    padding: 8px 0;
+    transition: all 0.2s ease;
+}
+
+.popularCityItem:hover {
+    background-color: transparent; /* BMS doesn't show background on hover usually, just maybe text color or opacity */
+}
+
+.cityIcon {
+    width: 50px; /* Slightly smaller icons */
+    height: 50px;
+    object-fit: contain;
+    opacity: 0.8;
+}
+
+.popularCityItem:hover .cityIcon {
+    opacity: 1;
+}
+
+.popularCityItem span {
+    font-size: 13px;
+    color: #333;
+    text-align: center;
+    font-weight: 400;
+}
+
+.popularCityItem:hover span {
+    color: #333; /* Text stays dark usually, or maybe light red? Keeping dark per screenshot clean look */
+    font-weight: 500;
+}
+
+.otherCitiesList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.otherCityItem {
+    width: calc(20% - 10px);
+    font-size: 14px;
+    color: #333;
+    padding: 4px 0;
+    cursor: pointer;
+}
+
+.otherCityItem:hover {
+    color: #DC3558;
+}
+
+@media (max-width: 768px) {
+    .modal {
+        height: 100vh;
+        width: 100vw;
+        border-radius: 0;
+        max-width: none;
+        max-height: none;
+    }
+    
+    .overlay {
+        padding-top: 0;
+    }
+
+    .otherCityItem {
+        width: 100%;
+        padding: 12px 0;
+        border-bottom: 1px solid #f0f0f0;
+    }
+}

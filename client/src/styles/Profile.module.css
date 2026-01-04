@@ -1,0 +1,195 @@
+.container {
+    padding-top: 20px;
+    padding-bottom: 60px;
+    background-color: #F2F2F2;
+    min-height: calc(100vh - 64px);
+}
+
+.wrapper {
+    display: flex;
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    align-items: flex-start;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 300px;
+    background: white;
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.sidebarHeader {
+    padding: 16px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #eee;
+}
+
+.sidebarHeader h2 {
+    font-size: 18px;
+    font-weight: 500;
+    color: #333;
+    margin: 0;
+}
+
+.menuList {
+    display: flex;
+    flex-direction: column;
+}
+
+.menuItem {
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #333;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.2s;
+    border-bottom: 1px solid #f9f9f9;
+}
+
+.menuItem:hover {
+    background-color: #f9f9f9;
+}
+
+.menuItem.active {
+    background-color: #F5F5F5;
+    color: #DC3558;
+    position: relative;
+    font-weight: 500;
+}
+
+.menuItem.signOut {
+    color: #DC3558;
+    margin-top: 10px;
+}
+
+/* Main Content */
+.content {
+    flex: 1;
+    background: white;
+    padding: 40px;
+    border-radius: 4px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.profileHeader {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    margin-bottom: 40px;
+}
+
+.avatarLarge {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: #888;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.userName {
+    font-size: 24px;
+    font-weight: 500;
+    color: #333;
+}
+
+.formSection {
+    margin-bottom: 40px;
+}
+
+.sectionTitle {
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 24px;
+    color: #333;
+}
+
+.inputRow {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 24px;
+}
+
+.inputGroup {
+    flex: 1;
+}
+
+.inputGroup label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 12px;
+    color: #666;
+    font-weight: 500;
+}
+
+.inputGroup input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #333;
+    outline: none;
+    transition: border 0.2s;
+}
+
+.inputGroup input:focus {
+    border-color: #DC3558;
+}
+
+.radioGroup {
+    display: flex;
+    gap: 12px;
+}
+
+.radioOption {
+    padding: 10px 24px;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #666;
+    background: white;
+}
+
+.radioOption.selected {
+    border-color: #DC3558;
+    color: #DC3558;
+    background: #FFF0F2;
+}
+
+.saveBtn {
+    background-color: #DC3558;
+    color: white;
+    border: none;
+    padding: 12px 32px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+.saveBtn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.successMessage {
+    background-color: #DFF2BF;
+    color: #4F8A10;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
