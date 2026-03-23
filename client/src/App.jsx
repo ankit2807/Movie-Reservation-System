@@ -14,6 +14,8 @@ import AddMovie from './pages/admin/AddMovie';
 import AddShowtime from './pages/admin/AddShowtime';
 import ProtectedAdminRoute from './components/ProtectedAdminRoute';
 import SubNavbar from './components/SubNavbar';
+import Footer from './components/Footer';
+import Toast from './components/Toast';
 
 function App() {
   return (
@@ -52,6 +54,8 @@ function App() {
           {/* Fallback */}
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
+        <Footer />
+        <Toast />
       </div>
     </Router>
   );

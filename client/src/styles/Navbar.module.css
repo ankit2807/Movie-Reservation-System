@@ -1,14 +1,14 @@
 .navbar {
   background-color: var(--nav-bg);
   color: #ffffff;
-  padding: 0 0;
-  height: 64px;
+  padding: 0;
+  height: 66px;
   position: sticky;
   top: 0;
   z-index: 1000;
   display: flex;
   align-items: center;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
 }
 
 .navContainer {
@@ -21,33 +21,36 @@
 .logoSearch {
   display: flex;
   align-items: center;
-  gap: 32px;
+  gap: 28px;
   flex: 1;
 }
 
 .logo {
-  font-size: 20px;
-  font-weight: 700;
+  font-size: 22px;
+  font-weight: 800;
   color: white;
   letter-spacing: 0.5px;
+  white-space: nowrap;
 }
 
 .searchBar {
-  background-color: white;
-  border-radius: 4px;
-  padding: 8px 12px;
+  background-color: #ffffff;
+  border-radius: 6px;
+  padding: 0 14px;
   display: flex;
   align-items: center;
   width: 100%;
-  max-width: 550px;
-  height: 36px;
+  max-width: 560px;
+  height: 40px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
 }
 
 .searchIcon {
-  color: #888;
-  margin-right: 12px;
-  width: 16px;
-  height: 16px;
+  color: #999;
+  margin-right: 10px;
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
 }
 
 .searchBar input {
@@ -56,21 +59,23 @@
   font-size: 14px;
   outline: none;
   color: var(--text-dark);
+  font-family: inherit;
 }
 
 .searchBar input::placeholder {
-  color: #999;
+  color: #aaa;
+  font-size: 13px;
 }
 
 .navActions {
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 22px;
 }
 
 .locationWrapper {
-    position: relative;
-    cursor: pointer;
+  position: relative;
+  cursor: pointer;
 }
 
 .location {
@@ -78,8 +83,9 @@
   align-items: center;
   gap: 4px;
   font-size: 14px;
-  color: #ccc;
+  color: #ddd;
   transition: color 0.2s;
+  font-weight: 500;
 }
 
 .location:hover {
@@ -87,29 +93,30 @@
 }
 
 .cityDropdown {
-    position: absolute;
-    top: 100%;
-    right: 0;
-    margin-top: 12px;
-    background: white;
-    color: var(--text-dark);
-    min-width: 150px;
-    border-radius: 4px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    padding: 8px 0;
-    max-height: 300px;
-    overflow-y: auto;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 12px;
+  background: white;
+  color: var(--text-dark);
+  min-width: 160px;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+  padding: 8px 0;
+  max-height: 300px;
+  overflow-y: auto;
 }
 
 .cityItem {
-    padding: 8px 16px;
-    font-size: 14px;
-    cursor: pointer;
+  padding: 10px 16px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.15s;
 }
 
 .cityItem:hover {
-    background: #f5f5f5;
-    color: var(--primary-color);
+  background: #f5f5f5;
+  color: var(--primary-color);
 }
 
 .userProfile {
@@ -119,6 +126,7 @@
   font-size: 14px;
   cursor: pointer;
   position: relative;
+  font-weight: 500;
 }
 
 .userProfile:hover .dropdown {
@@ -131,12 +139,13 @@
   top: 100%;
   right: 0;
   background: white;
-  min-width: 180px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-  border-radius: 4px;
+  min-width: 190px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+  border-radius: 8px;
   padding-top: 8px;
   border: 1px solid #eee;
   z-index: 1001;
+  overflow: hidden;
 }
 
 .dropdown a, .dropdown button {
@@ -148,18 +157,23 @@
   font-size: 14px;
   background: none;
   border-bottom: 1px solid #f5f5f5;
-  transition: background 0.2s;
+  transition: all 0.15s;
 }
 
 .dropdown a:hover, .dropdown button:hover {
-  background-color: #f9f9f9;
+  background-color: #fef2f4;
   color: var(--primary-color);
 }
 
 .menuTrigger {
   cursor: pointer;
+  color: rgba(255,255,255,0.8);
+  margin-left: 8px;
+  transition: color 0.2s;
+}
+
+.menuTrigger:hover {
   color: white;
-  margin-left: 16px;
 }
 
 @media (max-width: 768px) {
@@ -172,10 +186,14 @@
   }
 
   .navActions {
-    gap: 16px;
+    gap: 14px;
   }
-  
+
   .locationWrapper {
-      display: none;
+    display: none;
+  }
+
+  .navbar {
+    height: 56px;
   }
 }

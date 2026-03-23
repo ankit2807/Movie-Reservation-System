@@ -1,0 +1,48 @@
+.toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background-color: #333;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 4px;
+  font-size: 14px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  z-index: 9999;
+  animation: slideIn 0.3s cubic-bezier(0.2, 0, 0, 1), fadeOut 0.3s ease 2.7s forwards;
+}
+
+.success {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.error {
+  background-color: #F44336;
+  color: white;
+}
+
+.info {
+  background-color: #333;
+  color: white;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}

@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js"
+    "start": "nodemon index.js",
+    "review": "node tools/code-review-agent.js"
   },
   "keywords": [],
   "author": "",

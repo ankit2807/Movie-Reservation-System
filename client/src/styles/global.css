@@ -1,15 +1,25 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap');
+
 :root {
   --primary-color: #f84464;
   --primary-hover: #e03e5a;
-  --text-dark: #333333;
-  --text-light: #666666;
+  --text-dark: #222222;
+  --text-heading: #333333;
+  --text-light: #999999;
+  --text-muted: #666666;
   --text-white: #ffffff;
   --bg-light: #f5f5f5;
   --bg-white: #ffffff;
+  --bg-dark: #1a1a2e;
+  --bg-dark-card: #2d2d44;
   --border-color: #e0e0e0;
-  --nav-bg: #333545;
-  
-  --font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  --nav-bg: #2b3148;
+  --sub-nav-bg: #404464;
+  --card-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  --card-hover-shadow: 0 8px 25px rgba(0,0,0,0.15);
+  --section-gap: 48px;
+
+  --font-family: 'Roboto', system-ui, -apple-system, sans-serif;
 }
 
 * {
@@ -24,6 +34,7 @@ body {
   color: var(--text-dark);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 a {
@@ -37,10 +48,14 @@ button {
   font-family: inherit;
 }
 
+img {
+  max-width: 100%;
+}
+
 .container {
-  max-width: 1200px;
+  max-width: 1300px;
   margin: 0 auto;
-  padding: 0 16px;
+  padding: 0 24px;
 }
 
 @media (max-width: 768px) {
@@ -51,19 +66,24 @@ button {
 
 /* Utilities */
 .btn {
-  padding: 8px 16px;
+  padding: 8px 20px;
   border-radius: 4px;
   font-weight: 500;
-  transition: all 0.2s;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  letter-spacing: 0.3px;
 }
 
 .btn-primary {
   background-color: var(--primary-color);
   color: white;
+  border: none;
 }
 
 .btn-primary:hover {
   background-color: var(--primary-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(248, 68, 100, 0.3);
 }
 
 .text-primary {

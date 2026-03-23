@@ -15,7 +15,7 @@ const Navbar = () => {
   
   const dispatch = useDispatch();
   const { isAuthenticated, user } = useSelector((state) => state.auth);
-  const { currentCity } = useSelector((state) => state.location);
+  const { currentCity, hasSelectedCity } = useSelector((state) => state.location);
   const { searchQuery } = useSelector((state) => state.movie);
 
   const handleSearch = (e) => {
@@ -44,7 +44,7 @@ const Navbar = () => {
         <div className={styles.navActions}>
           <div className={styles.locationWrapper}>
             <div className={styles.location} onClick={() => setIsCityModalOpen(true)}>
-                {currentCity} <ChevronDown size={14} />
+                {hasSelectedCity && currentCity ? currentCity : 'Select City'} <ChevronDown size={14} />
             </div>
             <LocationModal isOpen={isCityModalOpen} onClose={() => setIsCityModalOpen(false)} />
           </div>

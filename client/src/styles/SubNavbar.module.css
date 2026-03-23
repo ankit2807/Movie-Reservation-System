@@ -1,33 +1,176 @@
 .subNavbar {
-    background-color: #222539;
-    color: #ffffff;
-    padding: 10px 0;
-    font-size: 14px;
+  background-color: #404464;
+  color: #ffffff;
+  padding: 0;
+  font-size: 13px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  position: relative;
+  z-index: 900;
 }
 
 .container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.left, .right {
-    display: flex;
-    gap: 20px;
+.left,
+.right {
+  display: flex;
+  gap: 0;
+  align-items: stretch;
+  height: 38px;
 }
 
-.left a, .right a {
-    color: #ccc;
-    transition: color 0.2s;
-    font-size: 12px;
+/* ── Nav Item Wrapper ── */
+.navItemWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
 }
 
-.left a:hover, .right a:hover {
-    color: white;
+/* ── Nav Links ── */
+.navLink {
+  color: rgba(255, 255, 255, 0.75);
+  transition: all 0.2s ease;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  padding: 0 14px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  position: relative;
+  white-space: nowrap;
+}
+
+.navLink:hover,
+.navLinkActive {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* Underline indicator */
+.navLink::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 14px;
+  right: 14px;
+  height: 2px;
+  background: #DC3558;
+  transform: scaleX(0);
+  transition: transform 0.2s ease;
+  transform-origin: left;
+}
+
+.navLink:hover::after,
+.navLinkActive::after {
+  transform: scaleX(1);
+}
+
+/* ── Mega Menu Dropdown ── */
+.megaMenu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  padding-top: 0;
+  z-index: 1000;
+  animation: menuFadeIn 0.2s ease;
+}
+
+@keyframes menuFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.megaMenuInner {
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  padding: 20px 24px;
+  display: flex;
+  gap: 32px;
+  min-width: 360px;
+}
+
+.megaMenuColumn {
+  min-width: 120px;
+}
+
+.megaMenuTitle {
+  font-size: 13px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 10px;
+  padding-bottom: 6px;
+  border-bottom: 2px solid #DC3558;
+  display: inline-block;
+}
+
+.megaMenuList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.megaMenuItem {
+  font-size: 13px;
+  color: #666;
+  padding: 5px 8px;
+  border-radius: 4px;
+  transition: all 0.15s ease;
+  display: block;
+  white-space: nowrap;
+}
+
+.megaMenuItem:hover {
+  color: #DC3558;
+  background: #fef2f4;
+}
+
+/* ── Right side links ── */
+.right .navLink {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.6);
+  padding: 0 12px;
+}
+
+.right .navLink:hover {
+  color: rgba(255, 255, 255, 0.95);
+  background: transparent;
+}
+
+.right .navLink::after {
+  display: none;
+}
+
+/* ── Responsive ── */
+@media (max-width: 1024px) {
+  .right {
+    display: none;
+  }
+
+  .navLink {
+    padding: 0 10px;
+    font-size: 11px;
+  }
 }
 
 @media (max-width: 768px) {
-    .subNavbar {
-        display: none;
-    }
+  .subNavbar {
+    display: none;
+  }
 }

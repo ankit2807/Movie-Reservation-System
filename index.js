@@ -20,6 +20,9 @@ if (!process.env.JWT_SECRET || !process.env.MONGO_URI) {
   process.exit(1);
 }
 
+// Port
+const PORT = process.env.PORT || 3000;
+
 // Connect to database then start server
 connection()
   .then(() => {
@@ -111,6 +114,3 @@ process.on("uncaughtException", (err) => {
   console.error("Uncaught Exception:", err);
   process.exit(1);
 });
-
-// Port
-const PORT = process.env.PORT || 3000;
