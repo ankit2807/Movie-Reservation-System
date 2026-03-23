@@ -20,28 +20,53 @@ if (!process.env.JWT_SECRET || !process.env.MONGO_URI) {
   process.exit(1);
 }
 
-// Connect to database with error handling
-connection().catch((err) => {
-  console.error("Database connection failed:", err);
-  process.exit(1);
-});
+// Port
+const PORT = process.env.PORT || 3000;
+
+// Connect to database then start server
+connection()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.error("Database connection failed:", err);
+    process.exit(1);
+  });
+
+// Middleware
+const mongoSanitize = require("express-mongo-sanitize");
+const xss = require("xss-clean");
+const hpp = require("hpp");
+
+// ... existing code ...
 
 // Middleware
 app.use(helmet()); // Security headers
 app.use(express.json({ limit: "10mb" })); // Limit JSON payload size
 app.use(express.urlencoded({ extended: true }));
 
+// Data sanitization against NoSQL query injection
+app.use(mongoSanitize());
+
+// Data sanitization against XSS
+app.use(xss());
+
+// Prevent parameter pollution
+app.use(hpp());
+
 // CORS configuration
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL || "http://localhost:3000",
+    origin: [process.env.FRONTEND_URL, "http://localhost:5173", "http://localhost:3000"].filter(Boolean),
     credentials: true,
   })
 );
 
 app.use(cookieParser());
 
-// Rate limiting
+// Global Rate limiting
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 100, // Limit each IP to 100 requests per windowMs
@@ -57,6 +82,10 @@ app.use("/api/movie", movieRouter);
 app.use("/api/user", userRouter);
 app.use("/api/movieReservation", movieReservationRouter);
 app.use("/api/showtimes", showTimeRouter);
+app.use("/api/reviews", require("./routes/reviewRoutes"));
+app.use("/api/upload", require("./utils/imageUpload"));
+
+app.use("/public", express.static("public"));
 
 // Health check route
 app.get("/health", (req, res) => {
@@ -84,11 +113,4 @@ process.on("unhandledRejection", (err) => {
 process.on("uncaughtException", (err) => {
   console.error("Uncaught Exception:", err);
   process.exit(1);
-});
-
-// Port
-const PORT = process.env.PORT || 3000;
-
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
 });

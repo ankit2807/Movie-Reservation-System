@@ -33,6 +33,10 @@ const reservationSchema = new mongoose.Schema(
         },
       },
     ],
+    date: {
+      type: Date,
+      required: [true, "Reservation date is required"],
+    },
   },
   { timestamps: true }
 );
@@ -47,5 +51,6 @@ reservationSchema.pre("save", function (next) {
 
 // Add index for user and showtime for efficient queries
 reservationSchema.index({ user: 1, showtime: 1 });
+reservationSchema.index({ showtime: 1, date: 1 });
 
 module.exports = mongoose.model("Reservation", reservationSchema);

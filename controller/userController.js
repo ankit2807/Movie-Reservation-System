@@ -58,6 +58,7 @@ const login = async (req, res) => {
         .status(400)
         .json({ message: "Email and password are required" });
     }
+    // const decodedPassword = Buffer.from(password, 'base64').toString('utf-8');
 
     const user = await User.findOne({ email });
     if (!user) {
@@ -66,7 +67,7 @@ const login = async (req, res) => {
 
     const validated = await bcrypt.compare(password, user.password);
     if (!validated) {
-      return res.status(401).json({ message: "Invalid credentials" });
+      return res.status(401).json({ message: "Incorrect password" });
     }
 
     const token = jwt.sign(
@@ -84,7 +85,7 @@ const login = async (req, res) => {
         sameSite: "strict",
       })
       .status(200)
-      .json({ details: { ...otherDetails }, isAdmin: false });
+      .json({ ...otherDetails, isAdmin: user.isAdmin });
   } catch (err) {
     console.error("Login error:", err);
     return res.status(500).json({ message: "Internal server error" });
@@ -111,8 +112,46 @@ const logout = async (req, res) => {
   }
 };
 
+/**
+ * Update user profile.
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ */
+const updateProfile = async (req, res) => {
+  try {
+    const { firstName, lastName, email, phone, gender, isMarried, birthday } = req.body;
+    const userId = req.user.id;
+
+    // Use findByIdAndUpdate for atomic update
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      {
+        firstName,
+        lastName,
+        email,
+        phone,
+        gender,
+        isMarried,
+        birthday
+      },
+      { new: true, runValidators: true }
+    ).select("-password"); // Exclude password from result
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Return flattened structure to match login
+    return res.status(200).json(updatedUser);
+  } catch (err) {
+    console.error("Profile update error:", err);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 module.exports = {
   register,
   login,
   logout,
+  updateProfile,
 };

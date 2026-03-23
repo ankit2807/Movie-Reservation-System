@@ -1,0 +1,84 @@
+.authContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 80vh;
+  padding: 20px;
+}
+
+.authBox {
+  background: white;
+  padding: 40px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+}
+
+@media (max-width: 480px) {
+  .authBox {
+    padding: 24px;
+  }
+}
+
+.authBox h2 {
+  text-align: center;
+  margin-bottom: 24px;
+  color: var(--text-dark);
+}
+
+.inputGroup {
+  margin-bottom: 16px;
+}
+
+.inputGroup label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: var(--text-light);
+}
+
+.inputGroup input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-size: 16px;
+  transition: border-color 0.2s;
+}
+
+.inputGroup input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+}
+
+/* New Logic for Inline Errors */
+.inputError {
+    border-color: #c62828 !important;
+}
+
+.inlineError {
+    display: block;
+    color: #c62828;
+    font-size: 12px;
+    margin-top: 4px;
+}
+
+.authBox button {
+  width: 100%;
+  margin-top: 16px;
+  padding: 12px;
+  font-size: 16px;
+}
+
+.switchText {
+  text-align: center;
+  margin-top: 24px;
+  font-size: 14px;
+  color: var(--text-light);
+}
+
+.switchText a {
+  color: var(--primary-color);
+  font-weight: 500;
+}

@@ -49,13 +49,29 @@ const userSchema = new mongoose.Schema(
         message: "Phone number must be exactly 10 digits",
       },
     },
+    firstName: {
+      type: String,
+      trim: true,
+    },
+    lastName: {
+      type: String,
+      trim: true,
+    },
+    gender: {
+      type: String,
+      enum: ["Male", "Female", "Other"],
+    },
+    isMarried: {
+      type: Boolean,
+      default: false,
+    },
+    birthday: {
+      type: String, // Format: dd/mm/yyyy
+    },
   },
   {
     timestamps: true,
   }
 );
-
-// Add index for email uniqueness
-userSchema.index({ email: 1 });
 
 module.exports = mongoose.model("User", userSchema);

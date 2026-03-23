@@ -1,0 +1,152 @@
+.footer {
+  background-color: #333545;
+  color: #999;
+  padding: 48px 0 32px;
+  margin-top: 0;
+}
+
+.footerContent {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ── Link Rows ── */
+.linkRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+
+.footerLink {
+  color: #999;
+  font-size: 13px;
+  transition: color 0.2s;
+  padding: 2px 0;
+  white-space: nowrap;
+}
+
+.footerLink:hover {
+  color: #ffffff;
+}
+
+.separator {
+  color: #555;
+  font-size: 13px;
+  margin: 0 6px;
+  user-select: none;
+}
+
+/* ── Sections ── */
+.section {
+  margin-top: 28px;
+}
+
+.sectionLabel {
+  font-size: 12px;
+  font-weight: 700;
+  color: #ccc;
+  letter-spacing: 1.5px;
+  margin-bottom: 14px;
+  text-transform: uppercase;
+}
+
+/* ── Brand Section ── */
+.brandSection {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin: 48px 0 36px;
+}
+
+.dividerLine {
+  flex: 1;
+  height: 1px;
+  background: #555;
+}
+
+.brandLogo {
+  font-size: 24px;
+  font-weight: 800;
+  white-space: nowrap;
+  letter-spacing: 0.5px;
+}
+
+.brandBook {
+  color: #ffffff;
+}
+
+.brandMy {
+  color: var(--primary-color);
+}
+
+/* ── Social Icons ── */
+.socialRow {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 36px;
+}
+
+.socialIcon {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1.5px solid #666;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #999;
+  transition: all 0.25s ease;
+}
+
+.socialIcon:hover {
+  color: #ffffff;
+  border-color: #ffffff;
+  transform: translateY(-3px);
+}
+
+/* ── Copyright ── */
+.copyright {
+  text-align: center;
+}
+
+.copyright p {
+  font-size: 13px;
+  color: #888;
+  margin-bottom: 8px;
+}
+
+.copyrightSub {
+  font-size: 11px !important;
+  color: #666 !important;
+  line-height: 1.6;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .footer {
+    padding: 32px 0 24px;
+  }
+
+  .brandSection {
+    margin: 32px 0 24px;
+  }
+
+  .socialRow {
+    gap: 14px;
+  }
+
+  .socialIcon {
+    width: 38px;
+    height: 38px;
+  }
+
+  .copyrightSub {
+    padding: 0 12px;
+  }
+}

@@ -40,6 +40,15 @@ const movieSchema = new mongoose.Schema(
       required: [true, "Genre is required"],
       trim: true,
     },
+    languages: {
+      type: [String],
+      default: ["Hindi", "English"],
+    },
+    type: {
+      type: String,
+      enum: ['Movie', 'Event', 'Play', 'Sport', 'Activity', 'Stream'],
+      default: 'Movie'
+    },
     rating: {
       type: String,
       required: [true, "Rating is required"],
@@ -61,11 +70,15 @@ const movieSchema = new mongoose.Schema(
         required: true,
       },
     ],
+    cast: [
+      {
+        name: { type: String, required: true },
+        role: { type: String, default: 'Actor' },
+        image: { type: String }
+      }
+    ]
   },
   { timestamps: true }
 );
-
-// Add index for title uniqueness
-movieSchema.index({ title: 1 });
 
 module.exports = mongoose.model("Movie", movieSchema);
