@@ -1,5 +1,5 @@
 .subNavbar {
-  background-color: #404464;
+  background-color: var(--sub-nav-bg);
   color: #ffffff;
   padding: 0;
   font-size: 13px;
@@ -34,11 +34,10 @@
 
 /* ── Nav Links ── */
 .navLink {
-  color: rgba(255, 255, 255, 0.75);
-  transition: all 0.2s ease;
-  font-size: 12px;
-  font-weight: 500;
-  letter-spacing: 0.3px;
+  color: #cccccc;
+  transition: color 0.2s ease;
+  font-size: 13px;
+  font-weight: 400;
   padding: 0 14px;
   height: 38px;
   display: flex;
@@ -49,27 +48,7 @@
 
 .navLink:hover,
 .navLinkActive {
-  color: #fff;
-  background: rgba(255, 255, 255, 0.08);
-}
-
-/* Underline indicator */
-.navLink::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 14px;
-  right: 14px;
-  height: 2px;
-  background: #DC3558;
-  transform: scaleX(0);
-  transition: transform 0.2s ease;
-  transform-origin: left;
-}
-
-.navLink:hover::after,
-.navLinkActive::after {
-  transform: scaleX(1);
+  color: #ffffff;
 }
 
 /* ── Mega Menu Dropdown ── */
@@ -143,18 +122,13 @@
 
 /* ── Right side links ── */
 .right .navLink {
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.6);
+  font-size: 12px;
+  color: #cccccc;
   padding: 0 12px;
 }
 
 .right .navLink:hover {
-  color: rgba(255, 255, 255, 0.95);
-  background: transparent;
-}
-
-.right .navLink::after {
-  display: none;
+  color: #ffffff;
 }
 
 /* ── Responsive ── */

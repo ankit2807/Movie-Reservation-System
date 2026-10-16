@@ -5,8 +5,12 @@ const {
   deleteMovie,
   getMovieById,
   getMovies,
+  searchMovies,
 } = require("../controller/movieController");
 const { verifyTokenAndAdmin } = require("../utils/tokenVerification");
+
+// Search movies (public) — must be before /:id routes
+router.get("/search", searchMovies);
 
 // Add a new movie (requires admin token)
 router.post("/", verifyTokenAndAdmin, addMovie);

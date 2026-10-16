@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { User, ShoppingBag, Tv, CreditCard, Gift, Monitor, LogOut } from 'lucide-react';
 import api from '../api/axios';
-import { loginSuccess } from '../redux/authSlice';
+import { loginSuccess, logout } from '../redux/authSlice';
 import styles from '../styles/Profile.module.css';
 
 const Profile = () => {
@@ -38,9 +38,15 @@ const Profile = () => {
         }
     }, [user]);
 
-    const handleLogout = () => {
-        dispatch({ type: 'auth/logout' });
-        navigate('/');
+    const handleLogout = async () => {
+        try {
+            await api.post('/user/logout');
+        } catch (err) {
+            console.error('Logout error:', err);
+        } finally {
+            dispatch(logout());
+            navigate('/');
+        }
     };
 
     const handleChange = (e) => {

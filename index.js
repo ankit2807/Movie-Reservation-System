@@ -25,7 +25,22 @@ const PORT = process.env.PORT || 3000;
 
 // Connect to database then start server
 connection()
-  .then(() => {
+  .then(async () => {
+    try {
+      const Movie = require("./models/movieModel");
+      const { seedDB } = require("./utils/seedData");
+      const movies = await Movie.find().lean();
+      const needsSeed =
+        movies.length === 0 ||
+        movies.some((m) => ["G", "PG", "PG-13", "R", "NC-17"].includes(m.rating)) ||
+        !movies.some((m) => m.title === "Street Fighter");
+      if (needsSeed) {
+        console.log("Seeding database with latest 2025-2026 BookMyShow catalog...");
+        await seedDB();
+      }
+    } catch (seedErr) {
+      console.error("Auto-seed check error:", seedErr.message);
+    }
     app.listen(PORT, () => {
       console.log(`Server is running on port ${PORT}`);
     });
@@ -69,7 +84,7 @@ app.use(cookieParser());
 // Global Rate limiting
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // Limit each IP to 100 requests per windowMs
+  max: process.env.NODE_ENV === "production" ? 100 : 1000, // Limit each IP per windowMs (relaxed for local dev)
   message: {
     message: "Too many requests from this IP, please try again later.",
   },

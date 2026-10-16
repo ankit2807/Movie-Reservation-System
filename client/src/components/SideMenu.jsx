@@ -2,6 +2,7 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { Bell, ShoppingBag, Tv, CreditCard, MessageCircle, Settings, Gift, Star, ChevronRight, User, Info } from 'lucide-react';
+import { setAuthModalOpen } from '../redux/authSlice';
 import styles from '../styles/SideMenu.module.css';
 
 const SideMenu = ({ isOpen, onClose }) => {
@@ -30,7 +31,9 @@ const SideMenu = ({ isOpen, onClose }) => {
                                 Edit Profile <ChevronRight size={14} />
                              </div>
                         ) : (
-                             <Link to="/login" className={styles.loginLink} onClick={onClose}>Login / Register <ChevronRight size={14} /></Link>
+                             <div className={styles.loginLink} onClick={() => { onClose(); dispatch(setAuthModalOpen(true)); }} style={{cursor: 'pointer'}}>
+                                Login / Register <ChevronRight size={14} />
+                             </div>
                         )}
                     </div>
                     <div className={styles.avatar}>

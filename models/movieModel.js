@@ -11,29 +11,27 @@ const movieSchema = new mongoose.Schema(
       required: [true, "Title is required"],
       unique: true,
       trim: true,
-      maxLength: [30, "Title cannot exceed 30 characters"],
+      maxLength: [150, "Title cannot exceed 150 characters"],
       minLength: [1, "Title must have at least 1 character"],
     },
     description: {
       type: String,
       required: [true, "Description is required"],
       trim: true,
-      maxLength: [100, "Description cannot exceed 100 characters"],
+      maxLength: [2000, "Description cannot exceed 2000 characters"],
       minLength: [4, "Description must have at least 4 characters"],
     },
     posterImage: {
       type: String,
       default: "",
     },
+    backdropImage: {
+      type: String,
+      default: "",
+    },
     duration: {
       type: String,
       required: [true, "Duration is required"],
-      validate: {
-        validator: function (v) {
-          return /^\d{1,2}:\d{2}$/.test(v); // HH:MM format
-        },
-        message: "Duration must be in HH:MM format",
-      },
     },
     genre: {
       type: String,
@@ -44,16 +42,27 @@ const movieSchema = new mongoose.Schema(
       type: [String],
       default: ["Hindi", "English"],
     },
+    format: {
+      type: String,
+      default: "2D, IMAX 2D",
+    },
     type: {
       type: String,
-      enum: ['Movie', 'Event', 'Play', 'Sport', 'Activity', 'Stream'],
-      default: 'Movie'
+      enum: ["Movie", "Event", "Play", "Sport", "Activity", "Stream"],
+      default: "Movie",
     },
     rating: {
       type: String,
       required: [true, "Rating is required"],
-      enum: ["G", "PG", "PG-13", "R", "NC-17"], // Common ratings
-      message: "Invalid rating",
+      default: "8.5",
+    },
+    votes: {
+      type: String,
+      default: "24.5K",
+    },
+    tagline: {
+      type: String,
+      default: "",
     },
     releaseDate: {
       type: Date,
@@ -63,20 +72,27 @@ const movieSchema = new mongoose.Schema(
       type: String,
       required: [true, "Certification is required"],
       trim: true,
+      default: "UA",
     },
     showtimes: [
       {
         type: Date,
-        required: true,
       },
     ],
     cast: [
       {
         name: { type: String, required: true },
-        role: { type: String, default: 'Actor' },
-        image: { type: String }
-      }
-    ]
+        role: { type: String, default: "Actor" },
+        image: { type: String, default: "" },
+      },
+    ],
+    crew: [
+      {
+        name: { type: String, required: true },
+        role: { type: String, default: "Crew" },
+        image: { type: String, default: "" },
+      },
+    ],
   },
   { timestamps: true }
 );

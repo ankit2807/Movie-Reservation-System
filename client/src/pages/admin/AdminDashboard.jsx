@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import api from '../../api/axios';
-import { fetchMoviesStart, fetchMoviesSuccess } from '../../redux/movieSlice';
+import { fetchMoviesStart, fetchMoviesSuccess, fetchMoviesFailure } from '../../redux/movieSlice';
 import { Trash2, Plus } from 'lucide-react';
 
 const AdminDashboard = () => {
@@ -12,8 +12,12 @@ const AdminDashboard = () => {
   useEffect(() => {
     const getMovies = async () => {
       dispatch(fetchMoviesStart());
-      const res = await api.get('/movie');
-      dispatch(fetchMoviesSuccess(res.data));
+      try {
+        const res = await api.get('/movie');
+        dispatch(fetchMoviesSuccess(res.data));
+      } catch (err) {
+        dispatch(fetchMoviesFailure(err.message));
+      }
     };
     getMovies();
   }, [dispatch]);
