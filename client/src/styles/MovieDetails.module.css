@@ -1,428 +1,1025 @@
-.detailsPage {
-  min-height: 100vh;
-  background-color: #f2f2f2;
+/* ═══════════════════════════════════════════════════════════
+   ─── BookMyShow Movie Details Page Styles (ET00481645) ───
+   ═══════════════════════════════════════════════════════════ */
+
+.movieDetailsPage {
+  background-color: #ffffff;
+  color: #111111;
+  min-height: 90vh;
+  padding-bottom: 48px;
 }
 
-.bannerWrapper {
-  position: relative;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-}
-
-.bannerOverlay {
-  background: linear-gradient(90deg, #1a1a1a 24.97%, #1a1a1a 38.3%, rgba(26, 26, 26, 0.04) 97.47%, #1a1a1a 100%);
-  padding: 40px 0;
-  color: white;
-}
-
-.bannerContent {
+.stateWrapper {
+  min-height: 60vh;
   display: flex;
-  gap: 32px;
-  align-items: flex-start;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  color: #666;
 }
 
-.posterContainer {
-    position: relative;
-    flex-shrink: 0;
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #e5e7eb;
+  border-top-color: #f84464;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
 }
 
-.posterContainer img {
-  width: 260px;
-  height: 390px;
-  object-fit: cover;
-  border-radius: 8px 8px 0 0;
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
-.status {
-    background: black;
-    color: white;
-    text-align: center;
-    padding: 6px;
-    font-size: 12px;
-    border-radius: 0 0 8px 8px;
+.primaryBtn {
+  background-color: #f84464;
+  color: #ffffff;
+  padding: 10px 24px;
+  border-radius: 6px;
+  font-weight: 600;
 }
 
-.info {
-    padding-top: 24px;
-    flex: 1;
+/* ─── 1. Sticky Top Movie Bar on Scroll (Exact BookMyShow Scroll Bar) ─── */
+.stickyScrollBar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: #ffffff;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  z-index: 120;
+  border-bottom: 1px solid #eeeeee;
+  animation: slideDown 0.2s ease-out;
 }
 
-.info h1 {
-  font-size: 38px;
-  margin-bottom: 20px;
+@keyframes slideDown {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.stickyBarInner {
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.stickyBarLeft {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.stickyMovieTitle {
+  font-size: 20px;
   font-weight: 700;
-  color: #fff;
+  color: #111111;
 }
 
+.stickyRatingMeta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #555555;
+}
+
+.stickyBookBtn {
+  background-color: #f84464;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 10px 28px;
+  border-radius: 8px;
+  transition: background-color 0.15s;
+}
+
+.stickyBookBtn:hover {
+  background-color: #e03454;
+}
+
+/* ─── 2. Dark Hero Banner (Exact BookMyShow Hero) ─── */
+.heroBanner {
+  background-color: #1a1a1a;
+  background-size: cover;
+  background-position: right center;
+  background-repeat: no-repeat;
+  color: #ffffff;
+  padding: 32px 0;
+  position: relative;
+}
+
+.heroContainer {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  position: relative;
+}
+
+/* Left Poster Card */
+.posterCard {
+  width: 260px;
+  border-radius: 12px;
+  overflow: hidden;
+  background-color: #000000;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+  flex-shrink: 0;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.posterImgBox {
+  position: relative;
+  width: 260px;
+  height: 382px;
+}
+
+.posterImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.trailerOverlayPill {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(18, 18, 18, 0.82);
+  color: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: transform 0.15s, background 0.15s;
+}
+
+.trailerOverlayPill:hover {
+  transform: translate(-50%, -50%) scale(1.05);
+  background: rgba(248, 68, 100, 0.92);
+}
+
+.inCinemasStrip {
+  background-color: #000000;
+  color: #ffffff;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 7px 0;
+  letter-spacing: 0.3px;
+}
+
+/* Center Movie Info Column */
+.heroInfoCol {
+  flex: 1;
+  max-width: 620px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.heroTitle {
+  font-size: 36px;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.15;
+}
+
+/* Rating Box */
 .ratingBox {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: #333;
-    padding: 12px 16px;
-    border-radius: 8px;
-    max-width: 450px;
-    margin-bottom: 24px;
-    border: 1px solid #444;
+  background-color: #333333;
+  border-radius: 8px;
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 440px;
 }
 
-.ratingLeft {
-    display: flex;
-    align-items: center;
-    gap: 12px;
+.ratingBoxLeft {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-.ratingScore {
-    font-size: 18px;
-    font-weight: 700;
+.ratingValue {
+  font-size: 18px;
+  font-weight: 700;
+  color: #ffffff;
 }
 
-.votes {
-    color: #ccc;
-    font-size: 12px;
+.votesText {
+  font-size: 14px;
+  color: #e2e8f0;
 }
 
-.rateBtn {
-    background: white;
-    color: #1a1a1a;
-    border: none;
-    padding: 6px 16px;
-    border-radius: 4px;
-    font-weight: 600;
-    cursor: pointer;
-    font-size: 14px;
+.rateNowBtn {
+  background-color: #ffffff;
+  color: #1f2533;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 8px;
+  transition: transform 0.12s;
 }
 
-.tagPills {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 16px;
-    flex-wrap: wrap;
+.rateNowBtn:hover {
+  transform: scale(1.03);
 }
 
-.tagPills span {
-    background: #e5e5e5;
-    color: black;
-    padding: 2px 8px;
-    border-radius: 2px;
-    font-size: 12px;
-    font-weight: 500;
-    text-transform: uppercase;
+/* Format & Language Pills */
+.tagsStack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
-.meta {
-    font-size: 16px;
-    color: #fff;
-    margin-bottom: 32px;
-    font-weight: 500;
+.tagPill {
+  background-color: #e5e5e5;
+  color: #000000;
+  padding: 4px 10px;
+  border-radius: 3px;
+  font-size: 14px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
 }
 
-.bookBtn {
-    background-color: #f84464;
-    color: white;
-    border: none;
-    padding: 14px 60px;
-    font-size: 18px;
-    font-weight: 600;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.2s;
+.tagLinkBtn {
+  background: transparent;
+  color: #000000;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 0;
 }
 
-.bookBtn:hover {
-    background-color: #e33e59;
+.tagLinkBtn:hover {
+  text-decoration: underline;
 }
 
-.contentBody {
-    margin-top: 32px;
-    padding-bottom: 60px;
+/* Metadata Line */
+.metaBulletLine {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 15px;
+  color: #ffffff;
+  font-weight: 400;
 }
 
-.mainColumn {
-    max-width: 950px;
+.dot {
+  color: #cccccc;
 }
 
-.section {
-    margin-bottom: 40px;
+/* Book Tickets CTA */
+.heroCtaWrap {
+  margin-top: 6px;
 }
 
-.section h2 {
-    font-size: 24px;
-    font-weight: 700;
-    color: #333;
-    margin-bottom: 20px;
+.bookTicketsBtn {
+  background-color: #f84464;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 14px 56px;
+  border-radius: 8px;
+  box-shadow: 0 4px 14px rgba(248, 68, 100, 0.35);
+  transition: background-color 0.15s, transform 0.1s;
 }
 
-.description {
-    line-height: 1.6;
-    color: #333;
-    font-size: 16px;
+.bookTicketsBtn:hover {
+  background-color: #e03454;
+  transform: translateY(-1px);
 }
 
+/* Top-Right Share Button */
+.shareBtn {
+  position: absolute;
+  top: 8px;
+  right: 16px;
+  background: rgba(34, 34, 34, 0.82);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 10px 18px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  backdrop-filter: blur(4px);
+}
+
+.shareBtn:hover {
+  background: rgba(50, 50, 50, 0.92);
+}
+
+/* ─── 3. Main Content Column & Sections (Exact BookMyShow Left Column) ─── */
+.mainContentColumn {
+  max-width: 880px;
+}
+
+.pageSection {
+  padding: 32px 0;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.sectionHeaderRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.sectionHeading {
+  font-size: 24px;
+  font-weight: 700;
+  color: #000000;
+  margin-bottom: 16px;
+}
+
+.sectionHeaderRow .sectionHeading {
+  margin-bottom: 0;
+}
+
+.aboutDescription {
+  font-size: 16px;
+  color: #333333;
+  line-height: 1.6;
+}
+
+/* Top Offers For You */
 .offersGrid {
-    display: flex;
-    gap: 16px;
-    flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 16px;
 }
 
 .offerCard {
-    background: #fff8e8;
-    border: 1px dashed #eec068;
-    padding: 12px;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    min-width: 300px;
-    flex: 1;
+  background-color: #fff8e5;
+  border: 2px dashed #f3d58d;
+  border-radius: 8px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
 }
 
-.offerIcon {
-    width: 24px;
-    height: 24px;
-    background: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-    font-weight: bold;
-    color: #eec068;
+.offerIconBox {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 }
 
-.offerCard h4 {
-    font-size: 14px;
-    margin: 0 0 4px 0;
-    color: #333;
+.offerText h4 {
+  font-size: 14px;
+  font-weight: 700;
+  color: #111111;
 }
 
-.offerCard p {
-    font-size: 12px;
-    color: #666;
-    margin: 0;
+.offerText p {
+  font-size: 12px;
+  color: #666666;
+  margin-top: 2px;
 }
 
-/* Cast Styles */
-.castGrid {
-    display: flex;
-    gap: 32px;
-    overflow-x: auto;
-    padding-bottom: 12px;
+/* Circular Cast & Crew Carousels */
+.carouselNavBtns {
+  display: flex;
+  gap: 8px;
 }
 
-.castCard {
-    text-align: center;
-    min-width: 120px;
+.carouselNavBtns button {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #f1f5f9;
+  color: #334155;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.castImage {
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    background: #eee;
-    margin: 0 auto 12px;
-    overflow: hidden;
+.peopleCarousel {
+  display: flex;
+  gap: 28px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  scrollbar-width: none;
 }
 
-.castImage img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+.peopleCarousel::-webkit-scrollbar {
+  display: none;
 }
 
-.castCard h4 {
-    font-size: 16px;
-    color: #333;
-    margin-bottom: 4px;
-    font-weight: 600;
+.personCard {
+  width: 120px;
+  flex-shrink: 0;
+  text-align: center;
 }
 
-.castCard p {
-    font-size: 14px;
-    color: #666;
+.personAvatarWrap {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-bottom: 10px;
+  background-color: #f1f5f9;
 }
 
-.divider {
-    border: 0;
-    border-top: 1px solid #e0e0e0;
-    margin: 40px 0;
+.personAvatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
-/* Review Styles */
-.sectionHeader {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
+.personName {
+  font-size: 15px;
+  font-weight: 500;
+  color: #000000;
+  line-height: 1.25;
 }
 
-.totalReviews {
-    color: #666;
-    font-size: 14px;
-    cursor: pointer;
+.personRole {
+  font-size: 13px;
+  color: #666666;
+  margin-top: 3px;
 }
 
-.reviewTags {
-    display: flex;
-    gap: 12px;
-    margin-bottom: 24px;
-    flex-wrap: wrap;
+/* Top Reviews Section */
+.reviewsHeaderRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+  gap: 16px;
 }
 
-.reviewTags span {
-    border: 1px solid #ddd;
-    border-radius: 20px;
-    padding: 6px 16px;
-    color: #f84464;
-    font-size: 14px;
-    background: white;
+.reviewsSubSummary {
+  font-size: 14px;
+  color: #666666;
 }
 
-.reviewsListHorizontal {
-    display: flex;
-    gap: 20px;
-    overflow-x: auto;
-    padding: 4px;
+.writeReviewBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #ffffff;
+  color: #f84464;
+  border: 1px solid #f84464;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  transition: all 0.15s;
+}
+
+.writeReviewBtn:hover {
+  background: #f84464;
+  color: #ffffff;
+}
+
+.hashtagStrip {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 14px;
+  margin-bottom: 14px;
+  scrollbar-width: none;
+}
+
+.hashtagStrip::-webkit-scrollbar {
+  display: none;
+}
+
+.hashtagPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  flex-shrink: 0;
+  transition: all 0.15s;
+}
+
+.hashtagPillActive {
+  border-color: #f84464;
+  background: #fff0f3;
+}
+
+.hashtagText {
+  font-size: 13px;
+  color: #f84464;
+  font-weight: 500;
+}
+
+.hashtagCount {
+  font-size: 11px;
+  background: #f1f5f9;
+  color: #475569;
+  padding: 2px 6px;
+  border-radius: 10px;
+}
+
+.reviewsCarousel {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  gap: 20px;
 }
 
 .reviewCard {
-    min-width: 320px;
-    max-width: 320px;
-    background: white;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  padding: 20px;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
-.reviewCardHeader {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 12px;
+.reviewCardTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
 }
 
-.reviewerInfo {
-    display: flex;
-    align-items: center;
-    gap: 8px;
+.reviewerMeta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
-.userAvatar {
-    background: #ddd;
-    border-radius: 50%;
-    padding: 4px;
-    color: #555;
+.reviewerAvatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #cbd5e1;
+  color: #1e293b;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.reviewRatingStar {
-    color: #f84464;
-    font-weight: 600;
-    font-size: 14px;
+.reviewerName {
+  font-size: 14px;
+  font-weight: 600;
+  color: #111111;
 }
 
-.reviewText {
-    font-size: 14px;
-    color: #555;
-    line-height: 1.5;
-    margin-bottom: 16px;
-    display: -webkit-box;
-    -webkit-line-clamp: 4;
-    line-clamp: 4;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
+.verifiedTag {
+  font-size: 11px;
+  color: #666666;
 }
 
-.reviewFooter {
-    font-size: 12px;
-    color: #999;
+.bmsInline {
+  color: #f84464;
 }
 
-/* Showtimes */
-.showtimeGrid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 16px;
+.reviewStarScore {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #111111;
 }
 
-.showtimeCard {
-    background: white;
-    border: 1px solid #e0e0e0;
-    border-radius: 4px;
-    padding: 12px;
-    min-width: 140px;
-    text-align: center;
-    transition: all 0.2s;
-    color: inherit;
-    text-decoration: none;
+.reviewHashtagLine {
+  font-size: 14px;
+  font-weight: 700;
+  color: #111111;
+  margin-bottom: 8px;
 }
 
-.showtimeCard:hover {
-    border-color: #f84464;
-    background-color: #fff9fa;
+.reviewBodyText {
+  font-size: 14px;
+  color: #444444;
+  line-height: 1.55;
+  margin-bottom: 18px;
 }
 
-.showtimeHeader {
-    font-size: 11px;
-    color: #666;
-    margin-bottom: 6px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 4px;
+.reviewCardBottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  color: #888888;
 }
 
-.showtimeTime {
-    font-size: 15px;
-    margin-bottom: 4px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 6px;
+.helpfulBtns {
+  display: flex;
+  align-items: center;
+  gap: 14px;
 }
 
-.showtimeType {
-    font-size: 10px;
-    color: #4fb643;
-    text-transform: uppercase;
-    font-weight: 600;
+.thumbBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: transparent;
+  color: #666666;
+  font-size: 12px;
 }
 
-.recommendationCard {
-    min-width: 180px;
-    text-decoration: none;
-    color: inherit;
+.thumbBtn:hover {
+  color: #f84464;
 }
 
-.recommendationCard h4 {
-    margin-top: 8px;
-    font-size: 16px;
-    color: #333;
+/* You Might Also Like Carousel */
+.recHeaderRight {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.viewAllLink {
+  display: inline-flex;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: #f84464;
+}
+
+.recCarousel {
+  display: flex;
+  gap: 22px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  scrollbar-width: none;
+}
+
+.recCarousel::-webkit-scrollbar {
+  display: none;
+}
+
+.recCard {
+  width: 185px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.recPosterWrap {
+  width: 185px;
+  height: 278px;
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+  margin-bottom: 10px;
+  background: #1f2533;
+}
+
+.recPosterWrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.25s;
+}
+
+.recCard:hover .recPosterWrap img {
+  transform: scale(1.03);
+}
+
+.recRatingBar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #000000;
+  color: #ffffff;
+  padding: 6px 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.recVotes {
+  margin-left: auto;
+  font-size: 11px;
+  color: #cbd5e1;
+  font-weight: 400;
+}
+
+.recTitle {
+  font-size: 15px;
+  font-weight: 600;
+  color: #111111;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.recGenre {
+  font-size: 13px;
+  color: #666666;
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.breadcrumbFooter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #888888;
+  padding-top: 20px;
+  border-top: 1px solid #f0f0f0;
+}
+
+/* ─── 4. "Select language and format" Modal (Exact BookMyShow Popup) ─── */
+.modalBackdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 250;
+  padding: 16px;
+}
+
+.langFormatModal {
+  background: #ffffff;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 420px;
+  overflow: hidden;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+  animation: modalPop 0.18s ease-out;
+}
+
+@keyframes modalPop {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.lfModalHeader {
+  padding: 18px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.lfMovieSub {
+  font-size: 12px;
+  color: #666666;
+  margin-bottom: 2px;
+}
+
+.lfTitle {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1f2533;
+}
+
+.lfCloseBtn {
+  background: transparent;
+  color: #666666;
+}
+
+.lfModalBody {
+  max-height: 70vh;
+  overflow-y: auto;
+  padding-bottom: 16px;
+}
+
+.lfLangBand {
+  background-color: #f2f5f9;
+  padding: 8px 20px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #666666;
+  letter-spacing: 0.6px;
+}
+
+.lfFormatsGrid {
+  padding: 16px 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.lfFormatPill {
+  background: #ffffff;
+  color: #f84464;
+  border: 1px solid #d1d5db;
+  border-radius: 20px;
+  padding: 8px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  transition: all 0.15s;
+}
+
+.lfFormatPill:hover {
+  border-color: #f84464;
+  background-color: #fff0f3;
+}
+
+/* Trailer Modal */
+.trailerModal {
+  background: #111111;
+  border-radius: 12px;
+  max-width: 720px;
+  width: 100%;
+  overflow: hidden;
+  color: #ffffff;
+}
+
+.trailerModalHeader {
+  padding: 14px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.trailerModalHeader h3 {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.trailerVideoBox {
+  position: relative;
+  height: 380px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.trailerPreviewBg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.35;
+}
+
+.trailerOverlayContent {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.trailerPulseCircle {
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  background: #f84464;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 6px;
+}
+
+.bookFromTrailerBtn {
+  margin-top: 8px;
+  background: #f84464;
+  color: #ffffff;
+  padding: 10px 26px;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+/* Review Modal */
+.reviewModal {
+  background: #ffffff;
+  border-radius: 12px;
+  max-width: 480px;
+  width: 100%;
+  overflow: hidden;
+}
+
+.reviewForm {
+  padding: 0 20px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.ratingSliderWrap {
+  background: #f8fafc;
+  padding: 14px;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.ratingBigDisplay {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 24px;
+  font-weight: 800;
+  color: #1f2533;
+  margin-bottom: 8px;
+}
+
+.ratingRange {
+  width: 100%;
+  accent-color: #f84464;
+}
+
+.tagSelectLabel {
+  font-size: 13px;
+  font-weight: 600;
+  color: #333333;
+}
+
+.modalHashtags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.modalTagChip {
+  font-size: 12px;
+  padding: 5px 12px;
+  border-radius: 16px;
+  border: 1px solid #d1d5db;
+  background: #ffffff;
+  color: #555555;
+}
+
+.modalTagChipActive {
+  border-color: #f84464;
+  background: #fff0f3;
+  color: #f84464;
+  font-weight: 600;
+}
+
+.reviewTextarea {
+  width: 100%;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 13px;
+  outline: none;
+  resize: vertical;
+}
+
+.reviewTextarea:focus {
+  border-color: #f84464;
+}
+
+.submitReviewBtn {
+  background: #f84464;
+  color: #ffffff;
+  padding: 12px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 14px;
 }
 
 @media (max-width: 768px) {
-  .bannerContent {
+  .heroContainer {
     flex-direction: column;
-    align-items: center;
     text-align: center;
   }
-  
-  .posterContainer img {
-      width: 180px;
-      height: auto;
+
+  .heroInfoCol {
+    align-items: center;
   }
 
-  .ratingBox {
-      flex-direction: column;
-      gap: 12px;
-  }
-  
-  .ratingLeft {
-      flex-direction: column;
-      gap: 4px;
+  .reviewsCarousel {
+    grid-template-columns: 1fr;
   }
 }
-

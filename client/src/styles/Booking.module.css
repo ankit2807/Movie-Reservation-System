@@ -1,227 +1,1396 @@
-.bookingContainer {
-  background-color: #f2f2f2;
+/* ═══════════════════════════════════════════════════════════
+   ─── BookMyShow Ticket Booking & Seat Selection Styles ───
+   ═══════════════════════════════════════════════════════════ */
+
+.bookingPage {
   min-height: 100vh;
-  padding-bottom: 80px;
-}
-
-.header {
-  background: white;
-  padding: 16px 24px;
+  background-color: #f5f5fa;
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  color: #1f2533;
+}
+
+.stateContainer {
+  min-height: 75vh;
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  border-bottom: 1px solid #e0e0e0;
-}
-
-.movieTitle h2 {
-  font-size: 18px;
-  color: var(--text-dark);
-}
-
-.movieTitle p {
-  font-size: 12px;
-  color: var(--text-light);
-}
-
-.showInfo {
-    display: flex;
-    gap: 16px;
-    align-items: center;
-}
-
-.dateSelector input {
-    padding: 6px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-.timeBadge {
-    border: 1px solid #4fb643;
-    color: #4fb643;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 12px;
-}
-
-.seatLayout {
-    max-width: 800px;
-    margin: 40px auto;
-    background: white;
-    padding: 40px;
-    border-radius: 4px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    overflow-x: auto;
-}
-
-@media (max-width: 768px) {
-    .seatLayout {
-        padding: 20px;
-        margin: 20px 16px;
-    }
-    
-    .seatRow {
-        gap: 12px;
-    }
-    
-    .seats {
-        gap: 6px;
-    }
-}
-
-.screen {
-    text-align: center;
-    margin-bottom: 40px;
-    position: relative;
-}
-
-.screen span {
-    font-size: 10px;
-    color: #aaa;
-}
-
-.screenGlow {
-    height: 8px;
-    background: #def6ff;
-    box-shadow: 0 0 15px #def6ff;
-    margin-top: 8px;
-    transform: perspective(300px) rotateX(-2deg);
-    border-radius: 50%;
-}
-
-.priceTier {
-    font-size: 12px;
-    color: var(--text-light);
-    margin-bottom: 12px;
-    border-bottom: 1px dashed #ddd;
-    padding-bottom: 4px;
-}
-
-.seatGrid {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    align-items: center;
-}
-
-.seatRow {
-    display: flex;
-    align-items: center;
-    gap: 24px;
-}
-
-.rowLabel {
-    width: 20px;
-    font-size: 14px;
-    color: #999;
-}
-
-.seats {
-    display: flex;
-    gap: 10px;
-}
-
-.seat {
-    width: 24px;
-    height: 24px;
-    border: 1px solid #1ea83c;
-    border-radius: 2px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 10px;
-    cursor: pointer;
-    color: #1ea83c;
-    transition: all 0.2s;
-    background: white;
-}
-
-.seat:hover {
-    background-color: #1ea83c;
-    color: white;
-}
-
-.seat.selected {
-    background-color: #1ea83c;
-    color: white;
-    box-shadow: 0 0 4px rgba(30, 168, 60, 0.4);
-}
-
-.seat.availableLegend {
-    cursor: default;
-}
-
-.seat.occupied, .seat.occupiedLegend {
-    background-color: #eee;
-    border-color: #ddd;
-    color: #ccc;
-    cursor: not-allowed;
-}
-
-.legend {
-    display: flex;
-    justify-content: center;
-    gap: 24px;
-    margin-top: 40px;
-    border-top: 1px solid #eee;
-    padding-top: 20px;
-}
-
-.legendItem {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 12px;
-    color: var(--text-light);
-}
-
-.summaryBar {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: white;
-    padding: 16px;
-    box-shadow: 0 -4px 12px rgba(0,0,0,0.1);
-    display: flex;
-    justify-content: center;
-    z-index: 100;
-}
-
-.payBtn {
-    width: 300px;
-    padding: 12px;
-    font-size: 16px;
-    font-weight: 600;
-}
-
-.paymentOverlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.8);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 2000;
-}
-
-.paymentModal {
-    background: white;
-    padding: 32px;
-    border-radius: 8px;
-    text-align: center;
-    width: 300px;
+  justify-content: center;
+  gap: 16px;
+  color: #666;
 }
 
 .spinner {
-    animation: spin 1s linear infinite;
-    color: var(--primary-color);
-    margin-bottom: 16px;
+  width: 40px;
+  height: 40px;
+  border: 3px solid #e5e7eb;
+  border-top-color: #f84464;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
 }
 
 @keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.goBackBtn {
+  background-color: #f84464;
+  color: #fff;
+  padding: 10px 24px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+/* ─── 1. Top Dark Header Bar (BookMyShow Booking Top Bar) ─── */
+.topBar {
+  background-color: #1f2533;
+  color: #ffffff;
+  position: sticky;
+  top: 0;
+  z-index: 90;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.topBarInner {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.topBarLeft {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.backBtnArrow {
+  color: #ffffff;
+  background: transparent;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.15s;
+  flex-shrink: 0;
+}
+
+.backBtnArrow:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.movieMeta {
+  min-width: 0;
+}
+
+.movieNameRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.movieName {
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.certBadgeInline {
+  font-size: 10px;
+  font-weight: 700;
+  color: #cbd5e1;
+  border: 1px solid #64748b;
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.movieSubheader {
+  font-size: 12px;
+  color: #cbd5e1;
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.topBarRight {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-shrink: 0;
+}
+
+.ticketQtyEdit {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  border-radius: 4px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  transition: all 0.15s;
+}
+
+.ticketQtyEdit:hover {
+  border-color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.closePageBtn {
+  color: #cbd5e1;
+  background: transparent;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+}
+
+.closePageBtn:hover {
+  color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* ─── 2. Showtime Time-Slot Switcher Strip ─── */
+.showtimeStrip {
+  background-color: #f5f5fa;
+  border-bottom: 1px solid #e0e3eb;
+}
+
+.showtimeStripInner {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.timePillsList {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.timeSlotPill {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 98px;
+  padding: 6px 14px;
+  border-radius: 4px;
+  border: 1px solid #1ea83c;
+  background-color: #ffffff;
+  color: #1ea83c;
+  transition: all 0.15s;
+}
+
+.timeSlotPill:hover {
+  background-color: #f0fdf4;
+}
+
+.timeSlotPillActive {
+  background-color: #1ea83c !important;
+  color: #ffffff !important;
+  box-shadow: 0 2px 6px rgba(30, 168, 60, 0.3);
+}
+
+.pillTimeText {
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.pillFormatText {
+  font-size: 9px;
+  font-weight: 600;
+  opacity: 0.85;
+  margin-top: 2px;
+  letter-spacing: 0.4px;
+}
+
+.stripScreenBadge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #64748b;
+  background: #ffffff;
+  padding: 6px 12px;
+  border-radius: 4px;
+  border: 1px solid #e2e8f0;
+}
+
+/* ─── 3. Auditorium Seat Layout Canvas ─── */
+.auditoriumContainer {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: #fafafa;
+}
+
+.seatCanvas {
+  max-width: 1120px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 28px 24px 100px;
+  overflow-x: auto;
+}
+
+.tierBlock {
+  margin-bottom: 24px;
+  min-width: 680px;
+}
+
+.tierDividerHeader {
+  font-size: 12px;
+  font-weight: 600;
+  color: #666666;
+  padding-bottom: 8px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid #ececec;
+  text-align: left;
+  letter-spacing: 0.3px;
+}
+
+.seatRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  gap: 16px;
+}
+
+.rowLetter {
+  width: 22px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #999999;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.rowBlocksWrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+}
+
+.seatBlockGroup {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.seatBtn {
+  width: 26px;
+  height: 26px;
+  border-radius: 3px;
+  border: 1px solid #1ea83c;
+  background-color: #ffffff;
+  color: #1ea83c;
+  font-size: 10px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.12s ease;
+  padding: 0;
+  user-select: none;
+}
+
+.seatRecliner {
+  width: 32px;
+  height: 28px;
+  border-radius: 5px 5px 3px 3px;
+  border-width: 1.5px;
+}
+
+.seatBtn:hover:not(:disabled) {
+  background-color: #1ea83c;
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.seatSelected {
+  background-color: #1ea83c !important;
+  border-color: #1ea83c !important;
+  color: #ffffff !important;
+  box-shadow: 0 2px 5px rgba(30, 168, 60, 0.35);
+}
+
+.seatSold {
+  background-color: #e0e0e0 !important;
+  border-color: #d4d4d4 !important;
+  color: #9e9e9e !important;
+  cursor: not-allowed !important;
+}
+
+/* Screen Illustration at Bottom */
+.screenContainer {
+  margin-top: 44px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 680px;
+}
+
+.screenSvg {
+  width: 320px;
+  height: 40px;
+}
+
+.screenCaption {
+  font-size: 12px;
+  color: #666666;
+  margin-top: 4px;
+  font-weight: 500;
+}
+
+/* ─── 4. Sticky Bottom Bar (Legend + Pay Rs. X Button) ─── */
+.bottomStickyBar {
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #ffffff;
+  border-top: 1px solid #e0e3eb;
+  box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.06);
+  z-index: 80;
+}
+
+.bottomBarInner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.seatLegend {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.legendEntry {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #555555;
+  font-weight: 500;
+}
+
+.legendBox {
+  width: 16px;
+  height: 16px;
+  border-radius: 3px;
+  display: inline-block;
+}
+
+.legendAvailable {
+  background-color: #ffffff;
+  border: 1px solid #1ea83c;
+}
+
+.legendSelected {
+  background-color: #1ea83c;
+  border: 1px solid #1ea83c;
+}
+
+.legendSold {
+  background-color: #e0e0e0;
+  border: 1px solid #d4d4d4;
+}
+
+.bottomPayActions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.selectedMiniInfo {
+  display: flex;
+  flex-direction: column;
+  text-align: right;
+}
+
+.miniSeatCount {
+  font-size: 13px;
+  color: #1f2533;
+}
+
+.miniSeatCount strong {
+  color: #1ea83c;
+}
+
+.miniSeatHint {
+  font-size: 11px;
+  color: #f84464;
+}
+
+.bmsPayCta {
+  background-color: #f84464;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 700;
+  padding: 11px 42px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(248, 68, 100, 0.35);
+  transition: background-color 0.15s, transform 0.1s;
+}
+
+.bmsPayCta:hover {
+  background-color: #e03454;
+  transform: translateY(-1px);
+}
+
+/* ─── 5. "How Many Seats?" Modal (BookMyShow Vehicle Popup) ─── */
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  padding: 16px;
+}
+
+.qtyModal {
+  background: #ffffff;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 500px;
+  padding: 28px 28px 24px;
+  text-align: center;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+  animation: modalFadeIn 0.2s ease-out;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.qtyTitle {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1f2533;
+  margin-bottom: 12px;
+}
+
+.vehicleGraphic {
+  height: 96px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 8px 0 16px;
+}
+
+.vehicleSvg {
+  width: 170px;
+  height: 85px;
+}
+
+.qtyPills {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.qtyPill {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: transparent;
+  color: #333333;
+  font-size: 14px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+}
+
+.qtyPill:hover {
+  background-color: #fde8ec;
+  color: #f84464;
+}
+
+.qtyPillActive {
+  background-color: #f84464 !important;
+  color: #ffffff !important;
+  box-shadow: 0 3px 8px rgba(248, 68, 100, 0.35);
+}
+
+.qtyCategories {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  border-top: 1px solid #eeeeee;
+  border-bottom: 1px solid #eeeeee;
+  padding: 16px 0;
+  margin-bottom: 22px;
+}
+
+.qtyCat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
+
+.qtyCatName {
+  font-size: 11px;
+  color: #777777;
+  font-weight: 600;
+}
+
+.qtyCatPrice {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1f2533;
+}
+
+.qtyCatStatus {
+  font-size: 10px;
+  font-weight: 700;
+  color: #1ea83c;
+  letter-spacing: 0.4px;
+}
+
+.qtySubmit {
+  width: 100%;
+  background-color: #f84464;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 700;
+  padding: 13px 20px;
+  border-radius: 8px;
+  transition: background-color 0.15s;
+}
+
+.qtySubmit:hover {
+  background-color: #e03454;
+}
+
+/* ─── 6. Step 2: Checkout (Grab a Bite F&B + Booking Summary) ─── */
+.checkoutLayout {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 24px;
+  padding-top: 24px;
+  padding-bottom: 60px;
+  align-items: start;
+}
+
+.fnbColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.fnbCard {
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 24px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+}
+
+.fnbHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.fnbTitle {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1f2533;
+}
+
+.fnbHighlight {
+  color: #f84464;
+}
+
+.fnbSubtitle {
+  font-size: 13px;
+  color: #666666;
+  margin-top: 2px;
+}
+
+.fnbTabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.fnbTab {
+  padding: 6px 16px;
+  border-radius: 20px;
+  border: 1px solid #dcdfe6;
+  background: #ffffff;
+  font-size: 11px;
+  font-weight: 700;
+  color: #555555;
+  letter-spacing: 0.4px;
+  transition: all 0.15s;
+}
+
+.fnbTabActive {
+  background-color: #f84464;
+  border-color: #f84464;
+  color: #ffffff;
+}
+
+.fnbGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.fnbItemCard {
+  display: flex;
+  gap: 12px;
+  padding: 12px;
+  border: 1px solid #eceef2;
+  border-radius: 8px;
+  background-color: #ffffff;
+  transition: box-shadow 0.15s;
+}
+
+.fnbItemCard:hover {
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+}
+
+.fnbImgWrap {
+  position: relative;
+  width: 78px;
+  height: 78px;
+  border-radius: 6px;
+  overflow: hidden;
+  flex-shrink: 0;
+  background-color: #f8f9fa;
+}
+
+.fnbImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.vegIndicator {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 14px;
+  height: 14px;
+  background: #ffffff;
+  border: 1.5px solid #1ea83c;
+  border-radius: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.vegDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #1ea83c;
+}
+
+.fnbItemBody {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-width: 0;
+}
+
+.fnbItemTop h4 {
+  font-size: 13px;
+  font-weight: 700;
+  color: #1f2533;
+  line-height: 1.25;
+}
+
+.fnbItemTop p {
+  font-size: 11px;
+  color: #777777;
+  margin-top: 3px;
+  line-height: 1.3;
+}
+
+.fnbItemBottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 8px;
+}
+
+.fnbPriceWrap {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.fnbPrice {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1f2533;
+}
+
+.fnbStrike {
+  font-size: 11px;
+  color: #999999;
+  text-decoration: line-through;
+}
+
+.fnbAddBtn {
+  background: #ffffff;
+  color: #f84464;
+  border: 1px solid #f84464;
+  border-radius: 4px;
+  padding: 4px 16px;
+  font-size: 12px;
+  font-weight: 700;
+  transition: all 0.15s;
+}
+
+.fnbAddBtn:hover {
+  background: #f84464;
+  color: #ffffff;
+}
+
+.fnbStepper {
+  display: flex;
+  align-items: center;
+  border: 1px solid #f84464;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.fnbStepper button {
+  background: #fde8ec;
+  color: #f84464;
+  width: 24px;
+  height: 24px;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.fnbStepper span {
+  padding: 0 10px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #1f2533;
+}
+
+/* Contact & Payment Options */
+.checkoutSubHeading {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1f2533;
+  margin-bottom: 12px;
+}
+
+.contactGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.contactField {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.contactField label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #666666;
+}
+
+.contactField input {
+  padding: 9px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 13px;
+  outline: none;
+}
+
+.contactField input:focus {
+  border-color: #f84464;
+}
+
+.paymentMethodGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.pmOption {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border: 1px solid #dcdfe6;
+  border-radius: 6px;
+  background: #ffffff;
+  font-size: 12px;
+  font-weight: 600;
+  color: #333333;
+  text-align: left;
+}
+
+.pmOptionActive {
+  border-color: #f84464;
+  background-color: #fff5f7;
+  color: #f84464;
+}
+
+/* ─── 7. Right Sidebar: BookMyShow Ticket Receipt Summary ─── */
+.summarySidebar {
+  position: sticky;
+  top: 80px;
+}
+
+.receiptCard {
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 24px;
+  position: relative;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+}
+
+.cutoutLeft,
+.cutoutRight {
+  position: absolute;
+  top: 230px;
+  width: 22px;
+  height: 22px;
+  background-color: #f5f5fa;
+  border-radius: 50%;
+}
+
+.cutoutLeft {
+  left: -11px;
+}
+
+.cutoutRight {
+  right: -11px;
+}
+
+.receiptHeader {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: #c62828;
+  margin-bottom: 16px;
+}
+
+.receiptShowMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding-bottom: 14px;
+  margin-bottom: 14px;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 12px;
+  color: #666666;
+}
+
+.receiptShowMeta strong {
+  font-size: 14px;
+  color: #1f2533;
+}
+
+.receiptLine {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.receiptMainItem {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  color: #1f2533;
+}
+
+.receiptSubCount {
+  font-size: 11px;
+  color: #777777;
+}
+
+.receiptValue {
+  font-size: 13px;
+  font-weight: 700;
+  color: #1f2533;
+}
+
+.receiptFeeBlock {
+  margin-bottom: 14px;
+}
+
+.receiptFeeHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  color: #555555;
+  cursor: pointer;
+}
+
+.feeToggleLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.feeSubRows {
+  margin-top: 8px;
+  padding-left: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.feeSubRow {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: #888888;
+}
+
+.receiptDash {
+  border-top: 1px dashed #d1d5db;
+  margin: 14px 0;
+}
+
+.receiptSubtotalRow {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  font-weight: 700;
+  color: #1f2533;
+  margin-bottom: 14px;
+}
+
+.receiptFoodSection {
+  border-top: 1px solid #f0f0f0;
+  padding-top: 12px;
+  margin-bottom: 14px;
+}
+
+.receiptFoodHeader {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  font-weight: 700;
+  color: #1f2533;
+  margin-bottom: 6px;
+}
+
+.receiptFoodLine {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: #666666;
+  margin-bottom: 4px;
+}
+
+/* Promo Box */
+.promoBox {
+  background-color: #f9fafb;
+  border: 1px dashed #d1d5db;
+  border-radius: 6px;
+  padding: 10px;
+  margin-bottom: 16px;
+}
+
+.promoInputRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.promoInputRow input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-size: 12px;
+  outline: none;
+  text-transform: uppercase;
+}
+
+.promoInputRow button {
+  background: transparent;
+  color: #f84464;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.promoQuickChips {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+
+.promoChip {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 4px;
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+  color: #555555;
+}
+
+.promoChipActive {
+  border-color: #1ea83c;
+  background: #ecfdf5;
+  color: #1ea83c;
+}
+
+.discountRow {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  font-weight: 700;
+  color: #1ea83c;
+  margin-top: 8px;
+}
+
+.payableBanner {
+  background-color: #fffde7;
+  border: 1px solid #fff59d;
+  padding: 12px 14px;
+  border-radius: 6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  font-size: 14px;
+}
+
+.payableBanner strong {
+  font-size: 16px;
+  color: #1f2533;
+}
+
+.proceedPayBtn {
+  width: 100%;
+  background-color: #f84464;
+  color: #ffffff;
+  padding: 13px 18px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 700;
+  transition: background-color 0.15s;
+}
+
+.proceedPayBtn:hover:not(:disabled) {
+  background-color: #e03454;
+}
+
+.cancellationNote {
+  margin-top: 12px;
+  font-size: 11px;
+  color: #888888;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ─── 8. Payment Overlay & M-Ticket Confirmation Modal ─── */
+.paymentOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 250;
+}
+
+.paymentModal {
+  background: #ffffff;
+  padding: 32px 40px;
+  border-radius: 12px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.processingSpinner {
+  color: #f84464;
+  animation: spin 1s linear infinite;
+}
+
+.confirmModal {
+  background: #ffffff;
+  border-radius: 14px;
+  width: 100%;
+  max-width: 480px;
+  padding: 24px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+}
+
+.confirmHeaderBadge {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.confirmHeaderBadge h2 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1f2533;
+}
+
+.confirmSubtitle {
+  font-size: 12px;
+  color: #666666;
+}
+
+.mTicketCard {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.mTicketTop {
+  display: flex;
+  gap: 14px;
+  padding: 16px;
+}
+
+.mTicketPoster {
+  width: 72px;
+  height: 104px;
+  object-fit: cover;
+  border-radius: 6px;
+  flex-shrink: 0;
+}
+
+.mTicketMeta h3 {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1f2533;
+}
+
+.mTicketSub {
+  font-size: 12px;
+  color: #64748b;
+  margin-top: 2px;
+}
+
+.mTicketVenue {
+  font-size: 12px;
+  font-weight: 600;
+  color: #334155;
+  margin-top: 6px;
+}
+
+.mTicketDateTime {
+  font-size: 12px;
+  font-weight: 700;
+  color: #f84464;
+  margin-top: 2px;
+}
+
+.mTicketScreen {
+  display: inline-block;
+  margin-top: 6px;
+  font-size: 10px;
+  font-weight: 700;
+  background: #e2e8f0;
+  color: #1e293b;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.mTicketPerforation {
+  position: relative;
+  height: 18px;
+  display: flex;
+  align-items: center;
+}
+
+.perfDash {
+  width: 100%;
+  border-top: 2px dashed #cbd5e1;
+}
+
+.perfCutLeft,
+.perfCutRight {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  background: #ffffff;
+  border-radius: 50%;
+  border: 1px solid #e2e8f0;
+}
+
+.perfCutLeft {
+  left: -10px;
+}
+
+.perfCutRight {
+  right: -10px;
+}
+
+.mTicketBody {
+  display: flex;
+  gap: 16px;
+  padding: 16px;
+  align-items: center;
+}
+
+.qrBox {
+  background: #ffffff;
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+
+.mTicketSeatDetails {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mTicketStat {
+  display: flex;
+  flex-direction: column;
+  font-size: 12px;
+}
+
+.mTicketLabel {
+  font-size: 11px;
+  color: #64748b;
+}
+
+.mTicketSeats {
+  font-size: 15px;
+  color: #1f2533;
+}
+
+.mTicketStatRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+  color: #475569;
+  padding-top: 6px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.mTicketPaid {
+  font-weight: 700;
+  color: #1ea83c;
+  font-size: 13px;
+}
+
+.confirmActions {
+  display: flex;
+  gap: 12px;
+}
+
+.viewBookingsBtn {
+  flex: 1;
+  background: #f84464;
+  color: #ffffff;
+  text-align: center;
+  padding: 11px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.closeConfirmBtn {
+  flex: 1;
+  background: #f1f5f9;
+  color: #334155;
+  padding: 11px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+@media (max-width: 960px) {
+  .checkoutLayout {
+    grid-template-columns: 1fr;
+  }
+
+  .fnbGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .summarySidebar {
+    position: static;
+  }
 }

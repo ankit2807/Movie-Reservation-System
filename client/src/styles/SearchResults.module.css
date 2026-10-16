@@ -1,0 +1,433 @@
+/* ═══════════════════════════════════════
+   Search Results Page – BookMyShow Style
+   ═══════════════════════════════════════ */
+
+/* ── Search Header ── */
+.searchPage {
+  min-height: 80vh;
+  background: #f5f5f5;
+}
+
+.searchHeader {
+  background: white;
+  padding: 20px 0;
+  border-bottom: 1px solid #e8e8e8;
+  position: sticky;
+  top: 66px;
+  z-index: 50;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.searchForm {
+  display: flex;
+  align-items: center;
+  background: #f5f5f5;
+  border-radius: 8px;
+  padding: 0 16px;
+  height: 52px;
+  gap: 12px;
+  border: 2px solid transparent;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.searchForm:focus-within {
+  border-color: var(--primary-color);
+  background: white;
+}
+
+.searchFormIcon {
+  color: #999;
+  flex-shrink: 0;
+}
+
+.searchFormInput {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 16px;
+  background: transparent;
+  color: var(--text-dark);
+  font-family: inherit;
+}
+
+.searchFormInput::placeholder {
+  color: #aaa;
+  font-size: 15px;
+}
+
+.clearInputBtn {
+  background: none;
+  border: none;
+  color: #999;
+  padding: 4px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.clearInputBtn:hover {
+  background: #e8e8e8;
+  color: #333;
+}
+
+/* ── Suggestions Panel ── */
+.suggestionsPanel {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 40px 0 60px;
+}
+
+.suggestionSection {
+  margin-bottom: 36px;
+}
+
+.suggestionTitleRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.suggestionTitle {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.clearRecentBtn {
+  background: none;
+  border: none;
+  color: var(--primary-color);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.clearRecentBtn:hover {
+  text-decoration: underline;
+}
+
+.suggestionChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.suggestionChip {
+  padding: 8px 18px;
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 20px;
+  font-size: 14px;
+  color: var(--text-heading);
+  cursor: pointer;
+  transition: all 0.2s;
+  font-weight: 500;
+}
+
+.suggestionChip:hover {
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+  background: #fff5f8;
+}
+
+/* ── Results Layout ── */
+.resultsLayout {
+  display: flex;
+  gap: 32px;
+  padding: 32px 0 60px;
+}
+
+/* ── Filter Sidebar ── */
+.filterSidebar {
+  width: 260px;
+  flex-shrink: 0;
+}
+
+.filterSidebarHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.filterSidebarHeader h3 {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-dark);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.clearAllBtn {
+  background: none;
+  border: none;
+  color: var(--primary-color);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.clearAllBtn:hover {
+  text-decoration: underline;
+}
+
+.filterSection {
+  background: white;
+  margin-bottom: 12px;
+  border-radius: 8px;
+  padding: 14px;
+  box-shadow: var(--card-shadow);
+}
+
+.filterSectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-heading);
+}
+
+.filterTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.filterTag {
+  font-size: 12px;
+  padding: 5px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  color: var(--text-heading);
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-weight: 500;
+}
+
+.filterTag:hover {
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+}
+
+.filterTagActive {
+  background: var(--primary-color);
+  color: white;
+  border-color: var(--primary-color);
+}
+
+/* ── Results Main ── */
+.resultsMain {
+  flex: 1;
+  min-width: 0;
+}
+
+.resultsHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 20px;
+}
+
+.resultsHeader h2 {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-dark);
+}
+
+.resultCount {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.quickPills {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.quickPill {
+  padding: 7px 18px;
+  background: white;
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  font-size: 13px;
+  color: var(--text-heading);
+  cursor: pointer;
+  transition: all 0.2s;
+  font-weight: 500;
+}
+
+.quickPill:hover {
+  color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+/* ── Results Grid ── */
+.resultsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 24px;
+}
+
+.resultCard {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.2s;
+}
+
+.resultCard:hover {
+  transform: translateY(-4px);
+}
+
+.resultPoster {
+  border-radius: 10px;
+  overflow: hidden;
+  aspect-ratio: 2 / 3;
+  position: relative;
+  background: #e8e8e8;
+  box-shadow: var(--card-shadow);
+  transition: box-shadow 0.3s;
+}
+
+.resultCard:hover .resultPoster {
+  box-shadow: var(--card-hover-shadow);
+}
+
+.resultPoster img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s;
+}
+
+.resultCard:hover .resultPoster img {
+  transform: scale(1.04);
+}
+
+.resultRating {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 8px 10px;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  font-weight: 700;
+  color: white;
+}
+
+.resultInfo {
+  padding: 10px 2px 0;
+}
+
+.resultTitle {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-dark);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 2px;
+}
+
+.resultGenre {
+  font-size: 13px;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── Loading / Empty ── */
+.loadingState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 40vh;
+  gap: 16px;
+  color: var(--text-muted);
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--border-color);
+  border-top-color: var(--primary-color);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.emptyState {
+  text-align: center;
+  padding: 80px 20px;
+}
+
+.emptyIcon {
+  font-size: 64px;
+  margin-bottom: 16px;
+}
+
+.emptyState h3 {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 8px;
+}
+
+.emptyState p {
+  font-size: 15px;
+  color: var(--text-muted);
+}
+
+/* ── Responsive ── */
+@media (max-width: 992px) {
+  .filterSidebar {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .searchHeader {
+    top: 56px;
+  }
+
+  .searchForm {
+    height: 44px;
+  }
+
+  .resultsGrid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 16px;
+  }
+
+  .resultsHeader h2 {
+    font-size: 18px;
+  }
+
+  .suggestionsPanel {
+    padding: 24px 0 40px;
+  }
+}

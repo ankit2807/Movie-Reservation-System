@@ -10,12 +10,22 @@ const showTimeSchema = new mongoose.Schema(
       type: String,
       required: [true, "Start time is required"],
       trim: true,
-      validate: {
-        validator: function (v) {
-          return /^\d{1,2}:\d{2}$/.test(v); // HH:MM format
-        },
-        message: "Start time must be in HH:MM format",
-      },
+    },
+    format: {
+      type: String,
+      default: "2D",
+    },
+    price: {
+      type: Number,
+      default: 250,
+    },
+    theatre: {
+      type: String,
+      default: "PVR: Logix City Centre Mall, Noida",
+    },
+    screen: {
+      type: String,
+      default: "AUDI 01",
     },
     startDate: {
       type: Date,

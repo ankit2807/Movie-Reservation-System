@@ -1,3 +1,7 @@
+/* ═══════════════════════════════════════
+   Navbar – BookMyShow Premium Style
+   ═══════════════════════════════════════ */
+
 .navbar {
   background-color: var(--nav-bg);
   color: #ffffff;
@@ -8,7 +12,7 @@
   z-index: 1000;
   display: flex;
   align-items: center;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
 }
 
 .navContainer {
@@ -28,28 +32,44 @@
 .logo {
   font-size: 22px;
   font-weight: 800;
-  color: white;
-  letter-spacing: 0.5px;
   white-space: nowrap;
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.5px;
+  text-decoration: none;
+}
+
+.logoMovie {
+  color: white;
+}
+
+.logoBook {
+  color: var(--primary-color);
 }
 
 .searchBar {
   background-color: #ffffff;
-  border-radius: 6px;
-  padding: 0 14px;
+  border-radius: 4px;
+  padding: 0 12px;
   display: flex;
   align-items: center;
   width: 100%;
-  max-width: 560px;
-  height: 40px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  max-width: 600px;
+  height: 38px;
+  border: 1px solid #e2e8f0;
+  transition: all 0.2s;
+}
+
+.searchBar:focus-within {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 1px var(--primary-color);
 }
 
 .searchIcon {
-  color: #999;
-  margin-right: 10px;
-  width: 18px;
-  height: 18px;
+  color: #666666;
+  margin-right: 8px;
+  width: 16px;
+  height: 16px;
   flex-shrink: 0;
 }
 
@@ -58,12 +78,13 @@
   width: 100%;
   font-size: 14px;
   outline: none;
-  color: var(--text-dark);
+  color: #333333;
   font-family: inherit;
+  background: transparent;
 }
 
 .searchBar input::placeholder {
-  color: #aaa;
+  color: #999999;
   font-size: 13px;
 }
 
@@ -92,6 +113,96 @@
   color: white;
 }
 
+.signInBtn {
+  padding: 8px 22px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 13px;
+  background: var(--primary-color);
+  color: white;
+  transition: all 0.2s;
+  white-space: nowrap;
+  text-decoration: none;
+  letter-spacing: 0.3px;
+}
+
+.signInBtn:hover {
+  background: var(--primary-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(248, 68, 100, 0.3);
+}
+
+.userProfile {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  position: relative;
+  font-weight: 500;
+}
+
+.userAvatar {
+  width: 30px;
+  height: 30px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.userProfile:hover .dropdown {
+  display: block;
+}
+
+.dropdown {
+  display: none;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: white;
+  min-width: 200px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.18);
+  border-radius: 10px;
+  padding-top: 8px;
+  border: 1px solid #eee;
+  z-index: 1001;
+  overflow: hidden;
+}
+
+.dropdown a, .dropdown button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 12px 18px;
+  color: var(--text-dark);
+  font-size: 14px;
+  background: none;
+  border-bottom: 1px solid #f5f5f5;
+  transition: all 0.15s;
+  font-weight: 500;
+}
+
+.dropdown a:hover, .dropdown button:hover {
+  background-color: #fef2f4;
+  color: var(--primary-color);
+}
+
+.menuTrigger {
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.8);
+  margin-left: 4px;
+  transition: color 0.2s;
+  display: flex;
+  align-items: center;
+}
+
+.menuTrigger:hover {
+  color: white;
+}
+
+/* ── City Dropdown (legacy, kept for reference) ── */
 .cityDropdown {
   position: absolute;
   top: 100%;
@@ -101,7 +212,7 @@
   color: var(--text-dark);
   min-width: 160px;
   border-radius: 8px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
   padding: 8px 0;
   max-height: 300px;
   overflow-y: auto;
@@ -119,63 +230,7 @@
   color: var(--primary-color);
 }
 
-.userProfile {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 14px;
-  cursor: pointer;
-  position: relative;
-  font-weight: 500;
-}
-
-.userProfile:hover .dropdown {
-  display: block;
-}
-
-.dropdown {
-  display: none;
-  position: absolute;
-  top: 100%;
-  right: 0;
-  background: white;
-  min-width: 190px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
-  border-radius: 8px;
-  padding-top: 8px;
-  border: 1px solid #eee;
-  z-index: 1001;
-  overflow: hidden;
-}
-
-.dropdown a, .dropdown button {
-  display: block;
-  width: 100%;
-  text-align: left;
-  padding: 12px 16px;
-  color: var(--text-dark);
-  font-size: 14px;
-  background: none;
-  border-bottom: 1px solid #f5f5f5;
-  transition: all 0.15s;
-}
-
-.dropdown a:hover, .dropdown button:hover {
-  background-color: #fef2f4;
-  color: var(--primary-color);
-}
-
-.menuTrigger {
-  cursor: pointer;
-  color: rgba(255,255,255,0.8);
-  margin-left: 8px;
-  transition: color 0.2s;
-}
-
-.menuTrigger:hover {
-  color: white;
-}
-
+/* ── Responsive ── */
 @media (max-width: 768px) {
   .searchBar {
     display: none;
@@ -195,5 +250,10 @@
 
   .navbar {
     height: 56px;
+  }
+
+  .signInBtn {
+    padding: 6px 16px;
+    font-size: 12px;
   }
 }

@@ -2,9 +2,9 @@ const mongoose = require('mongoose');
 
 const reviewSchema = new mongoose.Schema({
     movieId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Movie',
-        required: [true, 'Review must belong to a movie']
+        type: String,
+        required: [true, 'Review must belong to a movie'],
+        index: true
     },
     user: {
         type: mongoose.Schema.Types.ObjectId,
@@ -14,7 +14,7 @@ const reviewSchema = new mongoose.Schema({
     rating: {
         type: Number,
         min: 1,
-        max: 5,
+        max: 10,
         required: [true, 'Rating is required']
     },
     comment: {

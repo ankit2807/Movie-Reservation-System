@@ -16,16 +16,16 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 4px;
-  margin-bottom: 12px;
+  gap: 2px;
+  line-height: 1.8;
 }
 
 .footerLink {
-  color: #999;
-  font-size: 13px;
+  color: #999999;
+  font-size: 11px;
   transition: color 0.2s;
   padding: 2px 0;
-  white-space: nowrap;
+  text-decoration: none;
 }
 
 .footerLink:hover {
@@ -33,23 +33,24 @@
 }
 
 .separator {
-  color: #555;
-  font-size: 13px;
-  margin: 0 6px;
+  color: #555555;
+  font-size: 11px;
+  margin: 0 8px;
   user-select: none;
 }
 
 /* ── Sections ── */
 .section {
-  margin-top: 28px;
+  margin-top: 24px;
+  text-align: left;
 }
 
 .sectionLabel {
-  font-size: 12px;
-  font-weight: 700;
-  color: #ccc;
-  letter-spacing: 1.5px;
-  margin-bottom: 14px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #cccccc;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
   text-transform: uppercase;
 }
 
@@ -148,5 +149,116 @@
 
   .copyrightSub {
     padding: 0 12px;
+  }
+}
+
+/* ─── List Your Show Banner ─── */
+.bannerBg {
+  background: #2e3147;
+  color: #ffffff;
+  padding: 16px 0;
+  margin-bottom: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.bannerContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.bannerLeft {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  text-align: left;
+}
+
+.bannerIcon {
+  color: #ffd700;
+  flex-shrink: 0;
+}
+
+.bannerLeft h4 {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 2px;
+  color: #ffffff;
+}
+
+.bannerLeft p {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+  margin: 0;
+}
+
+.bannerBtn {
+  background: var(--primary-color);
+  color: #ffffff;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 13px;
+  text-decoration: none;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.bannerBtn:hover {
+  background: var(--primary-hover);
+  box-shadow: 0 4px 12px rgba(248, 68, 100, 0.3);
+}
+
+/* ─── Support Columns ─── */
+.supportBg {
+  background: #404454;
+  color: #ffffff;
+  padding: 24px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.supportContainer {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 24px;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.supportItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: #ffffff;
+  text-align: center;
+}
+
+.supportItem span {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: #cccccc;
+}
+
+@media (max-width: 768px) {
+  .bannerContainer {
+    flex-direction: column;
+    text-align: center;
+    gap: 16px;
+  }
+  .bannerLeft {
+    flex-direction: column;
+    text-align: center;
+  }
+  .supportContainer {
+    flex-direction: column;
+    gap: 24px;
   }
 }

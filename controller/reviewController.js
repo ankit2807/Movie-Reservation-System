@@ -1,29 +1,30 @@
 const Review = require('../models/reviewModel');
-const Movie = require('../models/movieModel');
 
 exports.addReview = async (req, res) => {
     try {
         const { movieId, rating, comment } = req.body;
+        const userId = req.user?.id || req.user?._id;
 
-        // Check if movie exists
-        const movie = await Movie.findById(movieId);
-        if (!movie) {
-            return res.status(404).json({ status: 'fail', message: 'Movie not found' });
+        if (!userId) {
+            return res.status(401).json({ status: 'fail', message: 'Please log in to submit a review' });
         }
 
-        const review = await Review.create({
-            movieId,
-            user: req.user._id,
-            rating,
-            comment
-        });
+        const review = await Review.findOneAndUpdate(
+            { movieId: String(movieId), user: userId },
+            {
+                movieId: String(movieId),
+                user: userId,
+                rating: Number(rating) || 8,
+                comment: comment || 'Great movie experience!'
+            },
+            { new: true, upsert: true, runValidators: true }
+        ).populate('user', 'name');
 
         res.status(201).json({
             status: 'success',
             data: review
         });
     } catch (err) {
-        // Handle duplicate review error
         if (err.code === 11000) {
             return res.status(400).json({ status: 'fail', message: 'You have already reviewed this movie' });
         }
@@ -33,7 +34,7 @@ exports.addReview = async (req, res) => {
 
 exports.getMovieReviews = async (req, res) => {
     try {
-        const reviews = await Review.find({ movieId: req.params.movieId })
+        const reviews = await Review.find({ movieId: String(req.params.movieId) })
             .populate('user', 'name')
             .sort({ createdAt: -1 });
 

@@ -61,7 +61,30 @@ const getShowTimes = async (req, res) => {
  */
 const getShowTimeById = async (req, res) => {
   try {
-    const showtime = await ShowTime.findById(req.params.id).populate("movieId");
+    const { id } = req.params;
+    if (id && id.startsWith("bms__")) {
+      const parts = id.split("__");
+      const movieId = parts[1];
+      const movie = /^[0-9a-fA-F]{24}$/.test(movieId)
+        ? await Movie.findById(movieId)
+        : await Movie.findOne({});
+      if (!movie) {
+        return res.status(404).json({ message: "Showtime movie not found" });
+      }
+      return res.status(200).json({
+        _id: id,
+        startAt: "07:30 PM",
+        format: "2D",
+        price: 290,
+        theatre: parts[2] || "PVR: Logix City Centre Mall, Noida",
+        screen: "AUDI 01",
+        movieId: movie,
+      });
+    }
+    if (!/^[0-9a-fA-F]{24}$/.test(id)) {
+      return res.status(404).json({ message: "Showtime not found" });
+    }
+    const showtime = await ShowTime.findById(id).populate("movieId");
     if (!showtime) {
       return res.status(404).json({ message: "Showtime not found" });
     }

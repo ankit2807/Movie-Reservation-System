@@ -41,8 +41,8 @@ const CITY_DATA = [
 ];
 
 const initialState = {
-    currentCity: localStorage.getItem('currentCity') || '',
-    hasSelectedCity: localStorage.getItem('hasSelectedCity') === 'true',
+    currentCity: localStorage.getItem('currentCity') || 'Noida',
+    hasSelectedCity: localStorage.getItem('hasSelectedCity') === 'true' || !localStorage.getItem('currentCity'),
     detectionStatus: 'idle', // 'idle' | 'detecting' | 'success' | 'error'
     detectionError: null,
     toast: null, // { message, type: 'success' | 'error' | 'info' }

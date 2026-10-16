@@ -1,0 +1,632 @@
+/* ═══════════════════════════════════════════════════════════
+   ─── BookMyShow Separate BuyTickets / Showtimes Page CSS ───
+   ═══════════════════════════════════════════════════════════ */
+
+.buyTicketsPage {
+  min-height: 85vh;
+  background-color: #f5f5fa;
+  padding-bottom: 60px;
+}
+
+.stateBox {
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  color: #666;
+}
+
+.spinner {
+  width: 38px;
+  height: 38px;
+  border: 3px solid #e5e7eb;
+  border-top-color: #f84464;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.backBtn {
+  background: #f84464;
+  color: #fff;
+  padding: 10px 22px;
+  border-radius: 6px;
+  font-weight: 600;
+}
+
+/* ─── 1. Top Movie Title & Genre Header ─── */
+.movieHeaderSection {
+  background-color: #ffffff;
+  padding: 24px 0 18px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.movieTitleLink {
+  display: inline-block;
+  font-size: 32px;
+  font-weight: 700;
+  color: #1f2533;
+  line-height: 1.2;
+  transition: color 0.15s;
+}
+
+.movieTitleLink:hover {
+  text-decoration: underline;
+}
+
+.certAndGenreRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+.certCircle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 26px;
+  height: 24px;
+  padding: 0 6px;
+  border-radius: 12px;
+  border: 1px solid #666666;
+  font-size: 10px;
+  font-weight: 700;
+  color: #555555;
+}
+
+.genrePill {
+  font-size: 10px;
+  font-weight: 600;
+  color: #666666;
+  border: 1px solid #cccccc;
+  padding: 2px 10px;
+  border-radius: 12px;
+  letter-spacing: 0.4px;
+}
+
+/* ─── 2. Sticky Date Strip & Filter Controls Bar ─── */
+.stickyControlsBar {
+  background-color: #ffffff;
+  border-bottom: 1px solid #e0e3eb;
+  position: sticky;
+  top: 64px;
+  z-index: 60;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.controlsInner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 68px;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.dateStrip {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 0;
+}
+
+.dateNavArrow {
+  background: transparent;
+  color: #666666;
+  width: 28px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dateNavArrow:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.datePillsRow {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.datePill {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 54px;
+  border-radius: 8px;
+  background: transparent;
+  color: #333333;
+  transition: all 0.15s;
+}
+
+.datePill:hover {
+  color: #f84464;
+}
+
+.datePillActive {
+  background-color: #f84464 !important;
+  color: #ffffff !important;
+  box-shadow: 0 3px 10px rgba(248, 68, 100, 0.3);
+}
+
+.dateDay {
+  font-size: 10px;
+  font-weight: 600;
+  opacity: 0.85;
+}
+
+.dateNum {
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.dateMonth {
+  font-size: 10px;
+  font-weight: 600;
+  opacity: 0.85;
+}
+
+/* Filter Dropdowns on Right */
+.filterGroup {
+  display: flex;
+  align-items: stretch;
+  height: 68px;
+}
+
+.filterCell {
+  display: flex;
+  align-items: center;
+  border-left: 1px solid #eeeeee;
+  padding: 0 14px;
+}
+
+.filterCell select {
+  border: none;
+  background: transparent;
+  font-size: 12px;
+  font-weight: 600;
+  color: #333333;
+  cursor: pointer;
+  outline: none;
+  padding-right: 8px;
+}
+
+.searchCinemaBox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-left: 1px solid #eeeeee;
+  padding: 0 14px;
+  min-width: 190px;
+}
+
+.searchIcon {
+  color: #666666;
+}
+
+.searchCinemaBox input {
+  border: none;
+  background: transparent;
+  font-size: 12px;
+  color: #333333;
+  outline: none;
+  width: 100%;
+}
+
+.clearBtn {
+  background: transparent;
+  color: #999999;
+}
+
+/* ─── 3. Showtimes Board ─── */
+.theatresContainer {
+  margin-top: 16px;
+}
+
+.theatresBoard {
+  background-color: #ffffff;
+  border-radius: 4px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+.legendBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+  border-bottom: 1px solid #f0f0f5;
+  background-color: #ffffff;
+  font-size: 11px;
+  color: #666666;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.legendLeft {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.lanTag,
+.lanBadgeSmall {
+  display: inline-block;
+  font-size: 8px;
+  font-weight: 800;
+  color: #1ea83c;
+  border: 1px solid #1ea83c;
+  padding: 1px 4px;
+  border-radius: 2px;
+}
+
+.legendRight {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.legendItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  font-weight: 600;
+  color: #666666;
+  letter-spacing: 0.4px;
+}
+
+.statusDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.dotAvailable {
+  background-color: #1ea83c;
+}
+
+.dotFilling {
+  background-color: #f97316;
+}
+
+/* Cinema Rows */
+.cinemaRow {
+  display: grid;
+  grid-template-columns: 330px 1fr;
+  gap: 24px;
+  padding: 20px;
+  border-bottom: 1px solid #f0f0f5;
+  align-items: flex-start;
+}
+
+.cinemaLeft {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.favBtn {
+  background: transparent;
+  color: #999999;
+  padding: 2px;
+  margin-top: 2px;
+}
+
+.favActive {
+  color: #f84464;
+}
+
+.cinemaDetails {
+  flex: 1;
+}
+
+.cinemaTitleRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.cinemaName {
+  font-size: 13px;
+  font-weight: 700;
+  color: #333333;
+  line-height: 1.35;
+}
+
+.cinemaName:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.infoTrigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: transparent;
+  color: #888888;
+  font-size: 10px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.facilityBadges {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 10px;
+}
+
+.mTicketLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  color: #49ba8e;
+  font-weight: 500;
+}
+
+.fnbLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  color: #ffa426;
+  font-weight: 500;
+}
+
+/* Showtime Pills */
+.cinemaRight {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.showtimesGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.showPillWrapper {
+  position: relative;
+}
+
+.showPillBtn {
+  min-width: 106px;
+  height: 40px;
+  padding: 4px 14px;
+  border-radius: 4px;
+  border: 1px solid #999999;
+  background-color: #ffffff;
+  color: #1ea83c;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+}
+
+.showPillBtn:hover {
+  border-color: #1ea83c;
+  background-color: #f4fcf6;
+}
+
+.showPillFastFilling {
+  color: #f97316;
+}
+
+.showTimeText {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+.showFormatSub {
+  font-size: 8px;
+  font-weight: 600;
+  color: #666666;
+  margin-top: 2px;
+}
+
+/* Hover Price Tooltip */
+.priceTooltip {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  border-radius: 6px;
+  padding: 10px 14px;
+  display: flex;
+  gap: 16px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+  z-index: 90;
+  white-space: nowrap;
+}
+
+.priceTooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 6px;
+  border-style: solid;
+  border-color: #ffffff transparent transparent transparent;
+}
+
+.showPillWrapper:hover .priceTooltip {
+  opacity: 1;
+}
+
+.tooltipCol {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.tooltipPrice {
+  font-size: 12px;
+  font-weight: 700;
+  color: #1f2533;
+}
+
+.tooltipTier {
+  font-size: 10px;
+  color: #666666;
+}
+
+.tooltipStatus {
+  font-size: 9px;
+  font-weight: 700;
+}
+
+.textGreen {
+  color: #1ea83c;
+}
+
+.textOrange {
+  color: #f97316;
+}
+
+.cancelPolicyLine {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: #666666;
+}
+
+.goldDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: #ffc107;
+}
+
+.emptyVenues {
+  padding: 48px 20px;
+  text-align: center;
+  color: #666666;
+}
+
+.resetBtn {
+  margin-top: 12px;
+  background: #f84464;
+  color: #ffffff;
+  padding: 8px 18px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.breadcrumbBar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #888888;
+  margin-top: 20px;
+}
+
+.breadcrumbBar a:hover {
+  color: #f84464;
+}
+
+/* Info Modal */
+.modalBackdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+}
+
+.infoModal {
+  background: #ffffff;
+  border-radius: 10px;
+  max-width: 440px;
+  width: 92%;
+  padding: 22px;
+}
+
+.infoModalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.infoModalHeader h3 {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.infoAddress {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 13px;
+  color: #555555;
+  margin-bottom: 16px;
+}
+
+.infoModalBody h4 {
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.infoFacilityTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.infoFacilityChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  padding: 5px 10px;
+  border-radius: 6px;
+}
+
+@media (max-width: 860px) {
+  .cinemaRow {
+    grid-template-columns: 1fr;
+  }
+
+  .filterGroup {
+    height: auto;
+    flex-wrap: wrap;
+    width: 100%;
+    border-top: 1px solid #eeeeee;
+    padding: 8px 0;
+  }
+}
