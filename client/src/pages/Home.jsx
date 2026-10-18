@@ -391,9 +391,16 @@ const Home = ({ type, pageMode }) => {
   // If route is /explore/home/:city (e.g. /explore/home/noida), sync city
   useEffect(() => {
     if (urlCityParam) {
-      const formattedCity =
-        urlCityParam.charAt(0).toUpperCase() + urlCityParam.slice(1).toLowerCase();
-      if (formattedCity !== currentCity) {
+      const currentSlug = (currentCity || '').toLowerCase().replace(/\s+/g, '-');
+      const paramSlug = urlCityParam.toLowerCase().replace(/\s+/g, '-');
+      if (currentSlug !== paramSlug) {
+        const formattedCity =
+          paramSlug === 'delhi-ncr'
+            ? 'Delhi-NCR'
+            : urlCityParam
+                .split('-')
+                .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+                .join(' ');
         dispatch(setCity(formattedCity));
       }
     }

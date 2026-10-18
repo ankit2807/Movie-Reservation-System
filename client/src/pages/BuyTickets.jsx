@@ -179,7 +179,10 @@ const BuyTickets = () => {
     );
   }
 
-  const genres = (movie.genre || 'Action, Adventure').split(',').map((g) => g.trim()).filter(Boolean);
+  const isStreetFighter = movie.title?.toLowerCase() === 'street fighter';
+  const genres = isStreetFighter
+    ? ['Action', 'Adventure', 'Comedy', 'Thriller']
+    : (movie.genre || 'Action, Adventure').split(',').map((g) => g.trim()).filter(Boolean);
 
   return (
     <div className={styles.buyTicketsPage}>
@@ -191,9 +194,10 @@ const BuyTickets = () => {
           </Link>
 
           <div className={styles.certAndGenreRow}>
+            <span className={styles.runtimePill}>Movie runtime: {movie.duration || '1h 59m'}</span>
             <span className={styles.certCircle}>{movie.certification || 'UA16+'}</span>
             {genres.map((g) => (
-              <span key={g} className={styles.genrePill}>{g.toUpperCase()}</span>
+              <span key={g} className={styles.genrePill}>{g}</span>
             ))}
           </div>
         </div>
@@ -252,7 +256,7 @@ const BuyTickets = () => {
 
           {/* Right Filter Dropdowns (Exact BookMyShow Filter Strip) */}
           <div className={styles.filterGroup}>
-            <div className={styles.filterCell}>
+            <div className={`${styles.filterCell} ${styles.filterCellActive}`}>
               <select
                 value={`${selectedLang}|${selectedFormat}`}
                 onChange={(e) => {
@@ -274,12 +278,12 @@ const BuyTickets = () => {
               <select
                 value={priceFilter}
                 onChange={(e) => setPriceFilter(e.target.value)}
-                aria-label="Filter Price Range"
+                aria-label="Price Range"
               >
-                <option value="All">Filter Price Range</option>
-                <option value="0-200">Rs. 0 - Rs. 200</option>
-                <option value="201-350">Rs. 201 - Rs. 350</option>
-                <option value="351+">Rs. 351 - Rs. 600</option>
+                <option value="All">Price Range</option>
+                <option value="0-200">₹0 - ₹200</option>
+                <option value="201-350">₹201 - ₹350</option>
+                <option value="351+">₹351 - ₹600</option>
               </select>
             </div>
 
@@ -287,9 +291,9 @@ const BuyTickets = () => {
               <select
                 value={timeFilter}
                 onChange={(e) => setTimeFilter(e.target.value)}
-                aria-label="Filter Show Timings"
+                aria-label="Preferred Time"
               >
-                <option value="All">Filter Show Timings</option>
+                <option value="All">Preferred Time</option>
                 <option value="Morning">Morning (12:00 - 11:59 AM)</option>
                 <option value="Afternoon">Afternoon (12:00 - 3:59 PM)</option>
                 <option value="Evening">Evening (4:00 - 6:59 PM)</option>
@@ -298,7 +302,7 @@ const BuyTickets = () => {
             </div>
 
             <div className={styles.searchCinemaBox}>
-              <Search size={15} className={styles.searchIcon} />
+              <Search size={16} className={styles.searchIcon} />
               <input
                 type="text"
                 placeholder="Search for cinema"
@@ -313,16 +317,25 @@ const BuyTickets = () => {
             </div>
           </div>
         </div>
-      </div>
 
-      {/* ═══════ 3. MAIN SHOWTIMES CONTAINER ═══════ */}
-      <div className={`container ${styles.theatresContainer}`}>
-        <div className={styles.theatresBoard}>
-          {/* Subtitle & Availability Legend Strip */}
-          <div className={styles.legendBar}>
+        {/* Sub-bar: Late night / Early morning + Availability Legend */}
+        <div className={styles.legendSubStrip}>
+          <div className={`container ${styles.legendBar}`}>
             <div className={styles.legendLeft}>
-              <span className={styles.lanTag}>LAN</span>
-              <span>indicates subtitle language, if subtitles are available</span>
+              <button
+                type="button"
+                className={`${styles.QuickTimeChip} ${timeFilter === 'Night' ? styles.QuickTimeChipActive : ''}`}
+                onClick={() => setTimeFilter((t) => (t === 'Night' ? 'All' : 'Night'))}
+              >
+                <span>🌙 Late night shows</span>
+              </button>
+              <button
+                type="button"
+                className={`${styles.QuickTimeChip} ${timeFilter === 'Morning' ? styles.QuickTimeChipActive : ''}`}
+                onClick={() => setTimeFilter((t) => (t === 'Morning' ? 'All' : 'Morning'))}
+              >
+                <span>🌅 Early morning shows</span>
+              </button>
             </div>
             <div className={styles.legendRight}>
               <span className={styles.legendItem}>
@@ -331,11 +344,14 @@ const BuyTickets = () => {
               <span className={styles.legendItem}>
                 <span className={`${styles.statusDot} ${styles.dotFilling}`} /> FAST FILLING
               </span>
-              <span className={styles.legendItem}>
-                <span className={styles.lanBadgeSmall}>LAN</span> SUBTITLES LANGUAGE
-              </span>
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* ═══════ 3. MAIN SHOWTIMES CONTAINER ═══════ */}
+      <div className={`container ${styles.theatresContainer}`}>
+        <div className={styles.theatresBoard}>
 
           {/* Cinema Rows */}
           {filteredTheatres.length === 0 ? (

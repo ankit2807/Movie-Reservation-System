@@ -1,0 +1,196 @@
+/* ─── BookMyShow /multimedia page (computed from in.bookmyshow.com) ─── */
+.page {
+  background-color: #f2f5f9;
+  min-height: 80vh;
+  padding-bottom: 32px;
+}
+
+.container {
+  width: 768px;
+  max-width: 100%;
+  margin: 0 auto;
+  background-color: #ffffff;
+  color: #333333;
+  min-height: 70vh;
+}
+
+.headerRow {
+  display: flex;
+  align-items: center;
+  padding: 16px 24px;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.videosFor {
+  font-size: 18px;
+  font-weight: 500;
+  color: #000000;
+}
+
+.movieTitle {
+  font-size: 18px;
+  font-weight: 500;
+  color: #dc354b;
+  padding-left: 6px;
+}
+
+.movieTitle:hover {
+  text-decoration: underline;
+}
+
+.langBar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 24px;
+  border-bottom: 1px solid #e5e5e5;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.langBar::-webkit-scrollbar {
+  display: none;
+}
+
+.langPill {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  border-radius: 16px;
+  border: 1px solid #cccccc;
+  background-color: #ffffff;
+  color: #dc354b;
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 400;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.langPillActive {
+  background-color: #dc354b;
+  color: #ffffff;
+}
+
+.videoSections {
+  padding: 16px 24px;
+}
+
+.videoSection + .videoSection {
+  margin-top: 8px;
+}
+
+.sectionHeading {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333333;
+  text-transform: uppercase;
+  padding: 0 0 4px;
+}
+
+.videoCard {
+  position: relative;
+  width: 100%;
+  height: 405px;
+  margin: 0 0 24px;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #000000;
+  cursor: pointer;
+}
+
+.videoCard:focus-visible {
+  outline: 2px solid #dc354b;
+  outline-offset: 2px;
+}
+
+.thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.playBtn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 48px;
+  height: 48px;
+  transform: translate(-50%, -50%);
+  transition: transform 0.15s ease;
+  pointer-events: none;
+}
+
+.videoCard:hover .playBtn {
+  transform: translate(-50%, -50%) scale(1.08);
+}
+
+.videoFrame {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+  cursor: auto;
+}
+
+.breadcrumb {
+  width: 768px;
+  max-width: 100%;
+  margin: 16px auto 0;
+  padding: 0 24px;
+  font-size: 12px;
+  color: #666666;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.breadcrumb a:hover {
+  color: #dc354b;
+}
+
+.crumbSep {
+  color: #999999;
+}
+
+.stateBox {
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  color: #666666;
+}
+
+.spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid #e5e7eb;
+  border-top-color: #dc354b;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.backBtn {
+  background-color: #dc354b;
+  color: #ffffff;
+  padding: 10px 22px;
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+@media (max-width: 800px) {
+  .videoCard {
+    height: auto;
+    aspect-ratio: 16 / 9;
+  }
+}

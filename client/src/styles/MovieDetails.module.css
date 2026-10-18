@@ -49,10 +49,10 @@
   left: 0;
   right: 0;
   background-color: #ffffff;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
-  z-index: 120;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  z-index: 1200;
   border-bottom: 1px solid #eeeeee;
-  animation: slideDown 0.2s ease-out;
+  animation: slideDown 0.18s ease-out;
 }
 
 @keyframes slideDown {
@@ -65,45 +65,31 @@
 }
 
 .stickyBarInner {
-  height: 64px;
+  height: 68px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
 }
 
-.stickyBarLeft {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
 .stickyMovieTitle {
   font-size: 20px;
   font-weight: 700;
-  color: #111111;
-}
-
-.stickyRatingMeta {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 13px;
-  color: #555555;
+  color: #000000;
 }
 
 .stickyBookBtn {
-  background-color: #f84464;
+  background-color: #dc354b;
   color: #ffffff;
-  font-size: 14px;
-  font-weight: 600;
-  padding: 10px 28px;
+  font-size: 15px;
+  font-weight: 500;
+  padding: 11px 48px;
   border-radius: 8px;
   transition: background-color 0.15s;
 }
 
 .stickyBookBtn:hover {
-  background-color: #e03454;
+  background-color: #c92c40;
 }
 
 /* ─── 2. Dark Hero Banner (Exact BookMyShow Hero) ─── */
@@ -126,19 +112,20 @@
 
 /* Left Poster Card */
 .posterCard {
-  width: 260px;
-  border-radius: 12px;
+  width: 261px;
+  border-radius: 16px;
   overflow: hidden;
   background-color: #000000;
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
   flex-shrink: 0;
   border: 1px solid rgba(255, 255, 255, 0.08);
+  cursor: pointer;
 }
 
 .posterImgBox {
   position: relative;
-  width: 260px;
-  height: 382px;
+  width: 261px;
+  height: 392px;
 }
 
 .posterImg {
@@ -153,23 +140,21 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: rgba(18, 18, 18, 0.82);
+  background: rgba(31, 31, 31, 0.85);
   color: #ffffff;
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 7px 14px;
-  border-radius: 20px;
+  padding: 6px 12px;
+  border-radius: 16px;
   font-size: 12px;
-  font-weight: 600;
-  backdrop-filter: blur(4px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  font-weight: 500;
   transition: transform 0.15s, background 0.15s;
 }
 
 .trailerOverlayPill:hover {
-  transform: translate(-50%, -50%) scale(1.05);
-  background: rgba(248, 68, 100, 0.92);
+  transform: translate(-50%, -50%) scale(1.04);
+  background: rgba(0, 0, 0, 0.95);
 }
 
 .inCinemasStrip {
@@ -179,7 +164,7 @@
   font-size: 12px;
   font-weight: 500;
   padding: 7px 0;
-  letter-spacing: 0.3px;
+  letter-spacing: 0.2px;
 }
 
 /* Center Movie Info Column */
@@ -202,11 +187,11 @@
 .ratingBox {
   background-color: #333333;
   border-radius: 8px;
-  padding: 12px 20px;
+  padding: 12px 24px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  max-width: 440px;
+  max-width: 446px;
 }
 
 .ratingBoxLeft {
@@ -222,22 +207,23 @@
 }
 
 .votesText {
-  font-size: 14px;
-  color: #e2e8f0;
+  font-size: 16px;
+  color: #ffffff;
+  font-weight: 400;
 }
 
 .rateNowBtn {
   background-color: #ffffff;
-  color: #1f2533;
-  font-size: 14px;
-  font-weight: 600;
-  padding: 8px 16px;
+  color: #333333;
+  font-size: 16px;
+  font-weight: 500;
+  padding: 8px 14px;
   border-radius: 8px;
   transition: transform 0.12s;
 }
 
 .rateNowBtn:hover {
-  transform: scale(1.03);
+  transform: scale(1.02);
 }
 
 /* Format & Language Pills */
@@ -252,8 +238,8 @@
   color: #000000;
   padding: 4px 10px;
   border-radius: 3px;
-  font-size: 14px;
-  font-weight: 500;
+  font-size: 16px;
+  font-weight: 400;
   display: inline-flex;
   align-items: center;
   flex-wrap: wrap;
@@ -262,8 +248,8 @@
 .tagLinkBtn {
   background: transparent;
   color: #000000;
-  font-size: 14px;
-  font-weight: 500;
+  font-size: 16px;
+  font-weight: 400;
   padding: 0;
 }
 
@@ -277,34 +263,32 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 8px;
-  font-size: 15px;
+  font-size: 16px;
   color: #ffffff;
   font-weight: 400;
 }
 
 .dot {
-  color: #cccccc;
+  color: #ffffff;
 }
 
 /* Book Tickets CTA */
 .heroCtaWrap {
-  margin-top: 6px;
+  margin-top: 8px;
 }
 
 .bookTicketsBtn {
-  background-color: #f84464;
+  background-color: #dc354b;
   color: #ffffff;
   font-size: 16px;
-  font-weight: 600;
-  padding: 14px 56px;
+  font-weight: 500;
+  padding: 13px 64px;
   border-radius: 8px;
-  box-shadow: 0 4px 14px rgba(248, 68, 100, 0.35);
-  transition: background-color 0.15s, transform 0.1s;
+  transition: background-color 0.15s;
 }
 
 .bookTicketsBtn:hover {
-  background-color: #e03454;
-  transform: translateY(-1px);
+  background-color: #c92c40;
 }
 
 /* Top-Right Share Button */
@@ -312,17 +296,15 @@
   position: absolute;
   top: 8px;
   right: 16px;
-  background: rgba(34, 34, 34, 0.82);
+  background: rgba(34, 34, 34, 0.8);
   color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  padding: 10px 18px;
-  border-radius: 6px;
+  padding: 12px 20px;
+  border-radius: 4px;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  font-size: 14px;
-  font-weight: 600;
-  backdrop-filter: blur(4px);
+  gap: 10px;
+  font-size: 16px;
+  font-weight: 500;
 }
 
 .shareBtn:hover {
@@ -331,7 +313,7 @@
 
 /* ─── 3. Main Content Column & Sections (Exact BookMyShow Left Column) ─── */
 .mainContentColumn {
-  max-width: 880px;
+  max-width: 900px;
 }
 
 .pageSection {
@@ -343,7 +325,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 20px;
+  margin-bottom: 18px;
 }
 
 .sectionHeading {
@@ -360,71 +342,119 @@
 .aboutDescription {
   font-size: 16px;
   color: #333333;
-  line-height: 1.6;
+  line-height: 24px;
+  white-space: pre-line;
 }
 
-/* Top Offers For You */
-.offersGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 16px;
+/* Relative Wrapper + Floating Right Arrow (BookMyShow Carousel Arrow) */
+.carouselRelativeWrap {
+  position: relative;
+}
+
+.floatingRightArrow {
+  position: absolute;
+  right: -14px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #666666;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.22);
+  z-index: 5;
+  transition: background-color 0.15s;
+}
+
+.floatingRightArrow:hover {
+  background: #444444;
+}
+
+.floatingArrowSmall {
+  width: 24px;
+  height: 24px;
+  right: 0;
+  top: 38%;
+}
+
+/* Top Offers For You (Dashed Golden-Yellow BookMyShow Cards) */
+.offersCarousel {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding-right: 24px;
+}
+
+.offersCarousel::-webkit-scrollbar {
+  display: none;
 }
 
 .offerCard {
-  background-color: #fff8e5;
-  border: 2px dashed #f3d58d;
+  background-color: #fff3d2;
+  border: 1.5px dashed #e2c066;
   border-radius: 8px;
-  padding: 14px 16px;
+  padding: 16px;
+  width: 345px;
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   gap: 14px;
+  text-align: left;
+  transition: transform 0.12s;
 }
 
-.offerIconBox {
-  width: 38px;
-  height: 38px;
+.offerCard:hover {
+  transform: translateY(-1px);
+}
+
+.offerLogoWrap {
+  width: 26px;
+  height: 26px;
   border-radius: 50%;
-  background: #ffffff;
+  overflow: hidden;
+  background: #dc354b;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
 }
 
+.offerLogoImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.offerText {
+  min-width: 0;
+  flex: 1;
+}
+
 .offerText h4 {
   font-size: 14px;
-  font-weight: 700;
-  color: #111111;
+  font-weight: 500;
+  color: #000000;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .offerText p {
   font-size: 12px;
   color: #666666;
-  margin-top: 2px;
+  margin-top: 4px;
 }
 
-/* Circular Cast & Crew Carousels */
-.carouselNavBtns {
-  display: flex;
-  gap: 8px;
-}
-
-.carouselNavBtns button {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: #f1f5f9;
-  color: #334155;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
+/* Cast & Crew (120x120 Rounded-Square Portraits) */
 .peopleCarousel {
   display: flex;
-  gap: 28px;
+  gap: 32px;
   overflow-x: auto;
-  padding-bottom: 8px;
+  padding-bottom: 4px;
   scrollbar-width: none;
 }
 
@@ -435,13 +465,13 @@
 .personCard {
   width: 120px;
   flex-shrink: 0;
-  text-align: center;
+  text-align: left;
 }
 
 .personAvatarWrap {
   width: 120px;
   height: 120px;
-  border-radius: 50%;
+  border-radius: 12px;
   overflow: hidden;
   margin-bottom: 10px;
   background-color: #f1f5f9;
@@ -454,16 +484,16 @@
 }
 
 .personName {
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 500;
   color: #000000;
   line-height: 1.25;
 }
 
 .personRole {
-  font-size: 13px;
+  font-size: 14px;
   color: #666666;
-  margin-top: 3px;
+  margin-top: 4px;
 }
 
 /* Top Reviews Section */
@@ -476,35 +506,31 @@
 }
 
 .reviewsSubSummary {
-  font-size: 14px;
+  font-size: 16px;
   color: #666666;
 }
 
-.writeReviewBtn {
+.reviewsCountLink {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  background: #ffffff;
-  color: #f84464;
-  border: 1px solid #f84464;
-  padding: 8px 16px;
-  border-radius: 6px;
-  font-size: 13px;
-  font-weight: 600;
-  transition: all 0.15s;
+  gap: 4px;
+  background: transparent;
+  color: #dc354b;
+  font-size: 16px;
+  font-weight: 500;
 }
 
-.writeReviewBtn:hover {
-  background: #f84464;
-  color: #ffffff;
+.reviewsCountLink:hover {
+  text-decoration: underline;
 }
 
 .hashtagStrip {
   display: flex;
-  gap: 10px;
+  gap: 14px;
   overflow-x: auto;
-  padding-bottom: 14px;
-  margin-bottom: 14px;
+  padding-bottom: 16px;
+  margin-bottom: 8px;
+  padding-right: 28px;
   scrollbar-width: none;
 }
 
@@ -515,44 +541,56 @@
 .hashtagPill {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   padding: 6px 14px;
   border-radius: 20px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid #999999;
   background: #ffffff;
   flex-shrink: 0;
   transition: all 0.15s;
 }
 
 .hashtagPillActive {
-  border-color: #f84464;
+  border-color: #dc354b;
   background: #fff0f3;
 }
 
 .hashtagText {
-  font-size: 13px;
-  color: #f84464;
-  font-weight: 500;
+  font-size: 14px;
+  color: #dc354b;
+  font-weight: 400;
 }
 
 .hashtagCount {
-  font-size: 11px;
-  background: #f1f5f9;
-  color: #475569;
+  font-size: 12px;
+  background: #eaeaea;
+  color: #000000;
   padding: 2px 6px;
-  border-radius: 10px;
+  border-radius: 4px;
+  font-weight: 500;
 }
 
+/* Horizontal Review Cards Carousel */
 .reviewsCarousel {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
-  gap: 20px;
+  display: flex;
+  gap: 24px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  padding-right: 24px;
+  scrollbar-width: none;
+}
+
+.reviewsCarousel::-webkit-scrollbar {
+  display: none;
 }
 
 .reviewCard {
-  border: 1px solid #e5e5e5;
+  width: 430px;
+  min-height: 245px;
+  flex-shrink: 0;
+  border: 1px solid #cccccc;
   border-radius: 8px;
-  padding: 20px;
+  padding: 20px 24px;
   background: #ffffff;
   display: flex;
   flex-direction: column;
@@ -563,7 +601,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 14px;
+  margin-bottom: 18px;
 }
 
 .reviewerMeta {
@@ -572,54 +610,82 @@
   gap: 12px;
 }
 
-.reviewerAvatar {
+.reviewerAvatarImg {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: #cbd5e1;
-  color: #1e293b;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  object-fit: cover;
+  background: #d8d8d8;
 }
 
 .reviewerName {
-  font-size: 14px;
-  font-weight: 600;
-  color: #111111;
+  font-size: 16px;
+  font-weight: 400;
+  color: #333333;
 }
 
 .verifiedTag {
-  font-size: 11px;
+  font-size: 12px;
   color: #666666;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 2px;
 }
 
-.bmsInline {
-  color: #f84464;
+.bmsLogoInline {
+  display: inline-flex;
+  align-items: center;
+  font-size: 13px;
+  font-weight: 700;
+  color: #333333;
+  letter-spacing: -0.3px;
+}
+
+.bmsMyBadge {
+  background-color: #dc354b;
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 1px 4px;
+  margin: 0 2px;
+  border-radius: 2px;
+  transform: skewX(-8deg);
+  display: inline-block;
+  line-height: 1.1;
 }
 
 .reviewStarScore {
   display: flex;
   align-items: center;
-  gap: 5px;
-  font-size: 15px;
-  font-weight: 700;
-  color: #111111;
+  gap: 6px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #000000;
 }
 
 .reviewHashtagLine {
-  font-size: 14px;
-  font-weight: 700;
-  color: #111111;
-  margin-bottom: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #333333;
+  margin-bottom: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .reviewBodyText {
   font-size: 14px;
-  color: #444444;
-  line-height: 1.55;
+  color: #666666;
+  line-height: 20px;
   margin-bottom: 18px;
+}
+
+.moreLinkBtn {
+  background: transparent;
+  color: #dc354b;
+  font-size: 13px;
+  padding: 0;
 }
 
 .reviewCardBottom {
@@ -627,48 +693,62 @@
   justify-content: space-between;
   align-items: center;
   font-size: 12px;
-  color: #888888;
+  color: #999999;
 }
 
 .helpfulBtns {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 16px;
 }
 
 .thumbBtn {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: 6px;
   background: transparent;
-  color: #666666;
+  color: #333333;
   font-size: 12px;
 }
 
 .thumbBtn:hover {
-  color: #f84464;
+  color: #dc354b;
 }
 
-/* You Might Also Like Carousel */
-.recHeaderRight {
+.reviewBottomRight {
   display: flex;
   align-items: center;
   gap: 14px;
 }
 
+.reviewDateLabel {
+  color: #cccccc;
+  font-size: 13px;
+}
+
+.reviewShareBtn {
+  background: transparent;
+  color: #333333;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* You Might Also Like Carousel */
 .viewAllLink {
   display: inline-flex;
   align-items: center;
-  font-size: 14px;
-  font-weight: 600;
-  color: #f84464;
+  gap: 2px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #dc354b;
 }
 
 .recCarousel {
   display: flex;
-  gap: 22px;
+  gap: 28px;
   overflow-x: auto;
   padding-bottom: 8px;
+  padding-right: 24px;
   scrollbar-width: none;
 }
 
@@ -677,16 +757,16 @@
 }
 
 .recCard {
-  width: 185px;
+  width: 195px;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
 }
 
 .recPosterWrap {
-  width: 185px;
-  height: 278px;
-  border-radius: 8px;
+  width: 195px;
+  height: 295px;
+  border-radius: 12px;
   overflow: hidden;
   position: relative;
   margin-bottom: 10px;
@@ -727,21 +807,30 @@
 }
 
 .recTitle {
-  font-size: 15px;
-  font-weight: 600;
-  color: #111111;
-  white-space: nowrap;
+  font-size: 16px;
+  font-weight: 500;
+  color: #000000;
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
   overflow: hidden;
-  text-overflow: ellipsis;
 }
 
-.recGenre {
-  font-size: 13px;
-  color: #666666;
-  margin-top: 2px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+.reportContentRow {
+  padding: 16px 0 28px;
+}
+
+.reportContentLink {
+  background: transparent;
+  color: #333333;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 0;
+}
+
+.reportContentLink:hover {
+  color: #dc354b;
 }
 
 .breadcrumbFooter {
@@ -758,28 +847,29 @@
 .modalBackdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.65);
+  background: rgba(34, 34, 34, 0.8);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 250;
+  z-index: 2500;
   padding: 16px;
 }
 
 .langFormatModal {
   background: #ffffff;
-  border-radius: 10px;
-  width: 100%;
-  max-width: 420px;
-  overflow: hidden;
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
-  animation: modalPop 0.18s ease-out;
+  border-radius: 8px;
+  width: 360px;
+  max-width: 92vw;
+  max-height: calc(100vh - 200px);
+  overflow: hidden auto;
+  box-shadow: none;
+  animation: modalPop 0.16s ease-out;
 }
 
 @keyframes modalPop {
   from {
     opacity: 0;
-    transform: scale(0.96);
+    transform: scale(0.97);
   }
   to {
     opacity: 1;
@@ -788,7 +878,7 @@
 }
 
 .lfModalHeader {
-  padding: 18px 20px;
+  padding: 20px 16px 16px 16px;
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -796,131 +886,348 @@
 
 .lfMovieSub {
   font-size: 12px;
-  color: #666666;
-  margin-bottom: 2px;
+  color: #000000;
+  font-weight: 400;
+  line-height: 16px;
+  margin-bottom: 0;
 }
 
 .lfTitle {
-  font-size: 16px;
-  font-weight: 700;
-  color: #1f2533;
+  font-size: 18px;
+  font-weight: 500;
+  color: #000000;
+  line-height: 24px;
 }
 
 .lfCloseBtn {
   background: transparent;
-  color: #666666;
+  color: #333333;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lfCloseBtn:hover {
+  color: #000000;
 }
 
 .lfModalBody {
-  max-height: 70vh;
-  overflow-y: auto;
-  padding-bottom: 16px;
+  padding-bottom: 8px;
 }
 
 .lfLangBand {
   background-color: #f2f5f9;
-  padding: 8px 20px;
+  padding: 12px 16px 10px 16px;
   font-size: 12px;
-  font-weight: 700;
-  color: #666666;
-  letter-spacing: 0.6px;
+  font-weight: 400;
+  color: #333333;
+  letter-spacing: 0.2px;
 }
 
 .lfFormatsGrid {
-  padding: 16px 20px;
+  padding: 16px;
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 8px;
 }
 
 .lfFormatPill {
-  background: #ffffff;
-  color: #f84464;
-  border: 1px solid #d1d5db;
-  border-radius: 20px;
-  padding: 8px 20px;
-  font-size: 13px;
-  font-weight: 600;
-  transition: all 0.15s;
+  background: transparent;
+  color: #dc354b;
+  border: 1px solid #cccccc;
+  border-radius: 16px;
+  padding: 8px 14px;
+  min-width: 58px;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
 }
 
 .lfFormatPill:hover {
-  border-color: #f84464;
-  background-color: #fff0f3;
+  border-color: #dc354b;
+  background-color: #fff5f7;
 }
 
-/* Trailer Modal */
-.trailerModal {
-  background: #111111;
-  border-radius: 12px;
-  max-width: 720px;
-  width: 100%;
-  overflow: hidden;
-  color: #ffffff;
-}
-
-.trailerModalHeader {
-  padding: 14px 20px;
+/* ─── 5. BookMyShow "Videos for {Movie}" Multimedia YouTube View / Modal ─── */
+.multimediaBackdrop {
+  position: fixed;
+  top: 105px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #f2f5f9;
+  z-index: 850;
+  overflow-y: auto;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+@media (max-width: 768px) {
+  .multimediaBackdrop {
+    top: 56px;
+  }
+}
+
+.multimediaContainer {
+  width: 768px;
+  max-width: 100%;
+  min-height: calc(100vh - 105px);
+  background-color: #ffffff;
+  padding-bottom: 32px;
+  display: flex;
+  flex-direction: column;
+}
+
+.multimediaHeader {
+  padding: 16px 24px;
+  border-bottom: 1px solid #e5e5e5;
+  display: flex;
   align-items: center;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  justify-content: space-between;
+  gap: 16px;
+  position: sticky;
+  top: 0;
+  background: #ffffff;
+  z-index: 10;
 }
 
-.trailerModalHeader h3 {
-  font-size: 15px;
-  font-weight: 600;
+.multimediaHeaderLeft {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
 }
 
-.trailerVideoBox {
-  position: relative;
-  height: 380px;
+.videosForLabel {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 24px;
+  color: #333333;
+}
+
+.videosMovieTitleBtn {
+  background: transparent;
+  color: #dc354b;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 24px;
+  padding: 0;
+}
+
+.videosMovieTitleBtn:hover {
+  text-decoration: underline;
+}
+
+.multimediaHeaderRight {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.multimediaCloseBtn {
+  background: transparent;
+  color: #666666;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.trailerPreviewBg {
-  position: absolute;
-  inset: 0;
+.multimediaCloseBtn:hover {
+  background-color: #f2f5f9;
+  color: #333333;
+}
+
+.multimediaLangBar {
+  padding: 16px 24px;
+  border-bottom: 1px solid #e5e5e5;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.multimediaLangPill {
+  padding: 6px 14px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+  border: 1px solid #cccccc;
+  background-color: #ffffff;
+  color: #dc354b;
+  transition: all 0.15s;
+}
+
+.multimediaLangPillActive {
+  background-color: #dc354b;
+  color: #ffffff;
+  border-color: #dc354b;
+}
+
+.multimediaVideoSection {
+  padding: 16px 24px;
+  flex: 1;
+}
+
+.multimediaLangHeading {
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+  color: #333333;
+  text-transform: uppercase;
+  margin: 0 0 8px 0;
+}
+
+.multimediaVideoCard {
+  margin-bottom: 24px;
+}
+
+.youtubeIframeWrap {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #000000;
+}
+
+.youtubeIframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+
+.youtubeThumbWrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #000000;
+  cursor: pointer;
+}
+
+.youtubeThumbImg {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  opacity: 0.35;
+  display: block;
 }
 
-.trailerOverlayContent {
-  position: relative;
-  z-index: 2;
-  text-align: center;
-  padding: 24px;
+.bmsPlayCircleBtn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 48px;
+  height: 48px;
+  transform: translate(-50%, -50%);
+  transition: transform 0.15s ease;
+  pointer-events: none;
+}
+
+.youtubeThumbWrap:hover .bmsPlayCircleBtn {
+  transform: translate(-50%, -50%) scale(1.06);
+}
+
+.multimediaBreadcrumb {
+  padding: 14px 24px 0;
+  border-top: 1px solid #f0f0f0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #999999;
+}
+
+.multimediaBreadcrumb a {
+  color: #999999;
+  text-decoration: none;
+}
+
+.multimediaBreadcrumb a:hover {
+  color: #dc354b;
+}
+
+/* ─── 6. Offer Details Modal ─── */
+.offerModal {
+  background: #ffffff;
+  border-radius: 8px;
+  max-width: 440px;
+  width: 100%;
+  overflow: hidden;
+}
+
+.offerModalBody {
+  padding: 0 16px 20px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 10px;
+  gap: 14px;
 }
 
-.trailerPulseCircle {
-  width: 68px;
-  height: 68px;
-  border-radius: 50%;
-  background: #f84464;
+.offerModalDesc {
+  font-size: 14px;
+  color: #333333;
+  line-height: 1.5;
+}
+
+.offerCodeBox {
+  background: #fff8e5;
+  border: 1.5px dashed #e2c066;
+  border-radius: 8px;
+  padding: 12px 14px;
   display: flex;
   align-items: center;
-  justify-content: center;
-  margin-bottom: 6px;
+  justify-content: space-between;
 }
 
-.bookFromTrailerBtn {
-  margin-top: 8px;
-  background: #f84464;
-  color: #ffffff;
-  padding: 10px 26px;
-  border-radius: 8px;
+.offerCodeLabel {
+  display: block;
+  font-size: 10px;
+  color: #666666;
   font-weight: 600;
 }
 
-/* Review Modal */
+.offerCodeValue {
+  font-size: 16px;
+  color: #000000;
+  letter-spacing: 0.6px;
+}
+
+.copyCodeBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #dc354b;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 6px 12px;
+  border-radius: 6px;
+}
+
+.offerTermsHeading {
+  font-size: 13px;
+  font-weight: 600;
+  color: #333333;
+}
+
+.offerTermsList {
+  padding-left: 18px;
+  font-size: 12px;
+  color: #666666;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* ─── 7. Review Modal ─── */
 .reviewModal {
   background: #ffffff;
   border-radius: 12px;
@@ -1001,11 +1308,11 @@
 }
 
 .submitReviewBtn {
-  background: #f84464;
+  background: #dc354b;
   color: #ffffff;
   padding: 12px;
   border-radius: 8px;
-  font-weight: 700;
+  font-weight: 600;
   font-size: 14px;
 }
 
@@ -1019,7 +1326,7 @@
     align-items: center;
   }
 
-  .reviewsCarousel {
-    grid-template-columns: 1fr;
+  .reviewCard {
+    width: 310px;
   }
 }

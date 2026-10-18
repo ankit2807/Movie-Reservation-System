@@ -1,17 +1,20 @@
+/* ─── Exact BookMyShow Sub-Navbar (computed from in.bookmyshow.com/explore/home/noida) ─── */
 .subNavbar {
-  background-color: var(--sub-nav-bg);
-  color: #ffffff;
-  padding: 0;
-  font-size: 13px;
-  height: 38px;
+  background-color: #f5f5f5;
+  border-bottom: 1px solid #e5e5e5;
+  height: 41px;
   display: flex;
   align-items: center;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   position: relative;
   z-index: 900;
+  font-family: 'Roboto', sans-serif;
 }
 
+/* The wrapper is a flex child of .subNavbar, so it must stretch to full width;
+   otherwise it shrinks to its content and gets centred by margin: 0 auto. */
 .container {
+  width: 100%;
+  height: 40px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -20,126 +23,47 @@
 .left,
 .right {
   display: flex;
-  gap: 0;
-  align-items: stretch;
-  height: 38px;
-}
-
-/* ── Nav Item Wrapper ── */
-.navItemWrapper {
-  position: relative;
-  display: flex;
   align-items: center;
+  height: 40px;
 }
 
-/* ── Nav Links ── */
-.navLink {
-  color: #cccccc;
-  transition: color 0.2s ease;
-  font-size: 13px;
+.left {
+  gap: 10px;
+}
+
+.right {
+  gap: 12px;
+}
+
+.leftLink {
+  font-size: 14px;
   font-weight: 400;
-  padding: 0 14px;
-  height: 38px;
-  display: flex;
-  align-items: center;
-  position: relative;
+  line-height: 20px;
+  color: #333333;
+  padding: 0 10px 0 0;
   white-space: nowrap;
+  transition: color 0.15s ease;
 }
 
-.navLink:hover,
-.navLinkActive {
-  color: #ffffff;
-}
-
-/* ── Mega Menu Dropdown ── */
-.megaMenu {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  padding-top: 0;
-  z-index: 1000;
-  animation: menuFadeIn 0.2s ease;
-}
-
-@keyframes menuFadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-4px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.megaMenuInner {
-  background: #fff;
-  border-radius: 0 0 8px 8px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-  padding: 20px 24px;
-  display: flex;
-  gap: 32px;
-  min-width: 360px;
-}
-
-.megaMenuColumn {
-  min-width: 120px;
-}
-
-.megaMenuTitle {
-  font-size: 13px;
-  font-weight: 600;
-  color: #333;
-  margin-bottom: 10px;
-  padding-bottom: 6px;
-  border-bottom: 2px solid #DC3558;
-  display: inline-block;
-}
-
-.megaMenuList {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.megaMenuItem {
-  font-size: 13px;
-  color: #666;
-  padding: 5px 8px;
-  border-radius: 4px;
-  transition: all 0.15s ease;
-  display: block;
-  white-space: nowrap;
-}
-
-.megaMenuItem:hover {
-  color: #DC3558;
-  background: #fef2f4;
-}
-
-/* ── Right side links ── */
-.right .navLink {
+.rightLink {
   font-size: 12px;
-  color: #cccccc;
-  padding: 0 12px;
+  font-weight: 400;
+  line-height: 16px;
+  color: #333333;
+  padding: 0 0 0 12px;
+  white-space: nowrap;
+  transition: color 0.15s ease;
 }
 
-.right .navLink:hover {
-  color: #ffffff;
+.leftLink:hover,
+.rightLink:hover,
+.linkActive {
+  color: #dc354b;
 }
 
-/* ── Responsive ── */
 @media (max-width: 1024px) {
   .right {
     display: none;
-  }
-
-  .navLink {
-    padding: 0 10px;
-    font-size: 11px;
   }
 }
 

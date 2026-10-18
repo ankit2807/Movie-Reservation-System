@@ -49,7 +49,7 @@ export const createAvatarFallback = (name = 'Artist', index = 0) => {
         <stop offset="100%" stop-color="${c2}"/>
       </linearGradient>
     </defs>
-    <rect width="240" height="240" rx="120" fill="url(#av)"/>
+    <rect width="240" height="240" rx="24" fill="url(#av)"/>
     <circle cx="120" cy="88" r="38" fill="rgba(255,255,255,0.22)"/>
     <path d="M48 212 C56 158, 184 158, 192 212" fill="rgba(255,255,255,0.18)"/>
     <text x="120" y="132" text-anchor="middle" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="38" font-weight="700" letter-spacing="1">${initials}</text>
@@ -59,52 +59,89 @@ export const createAvatarFallback = (name = 'Artist', index = 0) => {
 
 export const SEAT_TIERS = [
   {
-    tier: 'RECLINER',
-    label: 'RECLINER',
-    price: 480,
-    rows: ['A', 'B'],
-    blocks: [2, 8, 2], // Left aisle block, Center block, Right aisle block (12 seats/row)
-    isRecliner: true,
+    tier: 'MAX RECLINER',
+    label: 'MAX RECLINER',
+    price: 1400,
+    rows: ['A'],
+    blocks: [15], // Seats 15 down to 01
+    isRecliner: false,
+  },
+  {
+    tier: 'EXECUTIVE',
+    label: 'EXECUTIVE',
+    price: 520,
+    rows: ['B', 'C', 'D'],
+    blocks: [3, 14], // Left block (17, 16, 15) + Main block (14..01)
+    isRecliner: false,
   },
   {
     tier: 'PRIME',
     label: 'PRIME',
-    price: 280,
-    rows: ['C', 'D', 'E', 'F', 'G'],
-    blocks: [4, 10, 4], // 18 seats/row
+    price: 520,
+    rows: ['E', 'F', 'G', 'H', 'I', 'J'],
+    blocks: [2, 14], // Left block (16, 15) + Main block (14..01)
     isRecliner: false,
   },
   {
-    tier: 'CLASSIC',
-    label: 'CLASSIC',
-    price: 180,
-    rows: ['H', 'J', 'K'],
-    blocks: [4, 10, 4], // 18 seats/row
+    tier: 'CLUB',
+    label: 'CLUB',
+    price: 500,
+    rows: ['K', 'L'],
+    blocks: [2, 14], // Left block (16, 15) + Main block (14..01)
     isRecliner: false,
   },
 ];
 
 export const getTierForSeat = (seatId) => {
-  if (!seatId) return SEAT_TIERS[1];
+  if (!seatId) return SEAT_TIERS[2];
   const row = seatId[0].toUpperCase();
-  return SEAT_TIERS.find((t) => t.rows.includes(row)) || SEAT_TIERS[1];
+  return SEAT_TIERS.find((t) => t.rows.includes(row)) || SEAT_TIERS[2];
 };
 
 export const getTotalColsForTier = (tier) =>
-  (tier?.blocks || [4, 10, 4]).reduce((a, b) => a + b, 0);
+  (tier?.blocks || [2, 14]).reduce((a, b) => a + b, 0);
 
 const CITY_THEATRE_TEMPLATES = {
   Noida: [
     {
+      id: 'moviemax-gulshan-noida',
+      chain: 'MOVIEMAX',
+      name: 'MovieMax Laserplex: Gulshan One 29 Mall, Noida',
+      address: 'Plot 29, Sector 143, Noida Expressway, Noida',
+      tags: ['Food & Beverage', 'M-Ticket'],
+      cancellable: true,
+      facilities: ['Laser & 7.1', 'M-Ticket', 'Food & Beverage', 'Parking'],
+    },
+    {
+      id: 'miraj-tgip-noida',
+      chain: 'MIRAJ',
+      name: 'Miraj Cinemas: TGIP, Noida',
+      address: 'The Great India Place Mall, Sector 38A, Noida',
+      tags: ['Food & Beverage', 'M-Ticket'],
+      cancellable: true,
+      facilities: ['Dolby 7.1', 'M-Ticket', 'Food & Beverage', 'Recliner'],
+    },
+    {
       id: 'pvr-logix-noida',
+      chain: 'PVR',
       name: 'PVR: Logix City Centre Mall, Noida',
       address: 'Plot BW-58, Sector 32, Near Noida City Centre Metro, Noida',
       tags: ['M-Ticket', 'Food & Beverage'],
       cancellable: true,
-      facilities: ['Dolby Atmos', '4K Laser', 'Recliner', 'Parking'],
+      facilities: ['Dolby Atmos', '4K Laser', 'IMAX', 'Recliner', 'Parking'],
+    },
+    {
+      id: 'pvr-directors-dlf-noida',
+      chain: 'PVR',
+      name: 'PVR Directors Cut, DLF Mall Of India: Noida',
+      address: '4th Floor, DLF Mall of India, Sector 18, Noida',
+      tags: ['Food & Beverage', 'M-Ticket'],
+      cancellable: true,
+      facilities: ['LUXE', 'Gourmet Dining', 'Recliner'],
     },
     {
       id: 'inox-galleria-noida',
+      chain: 'INOX',
       name: 'INOX: Gardens Galleria Mall, Noida',
       address: 'Sector 38A, Entertainment City, Noida',
       tags: ['M-Ticket', 'Food & Beverage'],
@@ -113,27 +150,12 @@ const CITY_THEATRE_TEMPLATES = {
     },
     {
       id: 'cinepolis-dlf-noida',
+      chain: 'CINEPOLIS',
       name: 'Cinépolis: DLF Mall of India, Noida',
       address: 'Plot M-03, Sector 18, Noida, Uttar Pradesh',
       tags: ['M-Ticket', 'Food & Beverage', 'Recliner'],
       cancellable: true,
       facilities: ['IMAX with Laser', '4DX', 'VIP Lounge'],
-    },
-    {
-      id: 'pvr-superplex-noida',
-      name: 'PVR: Superplex Logix IMAX, Noida',
-      address: '4th Floor, Logix City Centre, Sector 32, Noida',
-      tags: ['M-Ticket', 'Food & Beverage', 'Recliner'],
-      cancellable: false,
-      facilities: ['IMAX', '4DX', 'P[XL]', 'Playhouse'],
-    },
-    {
-      id: 'wave-sec18-noida',
-      name: 'Wave Cinemas: Sector 18, Noida',
-      address: 'Wave Silver Tower, Pocket J, Sector 18, Noida',
-      tags: ['M-Ticket', 'Food & Beverage'],
-      cancellable: true,
-      facilities: ['Dolby Atmos', 'Gold Class'],
     },
   ],
 };
@@ -182,37 +204,35 @@ export const getTheatresForCity = (city = 'Noida', movie = {}) => {
 
   const slotSets = [
     [
-      { time: '09:45 AM', format: '2D', screen: 'AUDI 02', status: 'AVAILABLE', basePrice: 180 },
-      { time: '01:15 PM', format: '4K DOLBY ATMOS', screen: 'AUDI 01', status: 'AVAILABLE', basePrice: 280 },
-      { time: '04:30 PM', format: 'IMAX 2D', screen: 'IMAX AUDI', status: 'FAST_FILLING', basePrice: 380 },
-      { time: '07:45 PM', format: '4K DOLBY ATMOS', screen: 'AUDI 01', status: 'FAST_FILLING', basePrice: 320 },
-      { time: '10:45 PM', format: '2D', screen: 'AUDI 03', status: 'AVAILABLE', basePrice: 220 },
+      { time: '03:45 PM', format: 'Laser & 7.1', screen: 'AUDI 02', status: 'AVAILABLE', basePrice: 500 },
+      { time: '05:15 PM', format: 'Laser & 7.1', screen: 'AUDI 01', status: 'AVAILABLE', basePrice: 500 },
+      { time: '11:30 PM', format: 'Laser & 7.1', screen: 'AUDI 03', status: 'AVAILABLE', basePrice: 500 },
     ],
     [
-      { time: '10:30 AM', format: '2D', screen: 'AUDI 04', status: 'AVAILABLE', basePrice: 190 },
-      { time: '02:00 PM', format: '3D', screen: 'AUDI 02', status: 'AVAILABLE', basePrice: 260 },
-      { time: '05:15 PM', format: 'INSIGNIA 2D', screen: 'INSIGNIA 01', status: 'FAST_FILLING', basePrice: 450 },
-      { time: '08:15 PM', format: '2D ATMOS', screen: 'AUDI 01', status: 'AVAILABLE', basePrice: 290 },
-      { time: '11:00 PM', format: '2D', screen: 'AUDI 04', status: 'AVAILABLE', basePrice: 200 },
+      { time: '10:30 AM', format: 'Dolby 7.1', screen: 'AUDI 04', status: 'AVAILABLE', basePrice: 500 },
+      { time: '02:00 PM', format: 'Dolby 7.1', screen: 'AUDI 02', status: 'AVAILABLE', basePrice: 520 },
+      { time: '05:15 PM', format: 'INSIGNIA 2D', screen: 'INSIGNIA 01', status: 'FAST_FILLING', basePrice: 520 },
+      { time: '08:15 PM', format: '2D ATMOS', screen: 'AUDI 01', status: 'AVAILABLE', basePrice: 520 },
+      { time: '11:00 PM', format: 'Dolby 7.1', screen: 'AUDI 04', status: 'AVAILABLE', basePrice: 500 },
     ],
     [
-      { time: '11:00 AM', format: '4DX', screen: '4DX AUDI', status: 'AVAILABLE', basePrice: 420 },
-      { time: '01:45 PM', format: 'IMAX 2D', screen: 'IMAX AUDI', status: 'AVAILABLE', basePrice: 390 },
-      { time: '06:00 PM', format: '2D', screen: 'AUDI 05', status: 'FAST_FILLING', basePrice: 280 },
-      { time: '09:00 PM', format: 'IMAX 2D', screen: 'IMAX AUDI', status: 'ALMOST_FULL', basePrice: 440 },
+      { time: '11:00 AM', format: '4DX', screen: '4DX AUDI', status: 'AVAILABLE', basePrice: 520 },
+      { time: '01:45 PM', format: 'IMAX 2D', screen: 'IMAX AUDI', status: 'AVAILABLE', basePrice: 520 },
+      { time: '06:00 PM', format: 'Laser & 7.1', screen: 'AUDI 05', status: 'FAST_FILLING', basePrice: 520 },
+      { time: '09:00 PM', format: 'IMAX 2D', screen: 'IMAX AUDI', status: 'ALMOST_FULL', basePrice: 520 },
     ],
     [
-      { time: '10:15 AM', format: '2D', screen: 'AUDI 01', status: 'AVAILABLE', basePrice: 180 },
-      { time: '01:30 PM', format: '2D', screen: 'AUDI 02', status: 'AVAILABLE', basePrice: 240 },
-      { time: '04:45 PM', format: '4DX', screen: '4DX AUDI', status: 'AVAILABLE', basePrice: 420 },
-      { time: '07:30 PM', format: 'ICE 2D', screen: 'P[XL] AUDI', status: 'FAST_FILLING', basePrice: 360 },
-      { time: '10:30 PM', format: '2D', screen: 'AUDI 01', status: 'AVAILABLE', basePrice: 210 },
+      { time: '10:15 AM', format: 'Laser & 7.1', screen: 'AUDI 01', status: 'AVAILABLE', basePrice: 500 },
+      { time: '01:30 PM', format: 'Laser & 7.1', screen: 'AUDI 02', status: 'AVAILABLE', basePrice: 520 },
+      { time: '04:45 PM', format: '4DX', screen: '4DX AUDI', status: 'AVAILABLE', basePrice: 520 },
+      { time: '07:30 PM', format: 'ICE 2D', screen: 'P[XL] AUDI', status: 'FAST_FILLING', basePrice: 520 },
+      { time: '10:30 PM', format: 'Laser & 7.1', screen: 'AUDI 01', status: 'AVAILABLE', basePrice: 500 },
     ],
     [
-      { time: '11:30 AM', format: '2D', screen: 'AUDI 03', status: 'AVAILABLE', basePrice: 170 },
-      { time: '03:15 PM', format: '2D ATMOS', screen: 'AUDI 01', status: 'AVAILABLE', basePrice: 250 },
-      { time: '06:45 PM', format: '2D', screen: 'AUDI 02', status: 'FAST_FILLING', basePrice: 270 },
-      { time: '09:50 PM', format: '2D ATMOS', screen: 'AUDI 01', status: 'AVAILABLE', basePrice: 280 },
+      { time: '11:30 AM', format: '2D ATMOS', screen: 'AUDI 03', status: 'AVAILABLE', basePrice: 500 },
+      { time: '03:15 PM', format: '2D ATMOS', screen: 'AUDI 01', status: 'AVAILABLE', basePrice: 520 },
+      { time: '06:45 PM', format: 'Laser & 7.1', screen: 'AUDI 02', status: 'FAST_FILLING', basePrice: 520 },
+      { time: '09:50 PM', format: '2D ATMOS', screen: 'AUDI 01', status: 'AVAILABLE', basePrice: 520 },
     ],
   ];
 
@@ -229,9 +249,10 @@ export const getTheatresForCity = (city = 'Noida', movie = {}) => {
       status: slot.status,
       price: slot.basePrice,
       tiers: [
-        { label: 'RECLINER', price: 480, status: slot.status === 'ALMOST_FULL' ? 'FILLING FAST' : 'AVAILABLE' },
-        { label: 'PRIME', price: 280, status: 'AVAILABLE' },
-        { label: 'CLASSIC', price: 180, status: 'AVAILABLE' },
+        { label: 'MAX RECLINER', price: 1400, status: slot.status === 'ALMOST_FULL' ? 'FILLING FAST' : 'Available' },
+        { label: 'EXECUTIVE', price: 520, status: 'Available' },
+        { label: 'PRIME', price: 520, status: 'Available' },
+        { label: 'CLUB', price: 500, status: 'Available' },
       ],
     }));
 
@@ -243,46 +264,18 @@ export const getTheatresForCity = (city = 'Noida', movie = {}) => {
 };
 
 export const buildShowKey = (movieId, theatreId, dateStr, timeStr) => {
-  const cleanTime = String(timeStr || '07:30 PM').replace(/\s+/g, '');
-  return `${movieId || 'movie'}__${theatreId || 'pvr-logix-noida'}__${dateStr || 'today'}__${cleanTime}`;
+  const cleanTime = String(timeStr || '03:45 PM').replace(/\s+/g, '');
+  return `${movieId || 'movie'}__${theatreId || 'moviemax-gulshan-noida'}__${dateStr || 'today'}__${cleanTime}`;
 };
 
-// Deterministic realistic occupied seats per showKey so the seat map looks authentic and stays consistent
+// Deterministic realistic occupied seats matching BookMyShow's seat layout
 export const generateBaselineOccupiedSeats = (showKey = 'default') => {
-  let hash = 2166136261;
-  for (let i = 0; i < showKey.length; i++) {
-    hash ^= showKey.charCodeAt(i);
-    hash = Math.imul(hash, 16777619);
-  }
-
-  const nextRand = () => {
-    hash += 0x6d2b79f5;
-    let t = hash;
-    t = Math.imul(t ^ (t >>> 15), t | 1);
-    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-
-  const occupied = new Set();
-  SEAT_TIERS.forEach((tier) => {
-    const totalCols = getTotalColsForTier(tier);
-    tier.rows.forEach((row) => {
-      for (let col = 1; col <= totalCols; col++) {
-        // Center seats have slightly higher chance of being pre-booked, booked in pairs
-        const isCenter = col >= 5 && col <= totalCols - 4;
-        const threshold = isCenter ? 0.16 : 0.08;
-        if (nextRand() < threshold) {
-          occupied.add(`${row}${col}`);
-          if (col + 1 <= totalCols && nextRand() < 0.75) {
-            occupied.add(`${row}${col + 1}`);
-            col++;
-          }
-        }
-      }
-    });
-  });
-
-  return Array.from(occupied);
+  const fixedSold = [
+    'B14', 'B13', 'B12', 'B11', 'B10', 'B9', 'B5',
+    'C11', 'C10', 'C9', 'C8',
+    'D11', 'D10', 'D9', 'D8',
+  ];
+  return fixedSold;
 };
 
 export const FOOD_MENU = [
@@ -353,3 +346,284 @@ export const FOOD_MENU = [
     image: '/food/hotdog.jpg',
   },
 ];
+
+// Official YouTube trailer IDs per movie title (matches live BookMyShow /multimedia page)
+const MOVIE_TRAILERS_MAP = {
+  'street fighter': [
+    {
+      videoId: 'U6sbm1OaJb8',
+      title: 'Street Fighter | New Trailer (2026 Movie)',
+      language: 'English',
+    },
+    {
+      videoId: 'Xt4X4FvXk2A',
+      title: 'Street Fighter | Official Teaser Trailer',
+      language: 'English',
+    },
+  ],
+  'pushpa 2: the rule': [
+    {
+      videoId: 'g3JUbgOHgdw',
+      title: 'Pushpa 2: The Rule | Official Trailer (Hindi)',
+      language: 'Hindi',
+    },
+    {
+      videoId: '1kVK0MZlbI4',
+      title: 'Pushpa 2: The Rule | Official Teaser',
+      language: 'Telugu',
+    },
+  ],
+  chhaava: [
+    {
+      videoId: '77vRyWNqZjM',
+      title: 'Chhaava | Official Trailer | Vicky Kaushal',
+      language: 'Hindi',
+    },
+    {
+      videoId: 'hP2zR2wPq5A',
+      title: 'Chhaava | Official Teaser | Maddock Films',
+      language: 'Hindi',
+    },
+  ],
+  'kantara: chapter 1': [
+    {
+      videoId: '6oKFao0aISA',
+      title: 'Kantara: Chapter 1 | First Look Teaser | Hombale Films',
+      language: 'Kannada',
+    },
+    {
+      videoId: '8mrVmf239GU',
+      title: 'Kantara | Official Hindi Trailer',
+      language: 'Hindi',
+    },
+  ],
+  'war 2': [
+    {
+      videoId: 'tQ0mzXRk-oM',
+      title: 'War | Official Trailer | Hrithik Roshan | YRF Spy Universe',
+      language: 'Hindi',
+    },
+    {
+      videoId: 'vqu4z34wENw',
+      title: 'YRF Spy Universe | Official Promo',
+      language: 'Hindi',
+    },
+  ],
+  'stree 2: sarkate ka aatank': [
+    {
+      videoId: 'KVnheXywIbY',
+      title: 'Stree 2 | Official Trailer | Shraddha Kapoor, Rajkummar Rao',
+      language: 'Hindi',
+    },
+    {
+      videoId: 'VlvOgk5BHS4',
+      title: 'Stree 2 | Official Teaser | Maddock Supernatural Universe',
+      language: 'Hindi',
+    },
+  ],
+  'kalki 2898 ad': [
+    {
+      videoId: 'kQDd1AhGIHk',
+      title: 'Kalki 2898 AD | Official Trailer | Prabhas, Amitabh Bachchan',
+      language: 'Hindi',
+    },
+    {
+      videoId: 'bC36d8e3bb0',
+      title: 'Kalki 2898 AD | Release Trailer',
+      language: 'Telugu',
+    },
+  ],
+  'dune: part two': [
+    {
+      videoId: 'Way9Dexny3w',
+      title: 'Dune: Part Two | Official Trailer | Warner Bros.',
+      language: 'English',
+    },
+    {
+      videoId: 'U2Qp5pL3ovA',
+      title: 'Dune: Part Two | Official Trailer 2',
+      language: 'English',
+    },
+  ],
+  'deadpool & wolverine': [
+    {
+      videoId: '73_1biulkYk',
+      title: 'Deadpool & Wolverine | Official Trailer | Marvel Studios',
+      language: 'English',
+    },
+    {
+      videoId: 'uJMCNJP2ipI',
+      title: 'Deadpool & Wolverine | Official Teaser',
+      language: 'English',
+    },
+  ],
+  'mission: impossible – final reckoning': [
+    {
+      videoId: 'NOhDyUmT9z0',
+      title: 'Mission: Impossible – The Final Reckoning | Teaser Trailer',
+      language: 'English',
+    },
+    {
+      videoId: 'avz06PDqDbM',
+      title: 'Mission: Impossible | Official Trailer | Paramount Pictures',
+      language: 'English',
+    },
+  ],
+  'bhool bhulaiyaa 3': [
+    {
+      videoId: '6YMY62tMLUA',
+      title: 'Bhool Bhulaiyaa 3 | Official Trailer | Kartik Aaryan, Vidya Balan',
+      language: 'Hindi',
+    },
+    {
+      videoId: 'c3A3yG8a9jU',
+      title: 'Bhool Bhulaiyaa 3 | Official Teaser',
+      language: 'Hindi',
+    },
+  ],
+  'singham again': [
+    {
+      videoId: 'MD7v0-igVIM',
+      title: 'Singham Again | Official Trailer | Ajay Devgn, Rohit Shetty',
+      language: 'Hindi',
+    },
+  ],
+  oppenheimer: [
+    {
+      videoId: 'uYPbbksJxIg',
+      title: 'Oppenheimer | New Trailer | Christopher Nolan',
+      language: 'English',
+    },
+    {
+      videoId: 'bK6ldnjE3Y0',
+      title: 'Oppenheimer | Official Trailer',
+      language: 'English',
+    },
+  ],
+};
+
+export const getTrailersForMovie = (movie) => {
+  const key = (movie?.title || '').trim().toLowerCase();
+  if (MOVIE_TRAILERS_MAP[key]) {
+    return MOVIE_TRAILERS_MAP[key];
+  }
+  const primaryLang = movie?.languages?.[0] || 'English';
+  return [
+    {
+      videoId: 'U6sbm1OaJb8',
+      title: `${movie?.title || 'Official'} | New Trailer (2026 Movie)`,
+      language: primaryLang,
+    },
+    {
+      videoId: 'Xt4X4FvXk2A',
+      title: `${movie?.title || 'Official'} | Official Theatrical Trailer`,
+      language: primaryLang,
+    },
+  ];
+};
+
+export const BOOKMYSHOW_OFFERS = [
+  {
+    id: 'bandhan-debit',
+    title: 'Enjoy B1G1 Ticket Free!* with Bandhan Bank Legacy Debit Cards',
+    shortTitle: 'Enjoy B1G1 Ticket Free!* with Bandhan Bank...',
+    subtitle: 'Tap to view details',
+    code: 'FIRSTSHOW',
+    logo: 'https://in.bmscdn.com/offers/offerlogo/bandhan-bank-avni-debit-card-offer-bandhan824.jpg?28042026194202',
+    description:
+      'Get 1 free movie ticket (up to ₹500) on booking a minimum of 2 movie tickets using Bandhan Bank Legacy Debit Cards on BookMyShow.',
+    terms: [
+      'Valid on minimum purchase of 2 movie tickets per transaction.',
+      'Maximum discount of ₹500 per ticket, twice a calendar month.',
+      'Apply promo code FIRSTSHOW at checkout to avail instant discount.',
+    ],
+  },
+  {
+    id: 'bandhan-credit',
+    title: 'Get up to ₹1000 off per calendar month with Bandhan Bank credit cards',
+    shortTitle: 'Get up to ₹1000 off per calendar month with...',
+    subtitle: 'Tap to view details',
+    code: 'PAYTM150',
+    logo: 'https://in.bmscdn.com/offers/offerlogo/bandhan-bank-avni-debit-card-offer-bandhan824.jpg?22092026180000',
+    description:
+      'Save up to ₹1000 every month on movie and live event bookings when paying with eligible Bandhan Bank Credit Cards.',
+    terms: [
+      'Applicable on all days of the week across all cinemas in India.',
+      'Apply promo code PAYTM150 during checkout.',
+    ],
+  },
+  {
+    id: 'yes-private-debit',
+    title: 'YES Private Debit Card Offer',
+    shortTitle: 'YES Private Debit Card Offer',
+    subtitle: 'Tap to view details',
+    code: 'RUPAY25',
+    logo: 'https://in.bmscdn.com/offers/offerlogo/bandhan-bank-avni-debit-card-offer-bandhan824.jpg?28042026194202',
+    description:
+      'Complimentary movie tickets up to ₹1000 every month with YES Private Debit Cards on BookMyShow.',
+    terms: [
+      'Valid on IMAX, 4DX, ICE, and Recliner formats.',
+      'Use code RUPAY25 at payment screen.',
+    ],
+  },
+  {
+    id: 'yes-private-credit',
+    title: 'Buy 1 get 1 movie ticket free + 50% off on non movie tickets with Yes Private Credit Card',
+    shortTitle: 'Buy 1 get 1 movie ticket free + 50% off on...',
+    subtitle: 'Tap to view details',
+    code: 'FIRSTSHOW',
+    logo: 'https://in.bmscdn.com/offers/offerlogo/bandhan-bank-avni-debit-card-offer-bandhan824.jpg?22092026180000',
+    description:
+      'Buy 1 Get 1 free on movie tickets plus 50% off on Plays, Concerts, and Sports bookings every month.',
+    terms: [
+      'No minimum ticket price restriction.',
+      'Instant discount applied at checkout.',
+    ],
+  },
+];
+
+export const DEFAULT_BMS_REVIEWS = [
+  {
+    _id: 'bms-rev-1',
+    user: { name: 'Biswajeet' },
+    rating: 10,
+    hashtags: '#Blockbuster',
+    comment:
+      'mind blowing movie.. fun to watch.. I enjoyed movie.. animation sence in this movie are mind blowing.. vfx are mind blowing... action sequence of tournament is pure goosebumps!',
+    likes: 94,
+    timeAgo: '1 Day ago',
+  },
+  {
+    _id: 'bms-rev-2',
+    user: { name: 'User' },
+    rating: 10,
+    hashtags:
+      '#SuperDirection #GreatActing #WowMusic #AwesomeStory #Blockbuster #Rocking #Inspiring #Wellmade #Unbelievable',
+    comment:
+      'Incredible big-screen experience in IMAX 2D! Every fight sequence between Ryu and Ken feels straight out of the classic arcade game with thunderous sound design.',
+    likes: 51,
+    timeAgo: '2 Days ago',
+  },
+  {
+    _id: 'bms-rev-3',
+    user: { name: 'User' },
+    rating: 7,
+    hashtags: '#Rocking #Wellmade',
+    comment:
+      'As a Franchise games Fan the casting director nailed the cast and their acting is like cherry on Top. it was double fun for me as I was also excited to watch it in 4DX!',
+    likes: 23,
+    timeAgo: '1 Day ago',
+  },
+  {
+    _id: 'bms-rev-4',
+    user: { name: 'Sourav' },
+    rating: 10,
+    hashtags:
+      '#SuperDirection #GreatActing #WowMusic #AwesomeStory #Blockbuster #Rocking #Inspiring #Wellmade #Unbelievable',
+    comment:
+      'Best action entertainer of the year! Noah Centineo, Andrew Koji, Callina Liang, Vidyut Jammwal and Jason Momoa deliver knockout performances.',
+    likes: 17,
+    timeAgo: '1 Day ago',
+  },
+];
+

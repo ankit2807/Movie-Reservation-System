@@ -4,10 +4,11 @@
 
 .bookingPage {
   min-height: 100vh;
-  background-color: #f5f5fa;
+  background-color: #ffffff;
   display: flex;
   flex-direction: column;
-  color: #1f2533;
+  color: #333333;
+  font-family: Roboto, sans-serif;
 }
 
 .stateContainer {
@@ -17,14 +18,15 @@
   align-items: center;
   justify-content: center;
   gap: 16px;
-  color: #666;
+  color: #666666;
+  font-family: Roboto, sans-serif;
 }
 
 .spinner {
   width: 40px;
   height: 40px;
   border: 3px solid #e5e7eb;
-  border-top-color: #f84464;
+  border-top-color: #eb4e62;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
@@ -36,28 +38,34 @@
 }
 
 .goBackBtn {
-  background-color: #f84464;
-  color: #fff;
+  background-color: #eb4e62;
+  color: #ffffff;
   padding: 10px 24px;
   border-radius: 6px;
-  font-weight: 600;
+  font-weight: 500;
   font-size: 14px;
 }
 
-/* ─── 1. Top Dark Header Bar (BookMyShow Booking Top Bar) ─── */
-.topBar {
-  background-color: #1f2533;
-  color: #ffffff;
+/* ─── 1 & 2. Sticky Header Stack (White Top Bar + Showtime Strip) ─── */
+.headerStack {
   position: sticky;
   top: 0;
   z-index: 90;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  background-color: #ffffff;
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 4px 0.5px;
+}
+
+.topBar {
+  background-color: #ffffff;
+  color: #333333;
+  width: 100%;
 }
 
 .topBarInner {
-  max-width: 1400px;
+  max-width: 1280px;
+  width: 92%;
+  height: 56px;
   margin: 0 auto;
-  padding: 12px 24px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -67,29 +75,28 @@
 .topBarLeft {
   display: flex;
   align-items: center;
-  gap: 12px;
   min-width: 0;
 }
 
 .backBtnArrow {
-  color: #ffffff;
+  color: #333333;
   background: transparent;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  margin-right: 12px;
+  padding: 0;
+  border: none;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background-color 0.15s;
+  cursor: pointer;
   flex-shrink: 0;
-}
-
-.backBtnArrow:hover {
-  background-color: rgba(255, 255, 255, 0.1);
 }
 
 .movieMeta {
   min-width: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .movieNameRow {
@@ -99,32 +106,26 @@
 }
 
 .movieName {
+  font-family: Roboto, sans-serif;
   font-size: 16px;
-  font-weight: 600;
-  color: #ffffff;
+  font-weight: 500;
+  line-height: 20px;
+  letter-spacing: 0.2px;
+  color: rgb(51, 51, 51);
+  margin: 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.certBadgeInline {
-  font-size: 10px;
-  font-weight: 700;
-  color: #cbd5e1;
-  border: 1px solid #64748b;
-  border-radius: 50%;
-  width: 22px;
-  height: 22px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
 .movieSubheader {
-  font-size: 12px;
-  color: #cbd5e1;
-  margin-top: 2px;
+  font-family: Roboto, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 16px;
+  letter-spacing: 0.2px;
+  color: rgb(102, 102, 102);
+  margin: 2px 0 0 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -137,63 +138,63 @@
   flex-shrink: 0;
 }
 
+.a11yBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  color: #333333;
+  cursor: pointer;
+}
+
 .ticketQtyEdit {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  background: transparent;
-  color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.45);
+  justify-content: center;
+  width: 100px;
+  padding: 8px;
+  background: #ffffff;
+  color: rgb(235, 78, 98);
+  border: 1px solid rgb(235, 78, 98);
   border-radius: 4px;
-  padding: 6px 12px;
-  font-size: 12px;
-  font-weight: 600;
-  transition: all 0.15s;
+  font-family: Roboto, sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 16px;
+  letter-spacing: 0.2px;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.ticketQtyEdit span {
+  margin-left: 4px;
+  white-space: nowrap;
 }
 
 .ticketQtyEdit:hover {
-  border-color: #ffffff;
-  background-color: rgba(255, 255, 255, 0.08);
+  background-color: #fff5f7;
 }
 
-.closePageBtn {
-  color: #cbd5e1;
-  background: transparent;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.15s;
-}
-
-.closePageBtn:hover {
-  color: #ffffff;
-  background-color: rgba(255, 255, 255, 0.1);
-}
-
-/* ─── 2. Showtime Time-Slot Switcher Strip ─── */
+/* ─── Showtime Time-Slot Switcher Strip ─── */
 .showtimeStrip {
-  background-color: #f5f5fa;
-  border-bottom: 1px solid #e0e3eb;
+  background-color: rgb(242, 245, 249);
+  width: 100%;
+  padding: 8px 16px;
 }
 
 .showtimeStripInner {
-  max-width: 1400px;
+  max-width: 1280px;
+  width: 92%;
   margin: 0 auto;
-  padding: 12px 24px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  flex-wrap: wrap;
 }
 
 .timePillsList {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   flex-wrap: wrap;
 }
 
@@ -202,289 +203,556 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-width: 98px;
-  padding: 6px 14px;
+  height: 36px;
+  min-width: 90px;
+  padding: 2px 12px;
   border-radius: 4px;
-  border: 1px solid #1ea83c;
-  background-color: #ffffff;
-  color: #1ea83c;
-  transition: all 0.15s;
-}
-
-.timeSlotPill:hover {
-  background-color: #f0fdf4;
+  border-top: 1px solid rgb(31, 173, 62);
+  border-right: 1px solid rgb(31, 173, 62);
+  border-bottom: 1px solid rgb(31, 173, 62);
+  border-left: 4px solid rgb(31, 173, 62);
+  background-color: rgb(255, 255, 255);
+  cursor: pointer;
+  transition: background-color 0.15s;
 }
 
 .timeSlotPillActive {
-  background-color: #1ea83c !important;
-  color: #ffffff !important;
-  box-shadow: 0 2px 6px rgba(30, 168, 60, 0.3);
+  background-color: rgb(31, 173, 62) !important;
 }
 
 .pillTimeText {
+  font-family: Roboto, sans-serif;
   font-size: 12px;
-  font-weight: 700;
-  line-height: 1.2;
+  font-weight: 400;
+  line-height: 15px;
+  letter-spacing: 0.2px;
+  color: rgb(102, 102, 102);
+  flex-shrink: 0;
+}
+
+.timeSlotPillActive .pillTimeText {
+  color: rgb(255, 255, 255);
+  font-weight: 500;
 }
 
 .pillFormatText {
-  font-size: 9px;
-  font-weight: 600;
-  opacity: 0.85;
-  margin-top: 2px;
-  letter-spacing: 0.4px;
+  font-family: Roboto, sans-serif;
+  font-size: 8px;
+  font-weight: 400;
+  line-height: 11px;
+  letter-spacing: 0.2px;
+  color: rgb(102, 102, 102);
+  max-width: 75px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex-shrink: 0;
 }
 
-.stripScreenBadge {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 12px;
-  font-weight: 600;
-  color: #64748b;
-  background: #ffffff;
-  padding: 6px 12px;
-  border-radius: 4px;
-  border: 1px solid #e2e8f0;
+.timeSlotPillActive .pillFormatText {
+  color: rgb(255, 255, 255);
+  font-weight: 500;
 }
 
-/* ─── 3. Auditorium Seat Layout Canvas ─── */
+/* ─── 3. Auditorium Seat Layout Canvas (Exact BookMyShow Grid) ─── */
 .auditoriumContainer {
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  background-color: #fafafa;
+  background-color: #ffffff;
+  position: relative;
 }
 
 .seatCanvas {
-  max-width: 1120px;
   width: 100%;
   margin: 0 auto;
-  padding: 28px 24px 100px;
+  padding: 24px 24px 160px;
   overflow-x: auto;
+  display: flex;
+  justify-content: center;
+}
+
+.seatGridZoomWrap {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform 0.2s ease;
 }
 
 .tierBlock {
-  margin-bottom: 24px;
-  min-width: 680px;
+  margin-bottom: 22px;
+  width: 100%;
+}
+
+.tierRowLayout {
+  display: flex;
+  align-items: flex-start;
+}
+
+/* Left Row Letter Strip (.fIuTG / .hDNuHK) */
+.rowLetterColumn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-right: 140px;
+  flex-shrink: 0;
+}
+
+.rowLetterHeaderSpacer {
+  height: 35px;
+  width: 22px;
+}
+
+.rowLetterStrip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: rgb(249, 249, 249);
+  border-radius: 12px;
+  width: 22px;
+  padding: 2px 0;
+}
+
+.rowLetter {
+  width: 22px;
+  height: 25px;
+  margin: 4px 0;
+  font-family: Roboto, sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  color: rgb(51, 51, 51);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+}
+
+.tierSeatsColumn {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 }
 
 .tierDividerHeader {
+  font-family: Roboto, sans-serif;
   font-size: 12px;
-  font-weight: 600;
-  color: #666666;
+  font-weight: 700;
+  line-height: 16px;
+  letter-spacing: 0.2px;
+  color: rgb(51, 51, 51);
   padding-bottom: 8px;
-  margin-bottom: 12px;
-  border-bottom: 1px solid #ececec;
-  text-align: left;
-  letter-spacing: 0.3px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid rgb(235, 235, 235);
+  text-align: center;
 }
 
 .seatRow {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  margin-bottom: 8px;
-  gap: 16px;
+  justify-content: flex-end;
 }
 
-.rowLetter {
-  width: 22px;
-  font-size: 12px;
-  font-weight: 600;
-  color: #999999;
-  text-align: center;
-  flex-shrink: 0;
+.seatRowLeft {
+  justify-content: flex-start;
 }
 
 .rowBlocksWrap {
-  flex: 1;
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 28px;
+  justify-content: flex-end;
+  gap: 58px;
+}
+
+.rowBlocksWrapLeft {
+  justify-content: flex-start;
 }
 
 .seatBlockGroup {
   display: flex;
   align-items: center;
-  gap: 6px;
 }
 
 .seatBtn {
-  width: 26px;
-  height: 26px;
-  border-radius: 3px;
-  border: 1px solid #1ea83c;
-  background-color: #ffffff;
-  color: #1ea83c;
+  width: 25px;
+  height: 25px;
+  margin: 4px 2px;
+  border-radius: 4px;
+  border: 1px solid rgb(31, 173, 62);
+  background-color: rgb(255, 255, 255);
+  color: rgb(31, 173, 62);
+  font-family: Roboto, sans-serif;
   font-size: 10px;
-  font-weight: 600;
+  font-weight: 400;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.12s ease;
+  transition: background-color 0.12s ease, color 0.12s ease, border-color 0.12s ease;
   padding: 0;
+  cursor: pointer;
   user-select: none;
 }
 
-.seatRecliner {
-  width: 32px;
-  height: 28px;
-  border-radius: 5px 5px 3px 3px;
-  border-width: 1.5px;
+.seatBestseller {
+  border: 1px solid rgb(252, 196, 45);
+  box-shadow: inset 0 0 5px 1px rgba(252, 209, 73, 0.5);
+  background-color: rgb(255, 255, 255);
+  color: rgb(31, 173, 62);
 }
 
 .seatBtn:hover:not(:disabled) {
-  background-color: #1ea83c;
-  color: #ffffff;
-  transform: translateY(-1px);
+  background-color: rgb(31, 173, 62);
+  border-color: rgb(31, 173, 62);
+  color: rgb(255, 255, 255);
+  box-shadow: none;
 }
 
 .seatSelected {
-  background-color: #1ea83c !important;
-  border-color: #1ea83c !important;
-  color: #ffffff !important;
-  box-shadow: 0 2px 5px rgba(30, 168, 60, 0.35);
+  background-color: rgb(31, 173, 62) !important;
+  border: 1px solid rgb(31, 173, 62) !important;
+  color: rgb(255, 255, 255) !important;
+  box-shadow: none !important;
 }
 
 .seatSold {
-  background-color: #e0e0e0 !important;
-  border-color: #d4d4d4 !important;
-  color: #9e9e9e !important;
-  cursor: not-allowed !important;
+  background-color: rgb(229, 229, 229) !important;
+  border: 1px solid rgb(229, 229, 229) !important;
+  color: rgb(255, 255, 255) !important;
+  box-shadow: none !important;
+  cursor: default !important;
 }
 
-/* Screen Illustration at Bottom */
+/* Official Screen Illustration at Bottom */
 .screenContainer {
-  margin-top: 44px;
+  margin-top: 32px;
+  padding-left: 162px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-width: 680px;
 }
 
 .screenSvg {
-  width: 320px;
-  height: 40px;
+  width: 266px;
+  height: 34px;
 }
 
 .screenCaption {
+  font-family: Roboto, sans-serif;
   font-size: 12px;
-  color: #666666;
-  margin-top: 4px;
-  font-weight: 500;
+  font-weight: 400;
+  line-height: 16px;
+  letter-spacing: 0.2px;
+  color: rgb(51, 51, 51);
+  opacity: 0.7;
+  margin-top: 8px;
 }
 
-/* ─── 4. Sticky Bottom Bar (Legend + Pay Rs. X Button) ─── */
+/* ─── Floating Auditorium Minimap & Zoom Controls ─── */
+.minimapWidget {
+  position: fixed;
+  top: 155px;
+  right: 20px;
+  z-index: 50;
+  background-color: rgba(153, 153, 153, 0.85);
+  border-radius: 6px;
+  padding: 10px 14px;
+  width: 210px;
+  pointer-events: none;
+}
+
+.minimapInner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 4px;
+}
+
+.minimapViewportBox {
+  position: absolute;
+  top: 0;
+  left: -14px;
+  right: -14px;
+  bottom: 22px;
+  border-top: 2px solid rgb(248, 68, 100);
+  border-bottom: 2px solid rgb(248, 68, 100);
+}
+
+.minimapTier {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: 3px;
+}
+
+.minimapTierLabel {
+  font-size: 4px;
+  font-weight: 700;
+  color: #222222;
+  text-align: center;
+  border-bottom: 0.5px solid rgba(255, 255, 255, 0.35);
+  padding-bottom: 1px;
+  margin-bottom: 1px;
+}
+
+.minimapRow {
+  display: flex;
+  justify-content: flex-end;
+  gap: 2px;
+}
+
+.minimapRowLeft {
+  justify-content: flex-start;
+}
+
+.minimapDot {
+  width: 6px;
+  height: 6px;
+  background-color: #ffffff;
+  border: 0.5px solid rgb(31, 173, 62);
+  border-radius: 1px;
+  position: relative;
+  z-index: 1;
+}
+
+.minimapScreenBar {
+  width: 64px;
+  height: 6px;
+  margin: 4px auto 0;
+  background: #a8d1ff;
+  clip-path: polygon(10% 0%, 90% 0%, 100% 100%, 0% 100%);
+}
+
+.zoomControlsWrap {
+  position: fixed;
+  bottom: 96px;
+  right: 16px;
+  z-index: 60;
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  transition: bottom 0.15s ease;
+}
+
+.zoomControlsWithPay {
+  bottom: 152px;
+}
+
+.zoomTooltip {
+  position: relative;
+  background-color: rgb(62, 110, 234);
+  color: #ffffff;
+  font-family: Roboto, sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 16px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  white-space: nowrap;
+  cursor: pointer;
+  margin-bottom: 4px;
+}
+
+.zoomTooltipArrow {
+  position: absolute;
+  right: -5px;
+  bottom: 11px;
+  width: 10px;
+  height: 10px;
+  background-color: rgb(62, 110, 234);
+  transform: rotate(45deg);
+}
+
+.zoomButtonsBox {
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.16);
+  overflow: hidden;
+  border: 1px solid #ececec;
+}
+
+.zoomBtn {
+  width: 36px;
+  height: 36px;
+  background: #ffffff;
+  border: none;
+  border-bottom: 1px solid #eeeeee;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+}
+
+.zoomBtn:last-child {
+  border-bottom: none;
+}
+
+.zoomBtn:hover {
+  background-color: #f9f9f9;
+}
+
+/* ─── 4. 3-Tier Fixed Bottom Footer (Legend + Offer Strip + Pay ₹ CTA) ─── */
 .bottomStickyBar {
-  position: sticky;
+  position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
   background-color: #ffffff;
-  border-top: 1px solid #e0e3eb;
-  box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.06);
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 10px 20px 2px;
   z-index: 80;
+  display: flex;
+  flex-direction: column;
 }
 
-.bottomBarInner {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 12px 24px;
+.legendRow {
+  height: 32px;
+  background-color: rgb(255, 255, 255);
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 20px;
-  flex-wrap: wrap;
+  justify-content: center;
+  padding: 0 16px;
 }
 
 .seatLegend {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 24px;
 }
 
 .legendEntry {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
+  font-family: Roboto, sans-serif;
   font-size: 12px;
-  color: #555555;
-  font-weight: 500;
+  font-weight: 400;
+  line-height: 16px;
+  letter-spacing: 0.2px;
+  color: rgb(102, 102, 102);
 }
 
 .legendBox {
   width: 16px;
   height: 16px;
-  border-radius: 3px;
+  border-radius: 4px;
   display: inline-block;
 }
 
 .legendAvailable {
-  background-color: #ffffff;
-  border: 1px solid #1ea83c;
-}
-
-.legendSelected {
-  background-color: #1ea83c;
-  border: 1px solid #1ea83c;
+  background-color: rgb(255, 255, 255);
+  border: 1px solid rgb(31, 173, 62);
 }
 
 .legendSold {
-  background-color: #e0e0e0;
-  border: 1px solid #d4d4d4;
+  background-color: rgb(229, 229, 229);
+  border: 1px solid rgb(229, 229, 229);
 }
 
-.bottomPayActions {
-  display: flex;
-  align-items: center;
-  gap: 20px;
+.legendSelected {
+  background-color: rgb(31, 173, 62);
+  border: 1px solid rgb(31, 173, 62);
 }
 
-.selectedMiniInfo {
+.offerBannerStrip {
+  background-color: rgb(242, 245, 249);
+  padding: 4px 16px;
   display: flex;
   flex-direction: column;
-  text-align: right;
+  align-items: center;
+  justify-content: center;
 }
 
-.miniSeatCount {
-  font-size: 13px;
-  color: #1f2533;
+.offerBannerContent {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
 }
 
-.miniSeatCount strong {
-  color: #1ea83c;
+.offerBankBadge {
+  display: inline-flex;
+  align-items: center;
 }
 
-.miniSeatHint {
+.offerBannerText {
+  font-family: Roboto, sans-serif;
   font-size: 11px;
-  color: #f84464;
+  font-weight: 500;
+  line-height: 14px;
+  color: rgb(51, 51, 51);
+}
+
+.offerBannerCount {
+  font-family: Roboto, sans-serif;
+  font-size: 10px;
+  font-weight: 400;
+  color: rgb(51, 51, 51);
+  margin-left: 16px;
+}
+
+.offerDotsRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  margin-top: 3px;
+}
+
+.offerDot {
+  width: 6px;
+  height: 2px;
+  border-radius: 2px;
+  background-color: #cccccc;
+}
+
+.offerDotActive {
+  width: 12px;
+  background-color: #333333;
+}
+
+.payBarRow {
+  height: 56px;
+  padding: 8px 16px;
+  background-color: rgb(255, 255, 255);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .bmsPayCta {
-  background-color: #f84464;
-  color: #ffffff;
-  font-size: 15px;
-  font-weight: 700;
-  padding: 11px 42px;
+  max-width: 360px;
+  width: 100%;
+  height: 40px;
+  background-color: rgb(235, 78, 98);
+  border: 1px solid rgb(235, 78, 98);
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(248, 68, 100, 0.35);
-  transition: background-color 0.15s, transform 0.1s;
+  color: rgb(255, 255, 255);
+  font-family: Roboto, sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 20px;
+  letter-spacing: 0.2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.15s;
 }
 
 .bmsPayCta:hover {
-  background-color: #e03454;
-  transform: translateY(-1px);
+  background-color: #d83b50;
 }
 
-/* ─── 5. "How Many Seats?" Modal (BookMyShow Vehicle Popup) ─── */
+/* ─── 5. "How many seats?" Modal (Exact BookMyShow Vehicle Popup) ─── */
 .modalOverlay {
   position: fixed;
   inset: 0;
-  background-color: rgba(0, 0, 0, 0.65);
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -493,130 +761,238 @@
 }
 
 .qtyModal {
-  background: #ffffff;
-  border-radius: 10px;
-  width: 100%;
-  max-width: 500px;
-  padding: 28px 28px 24px;
+  background: rgb(255, 255, 255);
+  border-radius: 8px;
+  width: 480px;
+  max-width: 95vw;
+  padding: 0;
   text-align: center;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
-  animation: modalFadeIn 0.2s ease-out;
+  box-shadow: rgb(51, 51, 51) 0px 0px 20px 0px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+  font-family: Roboto, sans-serif;
+  animation: modalFadeIn 0.15s ease-out;
 }
 
 @keyframes modalFadeIn {
   from {
     opacity: 0;
-    transform: translateY(10px) scale(0.98);
+    transform: scale(0.98);
   }
   to {
     opacity: 1;
-    transform: translateY(0) scale(1);
+    transform: scale(1);
   }
 }
 
+.qtyHeader {
+  width: 100%;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .qtyTitle {
+  font-family: Roboto, sans-serif;
   font-size: 18px;
-  font-weight: 700;
-  color: #1f2533;
-  margin-bottom: 12px;
+  font-weight: 500;
+  line-height: 24px;
+  letter-spacing: 0.2px;
+  color: rgb(0, 0, 0);
+  margin: 0;
 }
 
 .vehicleGraphic {
-  height: 96px;
+  width: 100px;
+  height: 100px;
+  padding-top: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 8px 0 16px;
+  margin: 0 auto;
 }
 
 .vehicleSvg {
-  width: 170px;
-  height: 85px;
+  width: 100px;
+  height: 80px;
+  display: block;
+}
+
+.qtyPillsWrap {
+  width: 100%;
+  padding: 20px 16px;
+  display: flex;
+  justify-content: center;
 }
 
 .qtyPills {
+  width: 360px;
+  max-width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  margin-bottom: 24px;
-  flex-wrap: wrap;
 }
 
 .qtyPill {
-  width: 34px;
-  height: 34px;
+  width: 30px;
+  height: 30px;
+  margin: 0 3px;
   border-radius: 50%;
   background: transparent;
-  color: #333333;
-  font-size: 14px;
-  font-weight: 600;
+  border: none;
+  color: rgb(0, 0, 0);
+  font-family: Roboto, sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 20px;
+  letter-spacing: 0.2px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.15s;
+  cursor: pointer;
+  padding: 0;
+  transition: background-color 0.15s ease, color 0.15s ease;
 }
 
 .qtyPill:hover {
-  background-color: #fde8ec;
-  color: #f84464;
+  background-color: rgb(235, 78, 98);
+  color: rgb(255, 255, 255);
+  font-weight: 500;
 }
 
 .qtyPillActive {
-  background-color: #f84464 !important;
-  color: #ffffff !important;
-  box-shadow: 0 3px 8px rgba(248, 68, 100, 0.35);
+  background-color: rgb(235, 78, 98) !important;
+  color: rgb(255, 255, 255) !important;
+  font-weight: 500;
+}
+
+.qtyDivider {
+  border-top: 2px solid rgb(245, 245, 245);
+  width: 90%;
+  margin: 0 auto;
 }
 
 .qtyCategories {
   display: flex;
   justify-content: center;
-  gap: 24px;
-  border-top: 1px solid #eeeeee;
-  border-bottom: 1px solid #eeeeee;
-  padding: 16px 0;
-  margin-bottom: 22px;
+  flex-wrap: wrap;
+  width: 100%;
+  padding: 8px 16px;
 }
 
 .qtyCat {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 3px;
+  margin: 8px 10px;
 }
 
 .qtyCatName {
-  font-size: 11px;
-  color: #777777;
-  font-weight: 600;
+  font-family: Roboto, sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 16px;
+  letter-spacing: 0.2px;
+  color: rgb(102, 102, 102);
+  text-transform: uppercase;
 }
 
 .qtyCatPrice {
+  font-family: Roboto, sans-serif;
   font-size: 14px;
-  font-weight: 700;
-  color: #1f2533;
+  font-weight: 500;
+  line-height: 20px;
+  letter-spacing: 0.2px;
+  color: rgb(51, 51, 51);
+  margin-top: 2px;
 }
 
 .qtyCatStatus {
-  font-size: 10px;
-  font-weight: 700;
-  color: #1ea83c;
-  letter-spacing: 0.4px;
+  font-family: Roboto, sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 16px;
+  letter-spacing: 0.2px;
+  color: rgb(31, 173, 62);
+  text-transform: uppercase;
+}
+
+.bestsellerBanner {
+  width: 100%;
+  background-color: rgb(242, 245, 249);
+  padding: 12px;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  user-select: none;
+}
+
+.bestsellerInner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  font-family: Roboto, sans-serif;
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 16px;
+  letter-spacing: 0.2px;
+  color: rgb(51, 51, 51);
+}
+
+.bestsellerIconWrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 17px;
+  height: 16px;
+  margin: 0 2px;
+}
+
+.qtySubmitWrap {
+  width: 100%;
+  height: 56px;
+  padding: 8px 16px;
+  background-color: rgb(255, 255, 255);
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 8px 0px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .qtySubmit {
   width: 100%;
-  background-color: #f84464;
-  color: #ffffff;
-  font-size: 15px;
-  font-weight: 700;
-  padding: 13px 20px;
+  height: 40px;
+  background-color: rgb(235, 78, 98);
+  border: 1px solid rgb(235, 78, 98);
   border-radius: 8px;
+  color: rgb(255, 255, 255);
+  font-family: Roboto, sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 20px;
+  letter-spacing: 0.2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
   transition: background-color 0.15s;
 }
 
 .qtySubmit:hover {
-  background-color: #e03454;
+  background-color: #d83b50;
+}
+
+@media (max-width: 1024px) {
+  .minimapWidget,
+  .zoomControlsWrap {
+    display: none;
+  }
 }
 
 /* ─── 6. Step 2: Checkout (Grab a Bite F&B + Booking Summary) ─── */

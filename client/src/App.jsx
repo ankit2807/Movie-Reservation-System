@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'r
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import MovieDetails from './pages/MovieDetails';
+import MovieMultimedia from './pages/MovieMultimedia';
 import BuyTickets from './pages/BuyTickets';
 import Booking from './pages/Booking';
 import Login from './pages/Login';
@@ -52,7 +53,9 @@ function AppLayout() {
 
         <Route path="/search" element={<SearchResults />} />
         <Route path="/movie/:id" element={<MovieDetails />} />
+        <Route path="/movie/:id/multimedia" element={<MovieMultimedia />} />
         <Route path="/movies/:city/:slug/:id" element={<MovieDetails />} />
+        <Route path="/movies/:city/:slug/:id/multimedia" element={<MovieMultimedia />} />
         <Route path="/movie/:id/buytickets" element={<BuyTickets />} />
         <Route path="/buytickets/:city/:slug/:id" element={<BuyTickets />} />
         <Route path="/booking/:showtimeId" element={<Booking />} />
