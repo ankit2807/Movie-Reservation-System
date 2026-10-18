@@ -53,11 +53,13 @@ const Navbar = () => {
     <nav className={styles.navbar}>
       <div className={`container ${styles.navContainer}`}>
         <div className={styles.logoSearch}>
-          <Link to="/" className={styles.logo}>
-            <span className={styles.logoMovie}>Movie</span><span className={styles.logoBook}>Book</span>
+          <Link to="/" className={styles.logo} aria-label="BookMyShow Home">
+            <span className={styles.logoTextDark}>book</span>
+            <span className={styles.logoBadgeRed}>my</span>
+            <span className={styles.logoTextDark}>show</span>
           </Link>
           <form onSubmit={handleSearchSubmit} className={styles.searchBar}>
-            <Search size={18} className={styles.searchIcon} />
+            <Search size={16} className={styles.searchIcon} />
             <input
               type="text"
               placeholder="Search for Movies, Events, Plays, Sports and Activities"
@@ -74,7 +76,6 @@ const Navbar = () => {
             <div className={styles.location} onClick={() => setIsCityModalOpen(true)} id="location-selector">
                 {hasSelectedCity && currentCity ? currentCity : 'Select City'} <ChevronDown size={14} />
             </div>
-            <LocationModal isOpen={isCityModalOpen} onClose={() => setIsCityModalOpen(false)} />
           </div>
           
           {isAuthenticated ? (
@@ -103,6 +104,7 @@ const Navbar = () => {
         </div>
       </div>
     </nav>
+    <LocationModal isOpen={isCityModalOpen} onClose={() => setIsCityModalOpen(false)} />
     <SideMenu isOpen={isSideMenuOpen} onClose={() => setIsSideMenuOpen(false)} />
     </>
   );

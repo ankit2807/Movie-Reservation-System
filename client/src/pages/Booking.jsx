@@ -20,97 +20,15 @@ import {
 } from '../utils/bookmyshowData';
 import styles from '../styles/Booking.module.css';
 
-/* ─── BookMyShow Vehicle SVG Illustrations for "How Many Seats?" Modal ─── */
+/* ─── Official BookMyShow Vehicle SVG Sprite Illustration (1..10) ─── */
 const VehicleIllustration = ({ count }) => {
-  if (count === 1) {
-    // 1 Seat: Bicycle
-    return (
-      <svg viewBox="0 0 180 90" className={styles.vehicleSvg}>
-        <circle cx="48" cy="62" r="18" fill="none" stroke="#333" strokeWidth="3.5" />
-        <circle cx="48" cy="62" r="4" fill="#f84464" />
-        <circle cx="132" cy="62" r="18" fill="none" stroke="#333" strokeWidth="3.5" />
-        <circle cx="132" cy="62" r="4" fill="#f84464" />
-        <path d="M48 62 L78 34 L118 34 L90 62 Z" fill="none" stroke="#f84464" strokeWidth="4" strokeLinejoin="round" />
-        <path d="M78 34 L68 22 M60 22 L74 22" stroke="#333" strokeWidth="3.5" strokeLinecap="round" />
-        <path d="M132 62 L114 24 L126 20" fill="none" stroke="#333" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
-    );
-  }
-  if (count === 2) {
-    // 2 Seats: Scooter / Vespa
-    return (
-      <svg viewBox="0 0 180 90" className={styles.vehicleSvg}>
-        <circle cx="48" cy="66" r="14" fill="none" stroke="#333" strokeWidth="4" />
-        <circle cx="48" cy="66" r="5" fill="#f84464" />
-        <circle cx="130" cy="66" r="14" fill="none" stroke="#333" strokeWidth="4" />
-        <circle cx="130" cy="66" r="5" fill="#f84464" />
-        <path d="M34 62 Q48 38 82 44 L110 62 L34 62 Z" fill="#f84464" />
-        <path d="M110 62 L124 24 L112 20" fill="none" stroke="#333" strokeWidth="4" strokeLinecap="round" />
-        <rect x="52" y="34" width="34" height="9" rx="4.5" fill="#2b3148" />
-        <circle cx="128" cy="28" r="5" fill="#ffd700" stroke="#333" strokeWidth="2" />
-      </svg>
-    );
-  }
-  if (count === 3) {
-    // 3 Seats: Auto Rickshaw
-    return (
-      <svg viewBox="0 0 180 90" className={styles.vehicleSvg}>
-        <path d="M38 58 L38 28 Q38 16 54 16 L108 16 Q124 16 132 36 L142 58 Z" fill="#ffc107" stroke="#333" strokeWidth="3" />
-        <path d="M38 42 L136 42 L142 58 L38 58 Z" fill="#1ea83c" />
-        <rect x="46" y="22" width="32" height="16" rx="3" fill="#fff" stroke="#333" strokeWidth="2" />
-        <rect x="86" y="22" width="28" height="16" rx="3" fill="#fff" stroke="#333" strokeWidth="2" />
-        <circle cx="54" cy="64" r="12" fill="#333" />
-        <circle cx="54" cy="64" r="5" fill="#fff" />
-        <circle cx="130" cy="64" r="12" fill="#333" />
-        <circle cx="130" cy="64" r="5" fill="#fff" />
-      </svg>
-    );
-  }
-  if (count === 4) {
-    // 4 Seats: Compact Car
-    return (
-      <svg viewBox="0 0 180 90" className={styles.vehicleSvg}>
-        <path d="M28 58 L38 34 Q44 22 60 22 L114 22 Q130 22 140 36 L154 58 Z" fill="#f84464" stroke="#333" strokeWidth="3" />
-        <rect x="22" y="46" width="136" height="18" rx="8" fill="#f84464" stroke="#333" strokeWidth="3" />
-        <path d="M48 44 L56 27 L86 27 L86 44 Z" fill="#fff" stroke="#333" strokeWidth="2" />
-        <path d="M92 44 L92 27 L120 27 L130 44 Z" fill="#fff" stroke="#333" strokeWidth="2" />
-        <circle cx="52" cy="66" r="13" fill="#2b3148" stroke="#333" strokeWidth="3" />
-        <circle cx="52" cy="66" r="5" fill="#fff" />
-        <circle cx="128" cy="66" r="13" fill="#2b3148" stroke="#333" strokeWidth="3" />
-        <circle cx="128" cy="66" r="5" fill="#fff" />
-      </svg>
-    );
-  }
-  if (count <= 7) {
-    // 5-7 Seats: SUV / Sedan
-    return (
-      <svg viewBox="0 0 180 90" className={styles.vehicleSvg}>
-        <path d="M20 58 L28 28 Q32 18 48 18 L124 18 Q138 18 148 34 L162 58 Z" fill="#2b3148" stroke="#333" strokeWidth="3" />
-        <rect x="16" y="44" width="148" height="20" rx="7" fill="#f84464" stroke="#333" strokeWidth="3" />
-        <rect x="36" y="24" width="28" height="16" rx="2" fill="#fff" />
-        <rect x="70" y="24" width="28" height="16" rx="2" fill="#fff" />
-        <rect x="104" y="24" width="26" height="16" rx="2" fill="#fff" />
-        <circle cx="46" cy="66" r="14" fill="#333" />
-        <circle cx="46" cy="66" r="6" fill="#fff" />
-        <circle cx="134" cy="66" r="14" fill="#333" />
-        <circle cx="134" cy="66" r="6" fill="#fff" />
-      </svg>
-    );
-  }
-  // 8-10 Seats: Mini Bus / Van
+  const safeCount = Math.min(10, Math.max(1, Number(count) || 2));
   return (
-    <svg viewBox="0 0 180 90" className={styles.vehicleSvg}>
-      <rect x="16" y="18" width="148" height="46" rx="10" fill="#f84464" stroke="#333" strokeWidth="3" />
-      <rect x="16" y="46" width="148" height="10" fill="#2b3148" />
-      <rect x="26" y="25" width="22" height="16" rx="2" fill="#fff" />
-      <rect x="54" y="25" width="22" height="16" rx="2" fill="#fff" />
-      <rect x="82" y="25" width="22" height="16" rx="2" fill="#fff" />
-      <rect x="110" y="25" width="22" height="16" rx="2" fill="#fff" />
-      <rect x="138" y="25" width="18" height="16" rx="2" fill="#fff" />
-      <circle cx="46" cy="66" r="13" fill="#333" />
-      <circle cx="46" cy="66" r="5" fill="#fff" />
-      <circle cx="134" cy="66" r="13" fill="#333" />
-      <circle cx="134" cy="66" r="5" fill="#fff" />
+    <svg className={styles.vehicleSvg} aria-hidden="true">
+      <use
+        href={`/seat-selector-icons.svg#icon-vehicle-${safeCount}`}
+        xlinkHref={`/seat-selector-icons.svg#icon-vehicle-${safeCount}`}
+      />
     </svg>
   );
 };
@@ -224,9 +142,12 @@ const Booking = () => {
   // Seat & Qty state
   const [ticketQty, setTicketQty] = useState(2);
   const [hoveredQty, setHoveredQty] = useState(null);
+  const [bestsellerChecked, setBestsellerChecked] = useState(false);
   const [isQtyModalOpen, setIsQtyModalOpen] = useState(true);
   const [selectedSeats, setSelectedSeats] = useState([]);
   const [occupiedSeats, setOccupiedSeats] = useState([]);
+  const [zoomLevel, setZoomLevel] = useState(1);
+  const [showZoomTip, setShowZoomTip] = useState(true);
 
   // Checkout / F&B / Summary state
   const [step, setStep] = useState('seats'); // 'seats' | 'checkout'
@@ -274,9 +195,9 @@ const Booking = () => {
         }
 
         if (!targetMovie) {
-          if (extractedMovieId) {
-            const res = await api.get(`/movie/find/${extractedMovieId}`);
-            targetMovie = res.data;
+          if (extractedMovieId && /^[0-9a-fA-F]{24}$/.test(extractedMovieId)) {
+            const res = await api.get(`/movie/find/${extractedMovieId}`).catch(() => null);
+            targetMovie = res?.data;
           } else if (showtimeId && /^[0-9a-fA-F]{24}$/.test(showtimeId)) {
             const stRes = await api.get(`/showtimes/find/${showtimeId}`).catch(() => null);
             if (stRes?.data?.movieId) {
@@ -284,8 +205,8 @@ const Booking = () => {
             }
           }
           if (!targetMovie) {
-            const listRes = await api.get('/movie');
-            targetMovie = listRes.data?.[0];
+            const listRes = await api.get('/movie').catch(() => null);
+            targetMovie = listRes?.data?.[0];
           }
         }
 
@@ -316,7 +237,7 @@ const Booking = () => {
           time: urlTime || matchingShow.time,
           format: urlFormat || matchingShow.format,
           screen: urlScreen || matchingShow.screen,
-          language: urlLang || matchingShow.language || 'Hindi',
+          language: urlLang || matchingShow.language || 'English',
         });
       } catch (err) {
         console.error('Error loading booking context:', err);
@@ -374,7 +295,7 @@ const Booking = () => {
   const handleSwitchShowtime = (slot) => {
     setActiveShow({
       ...slot,
-      language: activeShow?.language || slot.language || 'Hindi',
+      language: activeShow?.language || slot.language || 'English',
     });
     setStep('seats');
     setSearchParams({
@@ -385,12 +306,131 @@ const Booking = () => {
       time: slot.time,
       format: slot.format,
       screen: slot.screen,
-      lang: activeShow?.language || slot.language || 'Hindi',
+      lang: activeShow?.language || slot.language || 'English',
     });
   };
 
-  /* ─── BookMyShow Smart Consecutive Seat Selection ─── */
-  const handleSeatClick = (seatId, tier, blockStartCol, blockEndCol) => {
+  /* ─── Bestseller Seat Identification (Matches BookMyShow Auditorium Bestseller Zone) ─── */
+  const isBestsellerSeat = (seatId) => {
+    if (!seatId) return false;
+    const row = seatId[0];
+    const col = parseInt(seatId.slice(1), 10);
+    if (row === 'C') return col >= 4 && col <= 7;
+    if (row === 'D') return (col >= 12 && col <= 14) || (col >= 4 && col <= 7);
+    if (['E', 'F', 'G', 'H'].includes(row)) return col >= 4 && col <= 12;
+    return false;
+  };
+
+  /* ─── Build descending seat blocks (15..01, 17..15 | 14..01, etc.) ─── */
+  const getDescendingBlocksForTier = (tier) => {
+    const totalCols = getTotalColsForTier(tier);
+    let high = totalCols;
+    return tier.blocks.map((count) => {
+      const end = high;
+      const start = high - count + 1;
+      high -= count;
+      const cols = Array.from({ length: count }, (_, idx) => end - idx);
+      return { start, end, cols };
+    });
+  };
+
+  /* ─── Helper to find block boundaries for any seat ─── */
+  const getBlockBoundsForSeat = (seatId) => {
+    const tier = getTierForSeat(seatId);
+    const col = parseInt(seatId.slice(1), 10);
+    const totalCols = getTotalColsForTier(tier);
+    const descBlocks = getDescendingBlocksForTier(tier);
+    for (const blk of descBlocks) {
+      if (col >= blk.start && col <= blk.end) {
+        return { tier, blockStartCol: blk.start, blockEndCol: blk.end, totalCols };
+      }
+    }
+    return { tier, blockStartCol: 1, blockEndCol: totalCols, totalCols };
+  };
+
+  /* ─── Smart Consecutive Seat Picker for 1..10 Seats ─── */
+  const buildConsecutiveSelection = (startSeatId, targetQty, currentOccupied, existingBase = []) => {
+    const row = startSeatId[0];
+    const clickedCol = parseInt(startSeatId.slice(1), 10);
+    const { tier, blockStartCol, blockEndCol, totalCols } = getBlockBoundsForSeat(startSeatId);
+
+    const baseSeats = [...existingBase];
+    const needed = Math.max(0, targetQty - baseSeats.length);
+    const newlyPicked = [];
+
+    const isTaken = (id) =>
+      currentOccupied.includes(id) || baseSeats.includes(id) || newlyPicked.includes(id);
+
+    // 1. Try consecutive available seats within the same block
+    for (let c = clickedCol; c <= blockEndCol && newlyPicked.length < needed; c++) {
+      const candidate = `${row}${c}`;
+      if (!isTaken(candidate)) {
+        newlyPicked.push(candidate);
+      } else {
+        break;
+      }
+    }
+
+    // 2. Try extending in the opposite direction within the same block
+    if (newlyPicked.length < needed) {
+      for (let c = clickedCol - 1; c >= blockStartCol && newlyPicked.length < needed; c--) {
+        const candidate = `${row}${c}`;
+        if (!isTaken(candidate)) {
+          newlyPicked.unshift(candidate);
+        } else {
+          break;
+        }
+      }
+    }
+
+    // 3. If user requested more seats than available in this block (e.g. 6..10 seats),
+    //    continue picking nearest available seats across the same row
+    if (newlyPicked.length < needed) {
+      for (let offset = 1; offset <= totalCols && newlyPicked.length < needed; offset++) {
+        const rightCol = clickedCol + offset;
+        if (rightCol <= totalCols) {
+          const rightCand = `${row}${rightCol}`;
+          if (!isTaken(rightCand)) newlyPicked.push(rightCand);
+        }
+        if (newlyPicked.length >= needed) break;
+        const leftCol = clickedCol - offset;
+        if (leftCol >= 1) {
+          const leftCand = `${row}${leftCol}`;
+          if (!isTaken(leftCand)) newlyPicked.unshift(leftCand);
+        }
+      }
+    }
+
+    // 4. Fallback across adjacent rows in the same tier if the entire row was nearly full
+    if (newlyPicked.length < needed && tier?.rows) {
+      for (const altRow of tier.rows) {
+        if (altRow === row) continue;
+        for (let c = 1; c <= totalCols && newlyPicked.length < needed; c++) {
+          const cand = `${altRow}${c}`;
+          if (!isTaken(cand)) newlyPicked.push(cand);
+        }
+      }
+    }
+
+    return [...baseSeats, ...newlyPicked];
+  };
+
+  /* ─── Auto-pick Bestseller Seats when Bestseller Checkbox is checked ─── */
+  const pickBestsellerSeats = (targetQty, currentOccupied) => {
+    const preferredRows = ['E', 'F', 'G', 'D', 'C', 'H'];
+    for (const r of preferredRows) {
+      for (let c = 6; c <= 12; c++) {
+        const candidate = `${r}${c}`;
+        if (!currentOccupied.includes(candidate)) {
+          return buildConsecutiveSelection(candidate, targetQty, currentOccupied, []);
+        }
+      }
+    }
+    return buildConsecutiveSelection('E7', targetQty, currentOccupied, []);
+  };
+
+  /* ─── BookMyShow Smart Consecutive Seat Selection on Click ─── */
+  const handleSeatClick = (seatId) => {
     if (occupiedSeats.includes(seatId)) return;
 
     // If clicking an already selected seat, toggle it off
@@ -399,39 +439,22 @@ const Booking = () => {
       return;
     }
 
-    const row = seatId[0];
-    const clickedCol = parseInt(seatId.slice(1), 10);
-
-    // Determine how many seats we still need to select
-    // If user already has full ticketQty selected, clicking a new seat starts a fresh selection of ticketQty
+    // If user has 0 seats or already has full ticketQty selected, start a fresh selection of ticketQty
     const startingFresh = selectedSeats.length === 0 || selectedSeats.length >= ticketQty;
     const baseSeats = startingFresh ? [] : [...selectedSeats];
-    const needed = ticketQty - baseSeats.length;
+    const nextSelection = buildConsecutiveSelection(seatId, ticketQty, occupiedSeats, baseSeats);
+    setSelectedSeats(nextSelection);
+  };
 
-    const newlyPicked = [];
-    // 1. Try selecting consecutive available seats to the right within the same block
-    for (let c = clickedCol; c <= blockEndCol && newlyPicked.length < needed; c++) {
-      const candidate = `${row}${c}`;
-      if (!occupiedSeats.includes(candidate) && !baseSeats.includes(candidate)) {
-        newlyPicked.push(candidate);
-      } else {
-        break;
-      }
+  /* ─── Confirm "How many seats?" Modal ─── */
+  const handleConfirmQtyModal = () => {
+    setIsQtyModalOpen(false);
+    if (bestsellerChecked) {
+      setSelectedSeats(pickBestsellerSeats(ticketQty, occupiedSeats));
+    } else if (selectedSeats.length > 0) {
+      // Resize current selection to match the newly chosen ticketQty
+      setSelectedSeats(buildConsecutiveSelection(selectedSeats[0], ticketQty, occupiedSeats, []));
     }
-
-    // 2. If we hit the end of the block or an occupied seat, try extending to the left of clickedCol in the same block
-    if (newlyPicked.length < needed) {
-      for (let c = clickedCol - 1; c >= blockStartCol && newlyPicked.length < needed; c--) {
-        const candidate = `${row}${c}`;
-        if (!occupiedSeats.includes(candidate) && !baseSeats.includes(candidate) && !newlyPicked.includes(candidate)) {
-          newlyPicked.unshift(candidate);
-        } else {
-          break;
-        }
-      }
-    }
-
-    setSelectedSeats([...baseSeats, ...newlyPicked]);
   };
 
   /* ─── Food Cart Helpers ─── */
@@ -505,16 +528,16 @@ const Booking = () => {
         movieTitle: movie?.title,
         posterImage: movie?.posterImage,
         certification: movie?.certification || 'UA',
-        language: activeShow?.language || 'Hindi',
+        language: activeShow?.language || 'English',
         format: activeShow?.format || '2D',
         theatre: {
-          id: theatre?.id || 'pvr-logix-noida',
-          name: theatre?.name || 'PVR: Logix City Centre Mall, Noida',
-          address: theatre?.address || 'Sector 32, Noida',
+          id: theatre?.id || 'moviemax-gulshan-noida',
+          name: theatre?.name || 'MovieMax Laserplex: Gulshan One 29 Mall, Noida',
+          address: theatre?.address || 'Sector 129, Noida',
           screen: activeShow?.screen || 'AUDI 01',
         },
         showDate: bookingDate,
-        showTime: activeShow?.time || '07:30 PM',
+        showTime: activeShow?.time || '03:45 PM',
         seatDetails,
         food: foodLineItems.map((f) => ({
           id: f.id,
@@ -559,7 +582,7 @@ const Booking = () => {
         movieTitle: movie?.title,
         posterImage: movie?.posterImage,
         certification: movie?.certification || 'UA',
-        language: activeShow?.language || 'Hindi',
+        language: activeShow?.language || 'English',
         format: activeShow?.format || '2D',
         theatre: {
           id: theatre?.id,
@@ -600,7 +623,7 @@ const Booking = () => {
         movieTitle: movie?.title,
         posterImage: movie?.posterImage,
         certification: movie?.certification || 'UA',
-        language: activeShow?.language || 'Hindi',
+        language: activeShow?.language || 'English',
         format: activeShow?.format || '2D',
         theatreName: theatre?.name,
         screen: activeShow?.screen || 'AUDI 01',
@@ -639,14 +662,11 @@ const Booking = () => {
     );
   }
 
-  const formattedBookingDate = new Date(bookingDate).toLocaleDateString('en-IN', {
-    weekday: 'long',
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-  });
+  const dObj = new Date(bookingDate);
+  const formattedBookingDate = `${dObj.toLocaleDateString('en-US', { weekday: 'short' })}, ${dObj.getDate()} ${dObj.toLocaleDateString('en-US', { month: 'long' })}, ${dObj.getFullYear()}`;
 
   const displayQty = hoveredQty || ticketQty;
+  const modalTiers = activeShow?.tiers?.length ? activeShow.tiers : SEAT_TIERS;
   const filteredFoodMenu = foodCategory === 'All'
     ? FOOD_MENU
     : FOOD_MENU.filter((f) => f.category === foodCategory);
@@ -656,51 +676,93 @@ const Booking = () => {
       {/* ═══════ 1. BOOKMYSHOW "HOW MANY SEATS?" MODAL ═══════ */}
       {isQtyModalOpen && (
         <div className={styles.modalOverlay} onClick={() => setIsQtyModalOpen(false)}>
-          <div className={styles.qtyModal} onClick={(e) => e.stopPropagation()}>
-            <h3 className={styles.qtyTitle}>How Many Seats?</h3>
+          <div
+            className={styles.qtyModal}
+            onClick={(e) => e.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+            aria-label="How many seats?"
+          >
+            <div className={styles.qtyHeader}>
+              <h3 className={styles.qtyTitle}>How many seats?</h3>
+            </div>
 
             <div className={styles.vehicleGraphic}>
               <VehicleIllustration count={displayQty} />
             </div>
 
-            <div className={styles.qtyPills}>
-              {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
-                <button
-                  key={num}
-                  type="button"
-                  className={`${styles.qtyPill} ${ticketQty === num ? styles.qtyPillActive : ''}`}
-                  onMouseEnter={() => setHoveredQty(num)}
-                  onMouseLeave={() => setHoveredQty(null)}
-                  onClick={() => setTicketQty(num)}
-                >
-                  {num}
-                </button>
-              ))}
+            <div className={styles.qtyPillsWrap}>
+              <div className={styles.qtyPills}>
+                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => {
+                  const isHighlighted = displayQty === num;
+                  return (
+                    <button
+                      key={num}
+                      type="button"
+                      id={`qty-pill-${num}`}
+                      className={`${styles.qtyPill} ${isHighlighted ? styles.qtyPillActive : ''}`}
+                      onMouseEnter={() => setHoveredQty(num)}
+                      onMouseLeave={() => setHoveredQty(null)}
+                      onFocus={() => setHoveredQty(num)}
+                      onBlur={() => setHoveredQty(null)}
+                      onClick={() => setTicketQty(num)}
+                    >
+                      {num}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
 
+            <div className={styles.qtyDivider} />
+
             <div className={styles.qtyCategories}>
-              {SEAT_TIERS.map((tier) => (
-                <div key={tier.tier} className={styles.qtyCat}>
+              {modalTiers.map((tier) => (
+                <div key={tier.tier || tier.label} className={styles.qtyCat}>
                   <span className={styles.qtyCatName}>{tier.label}</span>
-                  <span className={styles.qtyCatPrice}>Rs. {tier.price}.00</span>
-                  <span className={styles.qtyCatStatus}>AVAILABLE</span>
+                  <span className={styles.qtyCatPrice}>₹{tier.price}</span>
+                  <span className={styles.qtyCatStatus}>{tier.status || 'AVAILABLE'}</span>
                 </div>
               ))}
             </div>
 
-            <button
-              type="button"
-              className={styles.qtySubmit}
-              id="select-seats-confirm-btn"
-              onClick={() => {
-                setIsQtyModalOpen(false);
-                if (selectedSeats.length > ticketQty) {
-                  setSelectedSeats((prev) => prev.slice(0, ticketQty));
+            <div
+              className={styles.bestsellerBanner}
+              onClick={() => setBestsellerChecked((prev) => !prev)}
+              role="checkbox"
+              aria-checked={bestsellerChecked}
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === ' ' || e.key === 'Enter') {
+                  e.preventDefault();
+                  setBestsellerChecked((prev) => !prev);
                 }
               }}
             >
-              Select Seats
-            </button>
+              <div className={styles.bestsellerInner}>
+                <span>Book the </span>
+                <span className={styles.bestsellerIconWrap}>
+                  <svg width="17" height="16" aria-hidden="true">
+                    <use
+                      href={`/seat-layout-icons.svg#${bestsellerChecked ? 'icon-best-seat' : 'icon-bestseller'}`}
+                      xlinkHref={`/seat-layout-icons.svg#${bestsellerChecked ? 'icon-best-seat' : 'icon-bestseller'}`}
+                    />
+                  </svg>
+                </span>
+                <span> <b>Bestseller Seats</b> in this cinema at no extra cost!</span>
+              </div>
+            </div>
+
+            <div className={styles.qtySubmitWrap}>
+              <button
+                type="button"
+                className={styles.qtySubmit}
+                id="select-seats-confirm-btn"
+                onClick={handleConfirmQtyModal}
+              >
+                Select Seats
+              </button>
+            </div>
           </div>
         </div>
       )}
@@ -727,197 +789,339 @@ const Booking = () => {
         />
       )}
 
-      {/* ═══════ 4. TOP DARK HEADER BAR (Exact BookMyShow Style) ═══════ */}
-      <header className={styles.topBar}>
-        <div className={styles.topBarInner}>
-          <div className={styles.topBarLeft}>
-            <button
-              type="button"
-              className={styles.backBtnArrow}
-              onClick={() => (step === 'checkout' ? setStep('seats') : navigate(`/movie/${movie._id}/buytickets?lang=${encodeURIComponent(activeShow?.language || 'English')}`))}
-              aria-label="Go back"
-            >
-              <ChevronLeft size={26} />
-            </button>
-            <div className={styles.movieMeta}>
-              <div className={styles.movieNameRow}>
-                <h1 className={styles.movieName}>{movie.title}</h1>
-                <span className={styles.certBadgeInline}>{movie.certification || 'UA'}</span>
+      {/* ═══════ 4 & 5. STICKY HEADER STACK (White Top Bar + Showtime Strip) ═══════ */}
+      <div className={styles.headerStack}>
+        <header className={styles.topBar}>
+          <div className={styles.topBarInner}>
+            <div className={styles.topBarLeft}>
+              <button
+                type="button"
+                className={styles.backBtnArrow}
+                onClick={() =>
+                  step === 'checkout'
+                    ? setStep('seats')
+                    : navigate(`/movie/${movie._id}/buytickets?lang=${encodeURIComponent(activeShow?.language || 'English')}`)
+                }
+                aria-label="Go back"
+              >
+                <svg width="20" height="20" aria-hidden="true">
+                  <use
+                    href="/common-icons.svg#icon-chevron-any-color"
+                    xlinkHref="/common-icons.svg#icon-chevron-any-color"
+                  />
+                </svg>
+              </button>
+              <div className={styles.movieMeta}>
+                <div className={styles.movieNameRow}>
+                  <h1 className={styles.movieName}>
+                    {movie.title} - {activeShow?.language || 'English'}
+                  </h1>
+                </div>
+                <p className={styles.movieSubheader}>
+                  {theatre?.name} | {formattedBookingDate} | {activeShow?.time}
+                </p>
               </div>
-              <p className={styles.movieSubheader}>
-                {theatre?.name} &nbsp;|&nbsp; {formattedBookingDate}, {activeShow?.time} ({activeShow?.format})
-              </p>
+            </div>
+
+            <div className={styles.topBarRight}>
+              <span className={styles.a11yBadge} title="Wheelchair accessible cinema">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <circle cx="12" cy="12" r="9.5" stroke="#333333" strokeWidth="1.5" />
+                  <circle cx="12" cy="7" r="1.4" fill="#333333" />
+                  <path
+                    d="M8.5 10.5H15.5M12 10.5V14.5M12 14.5L9.8 18M12 14.5L14.2 18"
+                    stroke="#333333"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </span>
+              <button
+                type="button"
+                id="open-qty-modal-btn"
+                className={styles.ticketQtyEdit}
+                onClick={() => setIsQtyModalOpen(true)}
+              >
+                <svg width="14" height="14" aria-hidden="true">
+                  <use
+                    href="/seat-layout-icons.svg#icon-red-edit"
+                    xlinkHref="/seat-layout-icons.svg#icon-red-edit"
+                  />
+                </svg>
+                <span>{ticketQty} {ticketQty === 1 ? 'Ticket' : 'Tickets'}</span>
+              </button>
             </div>
           </div>
+        </header>
 
-          <div className={styles.topBarRight}>
-            <button
-              type="button"
-              className={styles.ticketQtyEdit}
-              onClick={() => setIsQtyModalOpen(true)}
-            >
-              <span>{ticketQty} Tickets</span>
-              <Edit2 size={13} />
-            </button>
-            <button
-              type="button"
-              className={styles.closePageBtn}
-              onClick={() => navigate(`/movie/${movie._id}/buytickets?lang=${encodeURIComponent(activeShow?.language || 'English')}`)}
-              aria-label="Close booking"
-            >
-              <X size={20} />
-            </button>
-          </div>
-        </div>
-      </header>
-
-      {/* ═══════ 5. SHOWTIME TIME-SLOT SWITCHER STRIP (BookMyShow Subheader) ═══════ */}
-      {step === 'seats' && theatre?.shows && (
-        <div className={styles.showtimeStrip}>
-          <div className={styles.showtimeStripInner}>
-            <div className={styles.timePillsList}>
-              {theatre.shows.map((slot) => {
-                const isActive = slot.time === activeShow?.time;
-                return (
-                  <button
-                    key={slot._id}
-                    type="button"
-                    className={`${styles.timeSlotPill} ${isActive ? styles.timeSlotPillActive : ''}`}
-                    onClick={() => handleSwitchShowtime(slot)}
-                  >
-                    <span className={styles.pillTimeText}>{slot.time}</span>
-                    <span className={styles.pillFormatText}>{slot.format}</span>
-                  </button>
-                );
-              })}
-            </div>
-            <div className={styles.stripScreenBadge}>
-              <span>{activeShow?.screen || 'AUDI 01'}</span>
-              <span>•</span>
-              <span>{activeShow?.language || 'Hindi'}</span>
+        {step === 'seats' && theatre?.shows && (
+          <div className={styles.showtimeStrip}>
+            <div className={styles.showtimeStripInner}>
+              <div className={styles.timePillsList}>
+                {theatre.shows.map((slot) => {
+                  const isActive = slot.time === activeShow?.time;
+                  return (
+                    <button
+                      key={slot._id}
+                      type="button"
+                      className={`${styles.timeSlotPill} ${isActive ? styles.timeSlotPillActive : ''}`}
+                      onClick={() => handleSwitchShowtime(slot)}
+                    >
+                      <span className={styles.pillTimeText}>{slot.time}</span>
+                      <span className={styles.pillFormatText}>{slot.format}</span>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
 
-      {/* ═══════ 6A. STEP 1: AUDITORIUM SEAT MAP VIEW (Full-Width BookMyShow Style) ═══════ */}
+      {/* ═══════ 6A. STEP 1: AUDITORIUM SEAT MAP VIEW (Exact BookMyShow Layout) ═══════ */}
       {step === 'seats' && (
         <div className={styles.auditoriumContainer}>
           <div className={styles.seatCanvas}>
-            {SEAT_TIERS.map((tier) => {
-              const totalCols = getTotalColsForTier(tier);
-              // Compute cumulative block boundaries for aisles
-              const blockRanges = [];
-              let cursor = 1;
-              tier.blocks.forEach((bCount) => {
-                blockRanges.push({ start: cursor, end: cursor + bCount - 1 });
-                cursor += bCount;
-              });
+            <div
+              className={styles.seatGridZoomWrap}
+              style={{ transform: `scale(${zoomLevel})`, transformOrigin: 'top center' }}
+            >
+              {SEAT_TIERS.map((tier) => {
+                const descBlocks = getDescendingBlocksForTier(tier);
+                return (
+                  <div key={tier.tier} className={styles.tierBlock}>
+                    <div className={styles.tierRowLayout}>
+                      {/* Left Row Letter Strip (.fIuTG / .hDNuHK) */}
+                      <div className={styles.rowLetterColumn}>
+                        <div className={styles.rowLetterHeaderSpacer} />
+                        <div className={styles.rowLetterStrip}>
+                          {tier.rows.map((row) => (
+                            <span key={row} className={styles.rowLetter}>
+                              {row}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
 
-              return (
-                <div key={tier.tier} className={styles.tierBlock}>
-                  <div className={styles.tierDividerHeader}>
-                    Rs. {tier.price} {tier.label}
-                  </div>
+                      {/* Right Seat Grid + Tier Price Header */}
+                      <div className={styles.tierSeatsColumn}>
+                        <div className={styles.tierDividerHeader}>
+                          ₹{tier.price} {tier.label}
+                        </div>
 
-                  {tier.rows.map((row) => (
-                    <div key={row} className={styles.seatRow}>
-                      <span className={styles.rowLetter}>{row}</span>
-
-                      <div className={styles.rowBlocksWrap}>
-                        {blockRanges.map((range, bIdx) => (
-                          <div key={bIdx} className={styles.seatBlockGroup}>
-                            {Array.from(
-                              { length: range.end - range.start + 1 },
-                              (_, idx) => range.start + idx
-                            ).map((col) => {
-                              const seatId = `${row}${col}`;
-                              const isSelected = selectedSeats.includes(seatId);
-                              const isOccupied = occupiedSeats.includes(seatId);
-                              return (
-                                <button
-                                  key={seatId}
-                                  id={`seat-${seatId}`}
-                                  type="button"
-                                  disabled={isOccupied}
-                                  title={`${tier.label} Seat ${seatId} — ₹${tier.price}`}
-                                  className={`${styles.seatBtn} ${tier.isRecliner ? styles.seatRecliner : ''} ${
-                                    isSelected ? styles.seatSelected : ''
-                                  } ${isOccupied ? styles.seatSold : ''}`}
-                                  onClick={() => handleSeatClick(seatId, tier, range.start, range.end)}
-                                >
-                                  {String(col).padStart(2, '0')}
-                                </button>
-                              );
-                            })}
+                        {tier.rows.map((row) => (
+                          <div
+                            key={row}
+                            className={`${styles.seatRow} ${
+                              tier.isRecliner ? styles.seatRowLeft : ''
+                            }`}
+                          >
+                            <div
+                              className={`${styles.rowBlocksWrap} ${
+                                tier.isRecliner ? styles.rowBlocksWrapLeft : ''
+                              }`}
+                            >
+                              {descBlocks.map((blk, bIdx) => (
+                                <div key={bIdx} className={styles.seatBlockGroup}>
+                                  {blk.cols.map((col) => {
+                                    const seatId = `${row}${col}`;
+                                    const isSelected = selectedSeats.includes(seatId);
+                                    const isOccupied = occupiedSeats.includes(seatId);
+                                    const isBestseller =
+                                      !isOccupied && !isSelected && isBestsellerSeat(seatId);
+                                    return (
+                                      <button
+                                        key={seatId}
+                                        id={`seat-${seatId}`}
+                                        type="button"
+                                        disabled={isOccupied}
+                                        title={`${tier.label}${isBestseller ? ' (Bestseller)' : ''} Seat ${seatId} — ₹${tier.price}`}
+                                        className={`${styles.seatBtn} ${
+                                          isBestseller ? styles.seatBestseller : ''
+                                        } ${isSelected ? styles.seatSelected : ''} ${
+                                          isOccupied ? styles.seatSold : ''
+                                        }`}
+                                        onClick={() => handleSeatClick(seatId)}
+                                      >
+                                        {String(col).padStart(2, '0')}
+                                      </button>
+                                    );
+                                  })}
+                                </div>
+                              ))}
+                            </div>
                           </div>
                         ))}
                       </div>
-
-                      <span className={styles.rowLetter}>{row}</span>
                     </div>
-                  ))}
-                </div>
-              );
-            })}
+                  </div>
+                );
+              })}
 
-            {/* BookMyShow Screen Illustration at the Bottom of the Auditorium */}
-            <div className={styles.screenContainer}>
-              <svg viewBox="0 0 360 44" className={styles.screenSvg}>
-                <defs>
-                  <linearGradient id="screenGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#cce4ff" stopOpacity="0.9" />
-                    <stop offset="100%" stopColor="#e8f3ff" stopOpacity="0.2" />
-                  </linearGradient>
-                </defs>
-                <polygon points="36,8 324,8 348,32 12,32" fill="url(#screenGrad)" stroke="#9ec5fe" strokeWidth="1.5" />
-                <line x1="36" y1="8" x2="324" y2="8" stroke="#6ea8fe" strokeWidth="3" />
-              </svg>
-              <p className={styles.screenCaption}>All eyes this way please!</p>
+              {/* Official BookMyShow 3D Screen Illustration at the Bottom of the Auditorium */}
+              <div className={styles.screenContainer}>
+                <svg viewBox="0 0 360 44" className={styles.screenSvg} aria-hidden="true">
+                  <defs>
+                    <linearGradient id="bmsScreenGrad" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#cce4ff" stopOpacity="0.95" />
+                      <stop offset="100%" stopColor="#e8f3ff" stopOpacity="0.35" />
+                    </linearGradient>
+                  </defs>
+                  <polygon
+                    points="36,8 324,8 348,32 12,32"
+                    fill="url(#bmsScreenGrad)"
+                    stroke="#9ec5fe"
+                    strokeWidth="1.5"
+                  />
+                  <line x1="36" y1="8" x2="324" y2="8" stroke="#6ea8fe" strokeWidth="3" />
+                </svg>
+                <p className={styles.screenCaption}>All eyes this way please</p>
+              </div>
             </div>
           </div>
 
-          {/* ── Sticky Bottom Bar: Legend + Pay CTA (Exact BookMyShow Bottom Bar) ── */}
+          {/* ── Right-Side Floating Auditorium Minimap (Matches bms_seat_map_real_1.png) ── */}
+          <div className={styles.minimapWidget} aria-hidden="true">
+            <div className={styles.minimapInner}>
+              <div className={styles.minimapViewportBox} />
+              {SEAT_TIERS.map((tier) => (
+                <div key={tier.tier} className={styles.minimapTier}>
+                  <div className={styles.minimapTierLabel}>₹{tier.price} {tier.label}</div>
+                  {tier.rows.map((r) => (
+                    <div
+                      key={r}
+                      className={`${styles.minimapRow} ${
+                        tier.isRecliner ? styles.minimapRowLeft : ''
+                      }`}
+                    >
+                      {Array.from({ length: getTotalColsForTier(tier) }, (_, idx) => (
+                        <span key={idx} className={styles.minimapDot} />
+                      ))}
+                    </div>
+                  ))}
+                </div>
+              ))}
+              <div className={styles.minimapScreenBar} />
+            </div>
+          </div>
+
+          {/* ── Right-Side Floating Zoom Controls + Blue Tooltip ── */}
+          <div
+            className={`${styles.zoomControlsWrap} ${
+              selectedSeats.length > 0 ? styles.zoomControlsWithPay : ''
+            }`}
+          >
+            {showZoomTip && (
+              <div className={styles.zoomTooltip} onClick={() => setShowZoomTip(false)}>
+                <span>The layout can be zoomed in/out</span>
+                <span className={styles.zoomTooltipArrow} />
+              </div>
+            )}
+            <div className={styles.zoomButtonsBox}>
+              <button
+                type="button"
+                className={styles.zoomBtn}
+                aria-label="Zoom in"
+                onClick={() => {
+                  setZoomLevel((z) => Math.min(1.25, +(z + 0.1).toFixed(2)));
+                  setShowZoomTip(false);
+                }}
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#666666" strokeWidth="1.8">
+                  <circle cx="11" cy="11" r="7" />
+                  <line x1="16.5" y1="16.5" x2="21" y2="21" strokeLinecap="round" />
+                  <line x1="11" y1="8" x2="11" y2="14" strokeLinecap="round" />
+                  <line x1="8" y1="11" x2="14" y2="11" strokeLinecap="round" />
+                </svg>
+              </button>
+              <button
+                type="button"
+                className={styles.zoomBtn}
+                aria-label="Zoom out"
+                onClick={() => {
+                  setZoomLevel((z) => Math.max(0.85, +(z - 0.1).toFixed(2)));
+                  setShowZoomTip(false);
+                }}
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#999999" strokeWidth="1.8">
+                  <circle cx="11" cy="11" r="7" />
+                  <line x1="16.5" y1="16.5" x2="21" y2="21" strokeLinecap="round" />
+                  <line x1="8" y1="11" x2="14" y2="11" strokeLinecap="round" />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          {/* ── 3-Tier Fixed Bottom Footer (Legend + Bank Offer Strip + Pay ₹ CTA) ── */}
           <div className={styles.bottomStickyBar}>
-            <div className={styles.bottomBarInner}>
+            {/* Tier 1: Seat Legend Row */}
+            <div className={styles.legendRow}>
               <div className={styles.seatLegend}>
                 <div className={styles.legendEntry}>
                   <span className={`${styles.legendBox} ${styles.legendAvailable}`} />
                   <span>Available</span>
                 </div>
                 <div className={styles.legendEntry}>
-                  <span className={`${styles.legendBox} ${styles.legendSelected}`} />
-                  <span>Selected</span>
-                </div>
-                <div className={styles.legendEntry}>
                   <span className={`${styles.legendBox} ${styles.legendSold}`} />
                   <span>Sold</span>
                 </div>
-              </div>
-
-              {selectedSeats.length > 0 && (
-                <div className={styles.bottomPayActions}>
-                  <div className={styles.selectedMiniInfo}>
-                    <span className={styles.miniSeatCount}>
-                      {selectedSeats.length} {selectedSeats.length === 1 ? 'Seat' : 'Seats'}: <strong>{selectedSeats.join(', ')}</strong>
-                    </span>
-                    {selectedSeats.length < ticketQty && (
-                      <span className={styles.miniSeatHint}>
-                        (Select {ticketQty - selectedSeats.length} more or proceed)
-                      </span>
-                    )}
-                  </div>
-                  <button
-                    type="button"
-                    id="pay-button"
-                    className={styles.bmsPayCta}
-                    onClick={() => setStep('checkout')}
-                  >
-                    Pay Rs. {ticketsAmount}.00
-                  </button>
+                <div className={styles.legendEntry}>
+                  <svg width="17" height="16" aria-hidden="true">
+                    <use
+                      href="/seat-layout-icons.svg#icon-bestseller"
+                      xlinkHref="/seat-layout-icons.svg#icon-bestseller"
+                    />
+                  </svg>
+                  <span>Bestseller</span>
+                  <svg width="12" height="12" aria-hidden="true">
+                    <use
+                      href="/common-icons.svg#icon-info-any-color"
+                      xlinkHref="/common-icons.svg#icon-info-any-color"
+                    />
+                  </svg>
                 </div>
-              )}
+                <div className={styles.legendEntry}>
+                  <span className={`${styles.legendBox} ${styles.legendSelected}`} />
+                  <span>Selected</span>
+                </div>
+              </div>
             </div>
+
+            {/* Tier 2: Bank Offer Strip */}
+            <div className={styles.offerBannerStrip}>
+              <div className={styles.offerBannerContent}>
+                <span className={styles.offerBankBadge} aria-hidden="true">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                    <circle cx="12" cy="12" r="10" fill="#1b4e8c" />
+                    <path d="M8 12h8M12 7v10" stroke="#e53935" strokeWidth="2.4" strokeLinecap="round" />
+                  </svg>
+                </span>
+                <span className={styles.offerBannerText}>
+                  Enjoy B1G1 Ticket Free!* with Bandhan Bank Legacy Debit Cards
+                </span>
+                <span className={styles.offerBannerCount}>1/3</span>
+              </div>
+              <div className={styles.offerDotsRow} aria-hidden="true">
+                <span className={`${styles.offerDot} ${styles.offerDotActive}`} />
+                <span className={styles.offerDot} />
+                <span className={styles.offerDot} />
+              </div>
+            </div>
+
+            {/* Tier 3: Pay ₹ CTA Bar (Shown when seats are selected) */}
+            {selectedSeats.length > 0 && (
+              <div className={styles.payBarRow}>
+                <button
+                  type="button"
+                  id="pay-button"
+                  className={styles.bmsPayCta}
+                  onClick={() => setStep('checkout')}
+                >
+                  Pay ₹ {ticketsAmount}
+                </button>
+              </div>
+            )}
           </div>
         </div>
       )}
