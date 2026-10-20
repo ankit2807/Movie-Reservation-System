@@ -432,7 +432,7 @@ const realData = [
   },
 
   // ═══════════════════════════════════════════════════
-  // ─── STREAMS (BookMyShow Stream Premieres) ───
+  // ─── STREAMS (MovieBook Stream Premieres) ───
   // ═══════════════════════════════════════════════════
   {
     title: "Spider-Man: Across the Spider-Verse",
@@ -622,7 +622,7 @@ const realData = [
       { name: "Will Champion", role: "Drums & Backing Vocals" },
     ],
     crew: [
-      { name: "BookMyShow Live", role: "Event Producer" },
+      { name: "MovieBook Live", role: "Event Producer" },
       { name: "Phil Harvey", role: "Creative Director" },
     ],
   },
@@ -1112,7 +1112,7 @@ const seedDB = async () => {
     await ShowTime.insertMany(showTimeDocs);
     console.log(`Successfully seeded ${showTimeDocs.length} showtimes`);
 
-    // 4. Generate Realistic BookMyShow Reviews (1–10 Rating Scale)
+    // 4. Generate Realistic MovieBook Reviews (1–10 Rating Scale)
     const reviewDocs = [];
     const comments = [
       "Goosebumps throughout! The interval block and climax are pure cinema magic. A must-watch in IMAX!",

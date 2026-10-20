@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Calendar, Clock, Ticket, MapPin, Utensils, XCircle, CheckCircle2 } from 'lucide-react';
 import { QRCodeCanvas } from 'qrcode.react';
 import api from '../api/axios';
-import { createPosterFallback } from '../utils/bookmyshowData';
+import { createPosterFallback } from '../utils/moviebookData';
 import styles from '../styles/MyBookings.module.css';
 
 const MyBookings = () => {

@@ -1,8 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-// Complete BookMyShow City Data (10 Popular Cities + Alphabetical Other Cities)
+// Complete MovieBook City Data (10 Popular Cities + Alphabetical Other Cities)
 const CITY_DATA = [
-    // 10 Popular Cities (in exact BookMyShow order)
+    // 10 Popular Cities (in exact MovieBook order)
     { name: 'Mumbai', state: 'Maharashtra', aliases: ['Bombay', 'Navi Mumbai', 'Thane', 'Kalyan', 'Dombivli'] },
     { name: 'Delhi-NCR', state: 'Delhi NCR', aliases: ['New Delhi', 'Delhi', 'Noida', 'Greater Noida', 'Gurgaon', 'Gurugram', 'Faridabad', 'Ghaziabad'] },
     { name: 'Bengaluru', state: 'Karnataka', aliases: ['Bangalore', 'Whitefield', 'Electronic City'] },
@@ -14,7 +14,7 @@ const CITY_DATA = [
     { name: 'Kolkata', state: 'West Bengal', aliases: ['Calcutta', 'Howrah', 'Salt Lake', 'New Town'] },
     { name: 'Kochi', state: 'Kerala', aliases: ['Cochin', 'Ernakulam'] },
 
-    // Other Cities (Alphabetical as on BookMyShow)
+    // Other Cities (Alphabetical as on MovieBook)
     { name: 'Abohar', state: 'Punjab', aliases: [] },
     { name: 'Agra', state: 'Uttar Pradesh', aliases: [] },
     { name: 'Ajmer', state: 'Rajasthan', aliases: [] },

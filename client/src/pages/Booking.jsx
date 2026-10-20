@@ -17,10 +17,10 @@ import {
   generateBaselineOccupiedSeats,
   FOOD_MENU,
   createPosterFallback,
-} from '../utils/bookmyshowData';
+} from '../utils/moviebookData';
 import styles from '../styles/Booking.module.css';
 
-/* ─── Official BookMyShow Vehicle SVG Sprite Illustration (1..10) ─── */
+/* ─── Official MovieBook Vehicle SVG Sprite Illustration (1..10) ─── */
 const VehicleIllustration = ({ count }) => {
   const safeCount = Math.min(10, Math.max(1, Number(count) || 2));
   return (
@@ -109,7 +109,7 @@ const ConfirmationModal = ({ booking, onClose }) => (
 );
 
 /* ═══════════════════════════════════════
-   ─── BookMyShow Ticket Booking Page ───
+   ─── MovieBook Ticket Booking Page ───
    ═══════════════════════════════════════ */
 const Booking = () => {
   const { showtimeId } = useParams();
@@ -291,7 +291,7 @@ const Booking = () => {
     };
   }, [currentShowKey]);
 
-  // Switch showtime pill directly on the Seat Layout page (BookMyShow feature)
+  // Switch showtime pill directly on the Seat Layout page (MovieBook feature)
   const handleSwitchShowtime = (slot) => {
     setActiveShow({
       ...slot,
@@ -310,7 +310,7 @@ const Booking = () => {
     });
   };
 
-  /* ─── Bestseller Seat Identification (Matches BookMyShow Auditorium Bestseller Zone) ─── */
+  /* ─── Bestseller Seat Identification (Matches MovieBook Auditorium Bestseller Zone) ─── */
   const isBestsellerSeat = (seatId) => {
     if (!seatId) return false;
     const row = seatId[0];
@@ -429,7 +429,7 @@ const Booking = () => {
     return buildConsecutiveSelection('E7', targetQty, currentOccupied, []);
   };
 
-  /* ─── BookMyShow Smart Consecutive Seat Selection on Click ─── */
+  /* ─── MovieBook Smart Consecutive Seat Selection on Click ─── */
   const handleSeatClick = (seatId) => {
     if (occupiedSeats.includes(seatId)) return;
 
@@ -477,7 +477,7 @@ const Booking = () => {
       .filter(Boolean);
   }, [foodCart]);
 
-  /* ─── Price Calculations (BookMyShow Structure) ─── */
+  /* ─── Price Calculations (MovieBook Structure) ─── */
   const seatDetails = useMemo(() => {
     return selectedSeats.map((seat) => {
       const t = getTierForSeat(seat);
@@ -507,7 +507,7 @@ const Booking = () => {
       setAppliedPromo(clean);
       setPromoCode(clean);
     } else {
-      alert('Try valid BookMyShow promo codes: FIRSTSHOW, PAYTM150, or RUPAY25');
+      alert('Try valid Movie Book promo codes: FIRSTSHOW, PAYTM150, or RUPAY25');
     }
   };
 
@@ -673,7 +673,7 @@ const Booking = () => {
 
   return (
     <div className={styles.bookingPage}>
-      {/* ═══════ 1. BOOKMYSHOW "HOW MANY SEATS?" MODAL ═══════ */}
+      {/* ═══════ 1. MOVIEBOOK "HOW MANY SEATS?" MODAL ═══════ */}
       {isQtyModalOpen && (
         <div className={styles.modalOverlay} onClick={() => setIsQtyModalOpen(false)}>
           <div
@@ -879,7 +879,7 @@ const Booking = () => {
         )}
       </div>
 
-      {/* ═══════ 6A. STEP 1: AUDITORIUM SEAT MAP VIEW (Exact BookMyShow Layout) ═══════ */}
+      {/* ═══════ 6A. STEP 1: AUDITORIUM SEAT MAP VIEW (Exact MovieBook Layout) ═══════ */}
       {step === 'seats' && (
         <div className={styles.auditoriumContainer}>
           <div className={styles.seatCanvas}>
@@ -959,7 +959,7 @@ const Booking = () => {
                 );
               })}
 
-              {/* Official BookMyShow 3D Screen Illustration at the Bottom of the Auditorium */}
+              {/* Official MovieBook 3D Screen Illustration at the Bottom of the Auditorium */}
               <div className={styles.screenContainer}>
                 <svg viewBox="0 0 360 44" className={styles.screenSvg} aria-hidden="true">
                   <defs>
@@ -1126,7 +1126,7 @@ const Booking = () => {
         </div>
       )}
 
-      {/* ═══════ 6B. STEP 2: GRAB A BITE (F&B) + BOOKING SUMMARY CHECKOUT (BookMyShow Style) ═══════ */}
+      {/* ═══════ 6B. STEP 2: GRAB A BITE (F&B) + BOOKING SUMMARY CHECKOUT (MovieBook Style) ═══════ */}
       {step === 'checkout' && (
         <div className={`container ${styles.checkoutLayout}`}>
           {/* Left Column: Grab a Bite! Food & Beverages */}
@@ -1250,7 +1250,7 @@ const Booking = () => {
             </div>
           </div>
 
-          {/* Right Column: BookMyShow Ticket Receipt Summary */}
+          {/* Right Column: MovieBook Ticket Receipt Summary */}
           <aside className={styles.summarySidebar}>
             <div className={styles.receiptCard}>
               <span className={styles.cutoutLeft} />

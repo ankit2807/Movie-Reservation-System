@@ -11,9 +11,9 @@ import {
   createPosterFallback,
   createAvatarFallback,
   getTrailersForMovie,
-  BOOKMYSHOW_OFFERS,
+  MOVIEBOOK_OFFERS,
   DEFAULT_BMS_REVIEWS,
-} from '../utils/bookmyshowData';
+} from '../utils/moviebookData';
 import styles from '../styles/MovieDetails.module.css';
 
 const REVIEW_HASHTAGS = [
@@ -82,7 +82,7 @@ const MovieDetails = ({ initialMultimedia = false }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Interactive BookMyShow states
+  // Interactive MovieBook states
   const [showStickyHeader, setShowStickyHeader] = useState(false);
   const [isLangFormatModalOpen, setIsLangFormatModalOpen] = useState(false);
   const [isTrailerModalOpen, setIsTrailerModalOpen] = useState(
@@ -342,7 +342,7 @@ const MovieDetails = ({ initialMultimedia = false }) => {
 
   return (
     <div className={styles.movieDetailsPage}>
-      {/* ═══════ 1. STICKY TOP MOVIE HEADER ON SCROLL (Exact BookMyShow Scroll Bar) ═══════ */}
+      {/* ═══════ 1. STICKY TOP MOVIE HEADER ON SCROLL (Exact MovieBook Scroll Bar) ═══════ */}
       {showStickyHeader && (
         <div className={styles.stickyScrollBar}>
           <div className={`container ${styles.stickyBarInner}`}>
@@ -358,7 +358,7 @@ const MovieDetails = ({ initialMultimedia = false }) => {
         </div>
       )}
 
-      {/* ═══════ 2. DARK HERO BANNER (Exact BookMyShow Layout) ═══════ */}
+      {/* ═══════ 2. DARK HERO BANNER (Exact MovieBook Layout) ═══════ */}
       <section
         className={styles.heroBanner}
         style={{
@@ -435,7 +435,7 @@ const MovieDetails = ({ initialMultimedia = false }) => {
               <span>{releaseDateFormatted}</span>
             </div>
 
-            {/* Format & Language Pills (Clickable like BookMyShow) */}
+            {/* Format & Language Pills (Clickable like MovieBook) */}
             <div className={styles.tagsStack}>
               <div className={styles.tagPill}>
                 {formats.map((fmt, idx) => (
@@ -493,7 +493,7 @@ const MovieDetails = ({ initialMultimedia = false }) => {
         </div>
       </section>
 
-      {/* ═══════ 3. MAIN CONTENT SECTIONS (Exact BookMyShow Left-Aligned Column) ═══════ */}
+      {/* ═══════ 3. MAIN CONTENT SECTIONS (Exact MovieBook Left-Aligned Column) ═══════ */}
       <div className="container">
         <div className={styles.mainContentColumn}>
           {/* ── SECTION 1: About the movie ── */}
@@ -502,12 +502,12 @@ const MovieDetails = ({ initialMultimedia = false }) => {
             <p className={styles.aboutDescription}>{movie.description}</p>
           </section>
 
-          {/* ── SECTION 2: Top offers for you (Exact BookMyShow Dashed Yellow Cards) ── */}
+          {/* ── SECTION 2: Top offers for you (Exact MovieBook Dashed Yellow Cards) ── */}
           <section className={styles.pageSection}>
             <h2 className={styles.sectionHeading}>Top offers for you</h2>
             <div className={styles.carouselRelativeWrap}>
               <div className={styles.offersCarousel} ref={offersScrollRef}>
-                {BOOKMYSHOW_OFFERS.map((offer) => (
+                {MOVIEBOOK_OFFERS.map((offer) => (
                   <button
                     key={offer.id}
                     type="button"
@@ -607,7 +607,7 @@ const MovieDetails = ({ initialMultimedia = false }) => {
             </div>
           </section>
 
-          {/* ── SECTION 5: Top reviews (Exact BookMyShow Hashtag Strip + Review Cards Carousel) ── */}
+          {/* ── SECTION 5: Top reviews (Exact MovieBook Hashtag Strip + Review Cards Carousel) ── */}
           <section className={styles.pageSection}>
             <div className={styles.reviewsHeaderRow}>
               <div>
@@ -854,7 +854,7 @@ const MovieDetails = ({ initialMultimedia = false }) => {
         </div>
       </div>
 
-      {/* ═══════ 4. BOOKMYSHOW "SELECT LANGUAGE AND FORMAT" MODAL ═══════ */}
+      {/* ═══════ 4. MOVIEBOOK "SELECT LANGUAGE AND FORMAT" MODAL ═══════ */}
       {isLangFormatModalOpen && (
         <div
           className={styles.modalBackdrop}
@@ -920,7 +920,7 @@ const MovieDetails = ({ initialMultimedia = false }) => {
         </div>
       )}
 
-      {/* ═══════ 5. BOOKMYSHOW "VIDEOS FOR {MOVIE}" YOUTUBE TRAILER VIEW / MODAL ═══════ */}
+      {/* ═══════ 5. MOVIEBOOK "VIDEOS FOR {MOVIE}" YOUTUBE TRAILER VIEW / MODAL ═══════ */}
       {isTrailerModalOpen && (
         <div
           className={styles.multimediaBackdrop}
@@ -1063,7 +1063,7 @@ const MovieDetails = ({ initialMultimedia = false }) => {
           <div className={styles.offerModal} onClick={(e) => e.stopPropagation()}>
             <div className={styles.lfModalHeader}>
               <div>
-                <p className={styles.lfMovieSub}>BookMyShow Exclusive Offer</p>
+                <p className={styles.lfMovieSub}>Movie Book Exclusive Offer</p>
                 <h3 className={styles.lfTitle}>{selectedOffer.title}</h3>
               </div>
               <button

@@ -229,7 +229,7 @@
   font-weight: 400;
 }
 
-/* ── 10 Popular Cities Row (native 80x80 BookMyShow icons) ── */
+/* ── 10 Popular Cities Row (native 80x80 MovieBook icons) ── */
 .popularGrid {
   display: grid;
   grid-template-columns: repeat(10, 1fr);

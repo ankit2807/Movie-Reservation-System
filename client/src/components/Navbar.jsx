@@ -53,10 +53,9 @@ const Navbar = () => {
     <nav className={styles.navbar}>
       <div className={`container ${styles.navContainer}`}>
         <div className={styles.logoSearch}>
-          <Link to="/" className={styles.logo} aria-label="BookMyShow Home">
-            <span className={styles.logoTextDark}>book</span>
-            <span className={styles.logoBadgeRed}>my</span>
-            <span className={styles.logoTextDark}>show</span>
+          <Link to="/" className={styles.logo} aria-label="MovieBook Home">
+            <span className={styles.logoTextDark}>movie</span>
+            <span className={styles.logoBadgeRed}>book</span>
           </Link>
           <form onSubmit={handleSearchSubmit} className={styles.searchBar}>
             <Search size={16} className={styles.searchIcon} />

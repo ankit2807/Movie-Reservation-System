@@ -9,10 +9,10 @@ import {
 import api from '../api/axios';
 import { fetchMoviesStart, fetchMoviesSuccess, fetchMoviesFailure } from '../redux/movieSlice';
 import { setCity } from '../redux/locationSlice';
-import { createPosterFallback, getTheatresForCity } from '../utils/bookmyshowData';
+import { createPosterFallback, getTheatresForCity } from '../utils/moviebookData';
 import styles from '../styles/Home.module.css';
 
-/* ─── Filter Accordion Section (BookMyShow Category Page Sidebar) ─── */
+/* ─── Filter Accordion Section (MovieBook Category Page Sidebar) ─── */
 const FilterSection = ({ title, items, selectedItems, onSelect, isOpenDefault = false }) => {
   const [isOpen, setIsOpen] = useState(isOpenDefault);
 
@@ -53,7 +53,7 @@ const FilterSection = ({ title, items, selectedItems, onSelect, isOpenDefault = 
   );
 };
 
-/* ─── BookMyShow Top Promotional Wide Banner Carousel ─── */
+/* ─── MovieBook Top Promotional Wide Banner Carousel ─── */
 const HeroCarousel = ({ movies, currentCity }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const intervalRef = useRef(null);
@@ -191,7 +191,7 @@ const HeroCarousel = ({ movies, currentCity }) => {
   );
 };
 
-/* ─── 5-Card Horizontal Scroll Container (BookMyShow Carousel) ─── */
+/* ─── 5-Card Horizontal Scroll Container (MovieBook Carousel) ─── */
 const ScrollSection = ({ children }) => {
   const scrollRef = useRef(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
@@ -248,7 +248,7 @@ const ScrollSection = ({ children }) => {
   );
 };
 
-/* ─── BookMyShow Movie Card (For Recommended Movies & Category Grid) ─── */
+/* ─── MovieBook Movie Card (For Recommended Movies & Category Grid) ─── */
 const MovieCard = ({ movie, showPromoted = false }) => {
   const formattedGenre = (movie.genre || 'Action, Drama').replace(/,\s*/g, '/');
   return (
@@ -279,7 +279,7 @@ const MovieCard = ({ movie, showPromoted = false }) => {
   );
 };
 
-/* ─── BookMyShow Event / Play / Sport / Activity Card (With Date Strip, Venue & Price) ─── */
+/* ─── MovieBook Event / Play / Sport / Activity Card (With Date Strip, Venue & Price) ─── */
 const ExperienceCard = ({ item, city = 'Noida', badgeText }) => {
   const dateLabel = item.dateText || (item.releaseDate
     ? new Date(item.releaseDate).toLocaleDateString('en-IN', {
@@ -330,7 +330,7 @@ const ExperienceCard = ({ item, city = 'Noida', badgeText }) => {
   );
 };
 
-/* ─── BookMyShow Square Live Event Category Tile ("The Best Of Live Events") ─── */
+/* ─── MovieBook Square Live Event Category Tile ("The Best Of Live Events") ─── */
 const LiveEventSquareTile = ({ title, countText, gradient, accentColor, icon: Icon, to }) => (
   <Link
     to={to}
@@ -348,7 +348,7 @@ const LiveEventSquareTile = ({ title, countText, gradient, accentColor, icon: Ic
   </Link>
 );
 
-/* ─── BookMyShow Premiere Card (Dark Navy Section) ─── */
+/* ─── MovieBook Premiere Card (Dark Navy Section) ─── */
 const PremiereCard = ({ movie }) => {
   const primaryLang = Array.isArray(movie.languages) && movie.languages.length > 0
     ? movie.languages[0]
@@ -376,7 +376,7 @@ const PremiereCard = ({ movie }) => {
 };
 
 /* ═══════════════════════════════════════════════════════════
-   ─── Main BookMyShow Home & Explore Page Component ───
+   ─── Main MovieBook Home & Explore Page Component ───
    ═══════════════════════════════════════════════════════════ */
 const Home = ({ type, pageMode }) => {
   const dispatch = useDispatch();
@@ -494,7 +494,7 @@ const Home = ({ type, pageMode }) => {
     return (
       <div className={styles.loadingState}>
         <div className={styles.spinner} />
-        <p>Loading BookMyShow {activeCity}...</p>
+        <p>Loading Movie Book {activeCity}...</p>
       </div>
     );
   }
@@ -517,10 +517,10 @@ const Home = ({ type, pageMode }) => {
         <div className="container">
           <div className={styles.specialBannerCard}>
             <div className={styles.specialBannerText}>
-              <span className={styles.specialTag}>BOOKMYSHOW {pageMode.toUpperCase()}</span>
+              <span className={styles.specialTag}>MOVIE BOOK {pageMode.toUpperCase()}</span>
               <h1>
                 {pageMode === 'offers' && `Exciting Bank, UPI & Cinema Offers in ${activeCity}`}
-                {pageMode === 'gift-cards' && 'BookMyShow Instant Gift Cards'}
+                {pageMode === 'gift-cards' && 'Movie Book Instant Gift Cards'}
                 {pageMode === 'list-your-show' && 'Host Your Show, Concert, Play or Sport Event'}
                 {pageMode === 'corporates' && 'Corporate Vouchers & Bulk Movie Bookings'}
               </h1>
@@ -591,7 +591,7 @@ const Home = ({ type, pageMode }) => {
   const isLandingPage = !type;
 
   /* ═══════════════════════════════════════════════════════════════════════
-     ─── 1. BOOKMYSHOW LANDING PAGE (/ and /explore/home/:city) ───
+     ─── 1. MOVIEBOOK LANDING PAGE (/ and /explore/home/:city) ───
      ═══════════════════════════════════════════════════════════════════════ */
   if (isLandingPage) {
     const cinemaMovies = movies.filter((m) => m.type === 'Movie' || !m.type);
@@ -601,7 +601,7 @@ const Home = ({ type, pageMode }) => {
     const sportItems = movies.filter((m) => m.type === 'Sport');
     const activityItems = movies.filter((m) => m.type === 'Activity');
 
-    // Curated BookMyShow Section Lists
+    // Curated MovieBook Section Lists
     const recommendedMovies = cinemaMovies.slice(0, 10);
     const premiereMovies = (streamMovies.length > 0 ? streamMovies : cinemaMovies.slice(0, 6)).slice(0, 8);
 
@@ -779,7 +779,7 @@ const Home = ({ type, pageMode }) => {
       },
     ];
 
-    // Trending Searches Right Now (Exact BookMyShow Bottom Section)
+    // Trending Searches Right Now (Exact MovieBook Bottom Section)
     const trendingSearches = [
       { item: cinemaMovies[0], categoryLabel: 'Movies' },
       { item: cinemaMovies[1], categoryLabel: 'Movies' },
@@ -815,7 +815,7 @@ const Home = ({ type, pageMode }) => {
           </div>
         </section>
 
-        {/* ═══════ 3. BOOKMYSHOW STREAM STRIP BANNER ═══════ */}
+        {/* ═══════ 3. MOVIEBOOK STREAM STRIP BANNER ═══════ */}
         <section className={styles.streamStripSection} id="stream-banner">
           <div className="container">
             <Link to="/stream" className={styles.bmsStreamStrip}>
@@ -1007,7 +1007,7 @@ const Home = ({ type, pageMode }) => {
           </div>
         </section>
 
-        {/* ═══════ 13. TRENDING SEARCHES RIGHT NOW (Exact BookMyShow Bottom Section) ═══════ */}
+        {/* ═══════ 13. TRENDING SEARCHES RIGHT NOW (Exact MovieBook Bottom Section) ═══════ */}
         <section className={styles.section} id="trending-searches-section">
           <div className="container">
             <div className={styles.sectionHeader}>
@@ -1137,7 +1137,7 @@ const Home = ({ type, pageMode }) => {
               })}
             </div>
 
-            {/* BookMyShow "Coming Soon — Explore Upcoming Movies" Strip */}
+            {/* MovieBook "Coming Soon — Explore Upcoming Movies" Strip */}
             {type === 'Movie' && (
               <div className={styles.comingSoonStrip} onClick={() => navigate('/stream')}>
                 <span className={styles.comingSoonTitle}>Coming Soon</span>

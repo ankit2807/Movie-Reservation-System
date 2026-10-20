@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════════════════
-   ─── BookMyShow Home & Explore Page Styles (/explore/home/noida) ───
+   ─── MovieBook Home & Explore Page Styles (/explore/home/noida) ───
    ═══════════════════════════════════════════════════════════════════ */
 
 .homePage {
@@ -33,7 +33,7 @@
   }
 }
 
-/* ─── 1. Top Promotional Wide Banner Carousel (BookMyShow Strip) ─── */
+/* ─── 1. Top Promotional Wide Banner Carousel (MovieBook Strip) ─── */
 .bmsBannerStrip {
   background-color: #ebebeb;
   padding: 10px 0;
@@ -336,7 +336,7 @@
   right: -18px;
 }
 
-/* ─── 4. BookMyShow Movie & Experience Card (5 per 1240px row = 222px width) ─── */
+/* ─── 4. MovieBook Movie & Experience Card (5 per 1240px row = 222px width) ─── */
 .movieCard {
   display: block;
   width: 222px;
@@ -461,7 +461,7 @@
   margin-top: 2px;
 }
 
-/* ─── 5. BookMyShow STREAM Strip Banner ─── */
+/* ─── 5. MovieBook STREAM Strip Banner ─── */
 .streamStripSection {
   padding: 36px 0 8px;
 }
@@ -671,7 +671,7 @@
   margin-top: 2px;
 }
 
-/* ─── 8. Trending Searches Right Now (BookMyShow Bottom Section) ─── */
+/* ─── 8. Trending Searches Right Now (MovieBook Bottom Section) ─── */
 .trendingSearchesGrid {
   display: flex;
   flex-wrap: wrap;

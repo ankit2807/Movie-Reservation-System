@@ -229,9 +229,9 @@ const Footer = () => {
                     </div>
                 </div>
 
-                {/* BOOKMYSHOW EXCLUSIVES */}
+                {/* MOVIEBOOK EXCLUSIVES */}
                 <div className={styles.section}>
-                    <h5 className={styles.sectionLabel}>BOOKMYSHOW EXCLUSIVES</h5>
+                    <h5 className={styles.sectionLabel}>MOVIEBOOK EXCLUSIVES</h5>
                     <div className={styles.linkRow}>
                         {exclusivesLinks.map((link, i) => (
                             <React.Fragment key={link.label}>
@@ -258,10 +258,10 @@ const Footer = () => {
                 {/* Divider + Logo */}
                 <div className={styles.brandSection}>
                     <div className={styles.dividerLine} />
-                    <div className={styles.brandLogo}>
-                        <span className={styles.brandBook}>Movie</span>
-                        <span className={styles.brandMy}>Book</span>
-                    </div>
+                    <Link to="/" className={styles.brandLogo} aria-label="MovieBook Home">
+                        <span className={styles.brandTextLight}>movie</span>
+                        <span className={styles.brandBadgeRed}>book</span>
+                    </Link>
                     <div className={styles.dividerLine} />
                 </div>
 

@@ -5,7 +5,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { setCity, CITY_DATA } from '../redux/locationSlice';
 import styles from '../styles/LocationModal.module.css';
 
-// Exact BookMyShow sub-regions shown on hover for metropolitan hubs
+// Exact MovieBook sub-regions shown on hover for metropolitan hubs
 const SUB_REGIONS = {
     'Mumbai': [
         { label: 'Mumbai', value: 'Mumbai' },
@@ -25,7 +25,7 @@ const SUB_REGIONS = {
     ],
 };
 
-// Map popular city names to official BookMyShow region icon slugs
+// Map popular city names to official MovieBook region icon slugs
 function getIconName(name) {
     const map = {
         'Mumbai': 'mumbai',
@@ -378,7 +378,7 @@ const LocationModal = ({ isOpen, onClose }) => {
                         })}
                     </div>
 
-                    {/* Fixed-height bottom slot below Popular Cities (matches BookMyShow 1:1 without layout shift) */}
+                    {/* Fixed-height bottom slot below Popular Cities (matches MovieBook 1:1 without layout shift) */}
                     {activeSubRegions ? (
                         <div
                             className={styles.bottomActionSlot}
