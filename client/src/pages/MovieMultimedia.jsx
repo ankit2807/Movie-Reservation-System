@@ -1,12 +1,12 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import api from '../api/axios';
-import { getTrailersForMovie } from '../utils/bookmyshowData';
+import { getTrailersForMovie } from '../utils/moviebookData';
 import styles from '../styles/MovieMultimedia.module.css';
 
 /* ═══════════════════════════════════════════════════════════
-   ─── BookMyShow "Videos for {Movie}" Trailer Page ───
-   Mirrors in.bookmyshow.com/movies/{city}/{slug}/{id}/multimedia:
+   ─── MovieBook "Videos for {Movie}" Trailer Page ───
+   Mirrors MovieBook movies/{city}/{slug}/{id}/multimedia:
    thumbnails only on load, YouTube embed swaps in on click.
    ═══════════════════════════════════════════════════════════ */
 const MovieMultimedia = () => {

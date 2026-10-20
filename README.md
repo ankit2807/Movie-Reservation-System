@@ -8,7 +8,7 @@
 [![Redux Toolkit](https://img.shields.io/badge/Redux-Toolkit-764ABC?logo=redux&logoColor=white)](https://redux-toolkit.js.org/)
 [![License: ISC](https://img.shields.io/badge/License-ISC-blue.svg)](https://opensource.org/licenses/ISC)
 
-A full-stack, enterprise-grade movie ticketing and entertainment reservation platform modeled after **BookMyShow**. Built with **React 19**, **Vite**, **Express**, and **MongoDB**, it features interactive tiered cinema seating layouts, real-time seat locking, food & beverage add-on checkout, digital QR-code ticket issuance, multi-city filtering, TMDB live API catalog synchronization, and a dedicated admin administration panel.
+A full-stack, enterprise-grade movie ticketing and entertainment reservation platform named **MovieBook**. Built with **React 19**, **Vite**, **Express**, and **MongoDB**, it features interactive tiered cinema seating layouts, real-time seat locking, food & beverage add-on checkout, digital QR-code ticket issuance, multi-city filtering, TMDB live API catalog synchronization, and a dedicated admin administration panel.
 
 ---
 
@@ -86,7 +86,7 @@ A full-stack, enterprise-grade movie ticketing and entertainment reservation pla
 ```mermaid
 flowchart TD
     subgraph Client ["Frontend (React 19 + Vite)"]
-        UI["BookMyShow UI / Pages"]
+        UI["MovieBook UI / Pages"]
         Redux["Redux Toolkit (Auth, Location, Movies)"]
         Axios["Axios (withCredentials: true)"]
         UI --> Redux

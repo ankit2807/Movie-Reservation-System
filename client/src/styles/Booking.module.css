@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════════
-   ─── BookMyShow Ticket Booking & Seat Selection Styles ───
+   ─── MovieBook Ticket Booking & Seat Selection Styles ───
    ═══════════════════════════════════════════════════════════ */
 
 .bookingPage {
@@ -254,7 +254,7 @@
   font-weight: 500;
 }
 
-/* ─── 3. Auditorium Seat Layout Canvas (Exact BookMyShow Grid) ─── */
+/* ─── 3. Auditorium Seat Layout Canvas (Exact MovieBook Grid) ─── */
 .auditoriumContainer {
   flex: 1;
   display: flex;
@@ -748,7 +748,7 @@
   background-color: #d83b50;
 }
 
-/* ─── 5. "How many seats?" Modal (Exact BookMyShow Vehicle Popup) ─── */
+/* ─── 5. "How many seats?" Modal (Exact MovieBook Vehicle Popup) ─── */
 .modalOverlay {
   position: fixed;
   inset: 0;
@@ -1274,7 +1274,7 @@
   color: #f84464;
 }
 
-/* ─── 7. Right Sidebar: BookMyShow Ticket Receipt Summary ─── */
+/* ─── 7. Right Sidebar: MovieBook Ticket Receipt Summary ─── */
 .summarySidebar {
   position: sticky;
   top: 80px;

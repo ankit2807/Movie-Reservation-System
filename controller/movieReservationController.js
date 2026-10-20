@@ -134,7 +134,7 @@ const createShowKeyReservation = async (req, res) => {
  */
 const createReservation = async (req, res) => {
   try {
-    // New BookMyShow-style flow
+    // New MovieBook flow
     if (req.body.showKey) {
       return await createShowKeyReservation(req, res);
     }

@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════════
-   ─── BookMyShow Movie Details Page Styles (ET00481645) ───
+   ─── MovieBook Movie Details Page Styles (ET00481645) ───
    ═══════════════════════════════════════════════════════════ */
 
 .movieDetailsPage {
@@ -42,7 +42,7 @@
   font-weight: 600;
 }
 
-/* ─── 1. Sticky Top Movie Bar on Scroll (Exact BookMyShow Scroll Bar) ─── */
+/* ─── 1. Sticky Top Movie Bar on Scroll (Exact MovieBook Scroll Bar) ─── */
 .stickyScrollBar {
   position: fixed;
   top: 0;
@@ -92,7 +92,7 @@
   background-color: #c92c40;
 }
 
-/* ─── 2. Dark Hero Banner (Exact BookMyShow Hero) ─── */
+/* ─── 2. Dark Hero Banner (Exact MovieBook Hero) ─── */
 .heroBanner {
   background-color: #1a1a1a;
   background-size: cover;
@@ -311,7 +311,7 @@
   background: rgba(50, 50, 50, 0.92);
 }
 
-/* ─── 3. Main Content Column & Sections (Exact BookMyShow Left Column) ─── */
+/* ─── 3. Main Content Column & Sections (Exact MovieBook Left Column) ─── */
 .mainContentColumn {
   max-width: 900px;
 }
@@ -346,7 +346,7 @@
   white-space: pre-line;
 }
 
-/* Relative Wrapper + Floating Right Arrow (BookMyShow Carousel Arrow) */
+/* Relative Wrapper + Floating Right Arrow (MovieBook Carousel Arrow) */
 .carouselRelativeWrap {
   position: relative;
 }
@@ -380,7 +380,7 @@
   top: 38%;
 }
 
-/* Top Offers For You (Dashed Golden-Yellow BookMyShow Cards) */
+/* Top Offers For You (Dashed Golden-Yellow MovieBook Cards) */
 .offersCarousel {
   display: flex;
   gap: 20px;
@@ -843,7 +843,7 @@
   border-top: 1px solid #f0f0f0;
 }
 
-/* ─── 4. "Select language and format" Modal (Exact BookMyShow Popup) ─── */
+/* ─── 4. "Select language and format" Modal (Exact MovieBook Popup) ─── */
 .modalBackdrop {
   position: fixed;
   inset: 0;
@@ -953,7 +953,7 @@
   background-color: #fff5f7;
 }
 
-/* ─── 5. BookMyShow "Videos for {Movie}" Multimedia YouTube View / Modal ─── */
+/* ─── 5. MovieBook "Videos for {Movie}" Multimedia YouTube View / Modal ─── */
 .multimediaBackdrop {
   position: fixed;
   top: 105px;

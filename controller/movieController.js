@@ -33,7 +33,7 @@ const getCertification = (voteAvg) => {
   return "A";
 };
 
-// Normalize a MongoDB Movie document so all BookMyShow UI fields are present
+// Normalize a MongoDB Movie document so all MovieBook UI fields are present
 const normalizeMongoMovie = (doc) => {
   const m = doc.toObject ? doc.toObject() : doc;
   const isLegacyMpaa = ["G", "PG", "PG-13", "R", "NC-17"].includes(m.rating);
@@ -188,7 +188,7 @@ const getMovieById = async (req, res) => {
     await ensureFreshDatabase();
     const id = req.params.id;
 
-    // 0. BookMyShow ET code or slug (e.g. ET00481645 or street-fighter)
+    // 0. MovieBook ET code or slug (e.g. ET00481645 or street-fighter)
     if (id === "ET00481645" || id.toLowerCase() === "street-fighter") {
       const sfMovie = await Movie.findOne({ title: /street fighter/i });
       if (sfMovie) return res.status(200).json(normalizeMongoMovie(sfMovie));

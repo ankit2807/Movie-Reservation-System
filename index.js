@@ -35,7 +35,7 @@ connection()
         movies.some((m) => ["G", "PG", "PG-13", "R", "NC-17"].includes(m.rating)) ||
         !movies.some((m) => m.title === "Street Fighter");
       if (needsSeed) {
-        console.log("Seeding database with latest 2025-2026 BookMyShow catalog...");
+        console.log("Seeding database with latest 2025-2026 MovieBook catalog...");
         await seedDB();
       }
     } catch (seedErr) {

@@ -48,7 +48,7 @@ const FilterSection = ({ section, activeFilters, onToggle }) => {
     );
 };
 
-import { createPosterFallback } from '../utils/bookmyshowData';
+import { createPosterFallback } from '../utils/moviebookData';
 
 /* ─── Result Card ─── */
 const ResultCard = ({ movie }) => (

@@ -2,7 +2,7 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import styles from '../styles/SubNavbar.module.css';
 
-// Exact BookMyShow sub-navigation: categories on the left, utility links on the right
+// Exact MovieBook sub-navigation: categories on the left, utility links on the right
 const LEFT_LINKS = [
     { label: 'Movies', path: '/movies' },
     { label: 'Stream', path: '/stream' },

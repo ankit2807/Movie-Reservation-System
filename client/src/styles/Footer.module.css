@@ -70,17 +70,52 @@
 
 .brandLogo {
   font-size: 24px;
-  font-weight: 800;
+  font-weight: 700;
   white-space: nowrap;
-  letter-spacing: 0.5px;
+  display: inline-flex;
+  align-items: center;
+  letter-spacing: -0.5px;
+  text-decoration: none;
+  font-family: 'Roboto', sans-serif;
+  cursor: pointer;
+}
+
+.brandTextLight {
+  color: #ffffff;
+  font-weight: 500;
+}
+
+.brandBadgeRed {
+  background-color: #e5293e;
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 700;
+  font-style: italic;
+  padding: 1px 6px;
+  margin: 0 3px;
+  border-radius: 3px;
+  transform: skewX(-10deg);
+  display: inline-block;
+  line-height: 1.2;
 }
 
 .brandBook {
   color: #ffffff;
+  font-weight: 500;
 }
 
 .brandMy {
-  color: var(--primary-color);
+  background-color: #e5293e;
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 700;
+  font-style: italic;
+  padding: 1px 6px;
+  margin: 0 3px;
+  border-radius: 3px;
+  transform: skewX(-10deg);
+  display: inline-block;
+  line-height: 1.2;
 }
 
 /* ── Social Icons ── */

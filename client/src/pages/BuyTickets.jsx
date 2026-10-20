@@ -6,7 +6,7 @@ import {
   Search, X, MapPin, ShieldCheck
 } from 'lucide-react';
 import api from '../api/axios';
-import { getTheatresForCity } from '../utils/bookmyshowData';
+import { getTheatresForCity } from '../utils/moviebookData';
 import styles from '../styles/BuyTickets.module.css';
 
 const generateDates = () => {
@@ -186,7 +186,7 @@ const BuyTickets = () => {
 
   return (
     <div className={styles.buyTicketsPage}>
-      {/* ═══════ 1. TOP MOVIE TITLE & GENRE HEADER (Exact BookMyShow /buytickets Header) ═══════ */}
+      {/* ═══════ 1. TOP MOVIE TITLE & GENRE HEADER (Exact MovieBook /buytickets Header) ═══════ */}
       <div className={styles.movieHeaderSection}>
         <div className="container">
           <Link to={`/movie/${movie._id}`} className={styles.movieTitleLink}>
@@ -254,7 +254,7 @@ const BuyTickets = () => {
             </button>
           </div>
 
-          {/* Right Filter Dropdowns (Exact BookMyShow Filter Strip) */}
+          {/* Right Filter Dropdowns (Exact MovieBook Filter Strip) */}
           <div className={styles.filterGroup}>
             <div className={`${styles.filterCell} ${styles.filterCellActive}`}>
               <select
