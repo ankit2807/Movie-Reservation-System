@@ -2,20 +2,27 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { Bell, ShoppingBag, Tv, CreditCard, MessageCircle, Settings, Gift, Star, ChevronRight, User, Info } from 'lucide-react';
-import { setAuthModalOpen } from '../redux/authSlice';
+import { logout, setAuthModalOpen } from '../redux/authSlice';
+import api from '../api/axios';
 import styles from '../styles/SideMenu.module.css';
 
 const SideMenu = ({ isOpen, onClose }) => {
-    const { isAuthenticated } = useSelector((state) => state.auth);
+    const { isAuthenticated, user } = useSelector((state) => state.auth);
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
     if (!isOpen) return null;
 
-    const handleLogout = () => {
-        dispatch({type: 'auth/logout'});
-        onClose();
-        navigate('/');
+    const handleLogout = async () => {
+        try {
+            await api.post('/user/logout');
+        } catch {
+            // proceed with local logout even if cookie already expired
+        } finally {
+            dispatch(logout());
+            onClose();
+            navigate('/');
+        }
     };
 
     return (
@@ -25,7 +32,9 @@ const SideMenu = ({ isOpen, onClose }) => {
                 {/* Header */}
                 <div className={styles.header}>
                     <div className={styles.headerContent}>
-                        <h2 className={styles.greeting}>Hey!</h2>
+                        <h2 className={styles.greeting}>
+                            {isAuthenticated && user?.name ? `Hey, ${user.name.split(' ')[0]}!` : 'Hey!'}
+                        </h2>
                         {isAuthenticated ? (
                              <div className={styles.profileLink} onClick={() => { onClose(); navigate('/profile'); }}>
                                 Edit Profile <ChevronRight size={14} />

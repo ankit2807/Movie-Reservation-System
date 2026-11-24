@@ -75,7 +75,12 @@ const reservationSchema = new mongoose.Schema(
       convenienceFee: { type: Number, default: 0 },
       gst: { type: Number, default: 0 },
       food: { type: Number, default: 0 },
+      discount: { type: Number, default: 0 },
       total: { type: Number, default: 0 },
+    },
+    promoCode: {
+      type: String,
+      trim: true,
     },
     paymentMethod: String,
     contact: {
@@ -102,12 +107,11 @@ const reservationSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Ensure seats array is not empty
-reservationSchema.pre("save", function (next) {
-  if (this.seats.length === 0) {
-    return next(new Error("At least one seat must be selected"));
+// Ensure seats array is not empty (modern promise/sync style without deprecated callback `next`)
+reservationSchema.pre("save", function () {
+  if (!Array.isArray(this.seats) || this.seats.length === 0) {
+    throw new Error("At least one seat must be selected");
   }
-  next();
 });
 
 // Add index for user and showtime for efficient queries

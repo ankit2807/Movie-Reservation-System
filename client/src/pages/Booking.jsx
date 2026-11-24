@@ -20,15 +20,28 @@ import {
 } from '../utils/moviebookData';
 import styles from '../styles/Booking.module.css';
 
+const getLocalIsoToday = () => {
+  const now = new Date();
+  const yyyy = now.getFullYear();
+  const mm = String(now.getMonth() + 1).padStart(2, '0');
+  const dd = String(now.getDate()).padStart(2, '0');
+  return `${yyyy}-${mm}-${dd}`;
+};
+
+const parseIsoLocalDate = (isoStr) => {
+  if (typeof isoStr === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(isoStr)) {
+    return new Date(`${isoStr}T00:00:00`);
+  }
+  const d = new Date(isoStr);
+  return Number.isNaN(d.getTime()) ? new Date() : d;
+};
+
 /* ─── Official MovieBook Vehicle SVG Sprite Illustration (1..10) ─── */
 const VehicleIllustration = ({ count }) => {
   const safeCount = Math.min(10, Math.max(1, Number(count) || 2));
   return (
     <svg className={styles.vehicleSvg} aria-hidden="true">
-      <use
-        href={`/seat-selector-icons.svg#icon-vehicle-${safeCount}`}
-        xlinkHref={`/seat-selector-icons.svg#icon-vehicle-${safeCount}`}
-      />
+      <use href={`/seat-selector-icons.svg#icon-vehicle-${safeCount}`} />
     </svg>
   );
 };
@@ -120,8 +133,10 @@ const Booking = () => {
   const { user, isAuthenticated } = useSelector((state) => state.auth);
   const { currentCity } = useSelector((state) => state.location);
 
-  // Read state or query params
-  const passedState = location.state || {};
+  const passedMovie = location.state?.movie || null;
+  const passedTheatre = location.state?.theatre || null;
+  const passedShow = location.state?.show || null;
+  const passedDate = location.state?.date || null;
   const urlMovieId = searchParams.get('movieId');
   const urlTheatreId = searchParams.get('theatreId');
   const urlTheatreName = searchParams.get('theatreName');
@@ -131,12 +146,12 @@ const Booking = () => {
   const urlScreen = searchParams.get('screen');
   const urlLang = searchParams.get('lang');
 
-  const bookingDate = urlDate || passedState.date || new Date().toISOString().split('T')[0];
+  const bookingDate = urlDate || passedDate || getLocalIsoToday();
 
-  const [movie, setMovie] = useState(passedState.movie || null);
-  const [theatre, setTheatre] = useState(passedState.theatre || null);
-  const [activeShow, setActiveShow] = useState(passedState.show || null);
-  const [loading, setLoading] = useState(!passedState.movie);
+  const [movie, setMovie] = useState(passedMovie);
+  const [theatre, setTheatre] = useState(passedTheatre);
+  const [activeShow, setActiveShow] = useState(passedShow);
+  const [loading, setLoading] = useState(!passedMovie);
   const [error, setError] = useState(null);
 
   // Seat & Qty state
@@ -159,14 +174,16 @@ const Booking = () => {
   const [paymentMethod, setPaymentMethod] = useState('UPI');
   const [contactEmail, setContactEmail] = useState(user?.email || 'aditi@example.com');
   const [contactPhone, setContactPhone] = useState(user?.phone || '9876543210');
+  const userContactKey = `${user?.email || ''}|${user?.phone || ''}`;
+  const [prevContactKey, setPrevContactKey] = useState(userContactKey);
+  if (prevContactKey !== userContactKey) {
+    setPrevContactKey(userContactKey);
+    if (user?.email) setContactEmail(user.email);
+    if (user?.phone) setContactPhone(user.phone);
+  }
 
   const [isProcessing, setIsProcessing] = useState(false);
   const [confirmedBooking, setConfirmedBooking] = useState(null);
-
-  useEffect(() => {
-    if (user?.email) setContactEmail(user.email);
-    if (user?.phone) setContactPhone(user.phone);
-  }, [user]);
 
   // Resolve Movie, Theatre, and Showtimes even on hard refresh
   useEffect(() => {
@@ -175,7 +192,7 @@ const Booking = () => {
         setLoading(true);
         setError(null);
 
-        let targetMovie = passedState.movie;
+        let targetMovie = passedMovie;
         let extractedMovieId = urlMovieId;
         let extractedTheatreId = urlTheatreId;
         let extractedSlotIdx = 0;
@@ -221,7 +238,7 @@ const Booking = () => {
         const foundTheatre =
           cityTheatres.find((t) => t.id === extractedTheatreId) ||
           cityTheatres.find((t) => t.name === urlTheatreName) ||
-          passedState.theatre ||
+          passedTheatre ||
           cityTheatres[0];
 
         setTheatre(foundTheatre);
@@ -229,7 +246,7 @@ const Booking = () => {
         const matchingShow =
           foundTheatre.shows.find((s) => s.time === urlTime) ||
           foundTheatre.shows[extractedSlotIdx] ||
-          passedState.show ||
+          passedShow ||
           foundTheatre.shows[0];
 
         setActiveShow({
@@ -248,12 +265,31 @@ const Booking = () => {
     };
 
     resolveContext();
-  }, [showtimeId]);
+  }, [
+    showtimeId,
+    currentCity,
+    passedMovie,
+    passedTheatre,
+    passedShow,
+    urlMovieId,
+    urlTheatreId,
+    urlTheatreName,
+    urlTime,
+    urlFormat,
+    urlScreen,
+    urlLang,
+  ]);
 
   const currentShowKey = useMemo(() => {
     if (!movie || !theatre || !activeShow) return '';
     return buildShowKey(movie._id, theatre.id, bookingDate, activeShow.time);
   }, [movie, theatre, activeShow, bookingDate]);
+
+  const [prevShowKey, setPrevShowKey] = useState(currentShowKey);
+  if (prevShowKey !== currentShowKey) {
+    setPrevShowKey(currentShowKey);
+    setSelectedSeats([]);
+  }
 
   // Fetch occupied seats from backend + deterministic baseline seats
   useEffect(() => {
@@ -285,7 +321,6 @@ const Booking = () => {
     };
 
     loadOccupiedSeats();
-    setSelectedSeats([]);
     return () => {
       isMounted = false;
     };
@@ -545,6 +580,7 @@ const Booking = () => {
           qty: f.qty,
           price: f.price,
         })),
+        promoCode: appliedPromo || undefined,
         paymentMethod,
         contact: {
           email: contactEmail,
@@ -600,6 +636,7 @@ const Booking = () => {
           convenienceFee: baseFee,
           gst: igst,
           food: foodAmount,
+          discount: discountAmount,
           total: grandTotal,
         },
         date: new Date().toISOString(),
@@ -611,7 +648,7 @@ const Booking = () => {
       }
 
       const tierNames = Array.from(new Set(seatDetails.map((s) => s.tier))).join(', ');
-      const formattedDateStr = new Date(bookingDate).toLocaleDateString('en-IN', {
+      const formattedDateStr = parseIsoLocalDate(bookingDate).toLocaleDateString('en-IN', {
         weekday: 'short',
         day: 'numeric',
         month: 'short',
@@ -662,7 +699,7 @@ const Booking = () => {
     );
   }
 
-  const dObj = new Date(bookingDate);
+  const dObj = parseIsoLocalDate(bookingDate);
   const formattedBookingDate = `${dObj.toLocaleDateString('en-US', { weekday: 'short' })}, ${dObj.getDate()} ${dObj.toLocaleDateString('en-US', { month: 'long' })}, ${dObj.getFullYear()}`;
 
   const displayQty = hoveredQty || ticketQty;
@@ -743,10 +780,7 @@ const Booking = () => {
                 <span>Book the </span>
                 <span className={styles.bestsellerIconWrap}>
                   <svg width="17" height="16" aria-hidden="true">
-                    <use
-                      href={`/seat-layout-icons.svg#${bestsellerChecked ? 'icon-best-seat' : 'icon-bestseller'}`}
-                      xlinkHref={`/seat-layout-icons.svg#${bestsellerChecked ? 'icon-best-seat' : 'icon-bestseller'}`}
-                    />
+                    <use href={`/seat-layout-icons.svg#${bestsellerChecked ? 'icon-best-seat' : 'icon-bestseller'}`} />
                   </svg>
                 </span>
                 <span> <b>Bestseller Seats</b> in this cinema at no extra cost!</span>
@@ -805,10 +839,7 @@ const Booking = () => {
                 aria-label="Go back"
               >
                 <svg width="20" height="20" aria-hidden="true">
-                  <use
-                    href="/common-icons.svg#icon-chevron-any-color"
-                    xlinkHref="/common-icons.svg#icon-chevron-any-color"
-                  />
+                  <use href="/common-icons.svg#icon-chevron-any-color" />
                 </svg>
               </button>
               <div className={styles.movieMeta}>
@@ -844,10 +875,7 @@ const Booking = () => {
                 onClick={() => setIsQtyModalOpen(true)}
               >
                 <svg width="14" height="14" aria-hidden="true">
-                  <use
-                    href="/seat-layout-icons.svg#icon-red-edit"
-                    xlinkHref="/seat-layout-icons.svg#icon-red-edit"
-                  />
+                  <use href="/seat-layout-icons.svg#icon-red-edit" />
                 </svg>
                 <span>{ticketQty} {ticketQty === 1 ? 'Ticket' : 'Tickets'}</span>
               </button>
@@ -1068,17 +1096,11 @@ const Booking = () => {
                 </div>
                 <div className={styles.legendEntry}>
                   <svg width="17" height="16" aria-hidden="true">
-                    <use
-                      href="/seat-layout-icons.svg#icon-bestseller"
-                      xlinkHref="/seat-layout-icons.svg#icon-bestseller"
-                    />
+                    <use href="/seat-layout-icons.svg#icon-bestseller" />
                   </svg>
                   <span>Bestseller</span>
                   <svg width="12" height="12" aria-hidden="true">
-                    <use
-                      href="/common-icons.svg#icon-info-any-color"
-                      xlinkHref="/common-icons.svg#icon-info-any-color"
-                    />
+                    <use href="/common-icons.svg#icon-info-any-color" />
                   </svg>
                 </div>
                 <div className={styles.legendEntry}>

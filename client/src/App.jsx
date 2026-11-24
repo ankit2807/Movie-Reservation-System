@@ -63,6 +63,7 @@ function AppLayout() {
         <Route path="/register" element={<Register />} />
         <Route path="/bookings" element={<MyBookings />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/settings" element={<Profile />} />
 
         {/* Admin Routes */}
         <Route path="/admin/login" element={<AdminLogin />} />

@@ -1,14 +1,12 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { Search, Menu, X, User, ChevronDown } from 'lucide-react';
+import { Search, Menu, User, ChevronDown } from 'lucide-react';
 import api from '../api/axios';
-import { setCity } from '../redux/locationSlice';
 import { setSearchQuery } from '../redux/movieSlice';
 import { logout, setAuthModalOpen } from '../redux/authSlice';
 import styles from '../styles/Navbar.module.css';
 import SideMenu from './SideMenu';
-
 import LocationModal from './LocationModal';
 
 const Navbar = () => {
@@ -44,67 +42,101 @@ const Navbar = () => {
       console.error('Logout error:', err);
     } finally {
       dispatch(logout());
-      window.location.href = '/';
+      navigate('/');
     }
   };
 
   return (
     <>
-    <nav className={styles.navbar}>
-      <div className={`container ${styles.navContainer}`}>
-        <div className={styles.logoSearch}>
-          <Link to="/" className={styles.logo} aria-label="MovieBook Home">
-            <span className={styles.logoTextDark}>movie</span>
-            <span className={styles.logoBadgeRed}>book</span>
-          </Link>
-          <form onSubmit={handleSearchSubmit} className={styles.searchBar}>
-            <Search size={16} className={styles.searchIcon} />
-            <input
-              type="text"
-              placeholder="Search for Movies, Events, Plays, Sports and Activities"
-              value={localSearch}
-              onChange={handleSearchChange} 
-              onFocus={handleSearchFocus}
-              id="navbar-search-input"
-            />
-          </form>
-        </div>
+      <nav className={styles.navbar}>
+        <div className={`container ${styles.navContainer}`}>
+          <div className={styles.logoSearch}>
+            <Link to="/" className={styles.logo} aria-label="MovieBook Home">
+              <span className={styles.logoTextDark}>movie</span>
+              <span className={styles.logoBadgeRed}>book</span>
+            </Link>
+            <form onSubmit={handleSearchSubmit} className={styles.searchBar}>
+              <Search size={16} className={styles.searchIcon} />
+              <input
+                type="search"
+                placeholder="Search for Movies, Events, Plays, Sports and Activities"
+                value={localSearch}
+                onChange={handleSearchChange}
+                onFocus={handleSearchFocus}
+                enterKeyHint="search"
+                id="navbar-search-input"
+                aria-label="Search for Movies, Events, Plays, Sports and Activities"
+              />
+            </form>
+          </div>
 
-        <div className={styles.navActions}>
-          <div className={styles.locationWrapper}>
-            <div className={styles.location} onClick={() => setIsCityModalOpen(true)} id="location-selector">
+          <div className={styles.navActions}>
+            <div className={styles.locationWrapper}>
+              <div
+                className={styles.location}
+                onClick={() => setIsCityModalOpen(true)}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    setIsCityModalOpen(true);
+                  }
+                }}
+                id="location-selector"
+              >
                 {hasSelectedCity && currentCity ? currentCity : 'Select City'} <ChevronDown size={14} />
-            </div>
-          </div>
-          
-          {isAuthenticated ? (
-            <div className={styles.userProfile}>
-              <div className={styles.userAvatar}>
-                <User size={16} />
-              </div>
-              <span>{user?.name || 'User'}</span>
-              <div className={styles.dropdown}>
-                 <Link to="/profile">My Profile</Link>
-                 <Link to="/bookings">My Bookings</Link>
-                 {(user?.isAdmin || user?.role === 'admin') && <Link to="/admin/dashboard">Admin Dashboard</Link>}
-                 <button onClick={handleLogout}>Logout</button>
               </div>
             </div>
-          ) : (
-            <button className={styles.signInBtn} id="sign-in-btn" onClick={() => dispatch(setAuthModalOpen(true))}>
-              Sign in
-            </button>
-          )}
-          
-          {/* Hamburger Menu */}
-          <div className={styles.menuTrigger} onClick={() => setIsSideMenuOpen(true)}>
-            <Menu size={24} />
+
+            {isAuthenticated ? (
+              <div className={styles.userProfile}>
+                <div className={styles.userAvatar}>
+                  <User size={16} />
+                </div>
+                <span>{user?.name || 'User'}</span>
+                <div className={styles.dropdown}>
+                  <Link to="/profile">My Profile</Link>
+                  <Link to="/bookings">My Bookings</Link>
+                  {(user?.isAdmin || user?.role === 'admin') && (
+                    <Link to="/admin/dashboard">Admin Dashboard</Link>
+                  )}
+                  <button type="button" onClick={handleLogout}>
+                    Logout
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <button
+                type="button"
+                className={styles.signInBtn}
+                id="sign-in-btn"
+                onClick={() => dispatch(setAuthModalOpen(true))}
+              >
+                Sign in
+              </button>
+            )}
+
+            <div
+              className={styles.menuTrigger}
+              onClick={() => setIsSideMenuOpen(true)}
+              role="button"
+              tabIndex={0}
+              aria-label="Open menu"
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  setIsSideMenuOpen(true);
+                }
+              }}
+            >
+              <Menu size={24} />
+            </div>
           </div>
         </div>
-      </div>
-    </nav>
-    <LocationModal isOpen={isCityModalOpen} onClose={() => setIsCityModalOpen(false)} />
-    <SideMenu isOpen={isSideMenuOpen} onClose={() => setIsSideMenuOpen(false)} />
+      </nav>
+      <LocationModal isOpen={isCityModalOpen} onClose={() => setIsCityModalOpen(false)} />
+      <SideMenu isOpen={isSideMenuOpen} onClose={() => setIsSideMenuOpen(false)} />
     </>
   );
 };

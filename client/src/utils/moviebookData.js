@@ -275,7 +275,14 @@ export const generateBaselineOccupiedSeats = (showKey = 'default') => {
     'C11', 'C10', 'C9', 'C8',
     'D11', 'D10', 'D9', 'D8',
   ];
-  return fixedSold;
+  let hash = 0;
+  for (let i = 0; i < showKey.length; i++) {
+    hash = (hash * 31 + showKey.charCodeAt(i)) >>> 0;
+  }
+  const extraPool = ['E8', 'E9', 'F7', 'F8', 'G9', 'G10', 'H6', 'H7'];
+  const extra1 = extraPool[hash % extraPool.length];
+  const extra2 = extraPool[(hash + 3) % extraPool.length];
+  return Array.from(new Set([...fixedSold, extra1, extra2]));
 };
 
 export const FOOD_MENU = [
@@ -349,6 +356,231 @@ export const FOOD_MENU = [
 
 // Official YouTube trailer IDs per movie title (matches live MovieBook /multimedia page)
 const MOVIE_TRAILERS_MAP = {
+  'ramayana: rise of a legend': [
+    {
+      videoId: 'bw6NMTNS1ao',
+      title: 'Ramayana: Rise of a Legend | Official Box Office Promo',
+      language: 'Hindi',
+    },
+    {
+      videoId: 'goXqZKvxEu8',
+      title: 'Ramayana: Rise of a Legend | Hans Zimmer & A. R. Rahman Score Teaser',
+      language: 'English',
+    },
+  ],
+  'the hunger games: sunrise on the reaping': [
+    {
+      videoId: 'DBOaOb4CNcc',
+      title: 'The Hunger Games: Sunrise on the Reaping | Official Trailer',
+      language: 'English',
+    },
+    {
+      videoId: 'Yp4pY9CgdMk',
+      title: 'The Hunger Games: Sunrise on the Reaping | Official Teaser',
+      language: 'English',
+    },
+  ],
+  'godzilla minus zero': [
+    {
+      videoId: 'Pu0pH5BuCPM',
+      title: 'Godzilla Minus Zero | Official Trailer [Subtitled]',
+      language: 'English',
+    },
+    {
+      videoId: 'pWJjYoqVSjQ',
+      title: 'Godzilla Minus Zero | Official Teaser Trailer',
+      language: 'Japanese',
+    },
+  ],
+  'avengers: doomsday': [
+    {
+      videoId: 'UKAq31cLPfk',
+      title: 'Avengers: Doomsday | Official Teaser | Marvel Studios',
+      language: 'English',
+    },
+    {
+      videoId: '0r56zgXq940',
+      title: 'Avengers: Doomsday | Special Look',
+      language: 'English',
+    },
+  ],
+  king: [
+    {
+      videoId: 'Uu2QK9Z9X5E',
+      title: 'King | Official Title Reveal | Shah Rukh Khan, Siddharth Anand',
+      language: 'Hindi',
+    },
+  ],
+  'dune: part three': [
+    {
+      videoId: 'KFqe2evmkz8',
+      title: 'Dune: Part Three | Official Trailer | Denis Villeneuve',
+      language: 'English',
+    },
+    {
+      videoId: 'OAUnScp6fYA',
+      title: 'Dune: Part Three | Official Teaser',
+      language: 'English',
+    },
+  ],
+  ebenezer: [
+    {
+      videoId: 'LqZjdZ_UE-8',
+      title: 'Ebenezer | Official Trailer | Johnny Depp',
+      language: 'English',
+    },
+    {
+      videoId: 'BmYmv1JrzQ4',
+      title: 'Ebenezer | Official Holiday Teaser',
+      language: 'English',
+    },
+  ],
+  'drishyam: the conclusion': [
+    {
+      videoId: 'MFQFxsDWbA8',
+      title: 'Drishyam: The Conclusion | Official Trailer | Ajay Devgn, Tabu',
+      language: 'Hindi',
+    },
+  ],
+  'jailer 2': [
+    {
+      videoId: '3vkHWYL2JmA',
+      title: 'Jailer 2 | Official Trailer | Rajinikanth, Anirudh',
+      language: 'Tamil',
+    },
+  ],
+  'jumanji: open world': [
+    {
+      videoId: 'NFrRSNtzfpI',
+      title: 'Jumanji: Open World | Official Trailer',
+      language: 'English',
+    },
+    {
+      videoId: 'RfVHb05uHV0',
+      title: 'Jumanji: Open World | Official Teaser',
+      language: 'English',
+    },
+  ],
+  'the cat in the hat': [
+    {
+      videoId: 'hAsobRSRCLc',
+      title: 'The Cat in the Hat | Official Trailer | Warner Bros.',
+      language: 'English',
+    },
+    {
+      videoId: 'ySBhKFPISgw',
+      title: 'The Cat in the Hat | Official Teaser',
+      language: 'English',
+    },
+  ],
+  madden: [
+    {
+      videoId: 'xzh7HzLXXpk',
+      title: 'Madden | Official Trailer | Nicolas Cage, Christian Bale',
+      language: 'English',
+    },
+    {
+      videoId: 'KjOL6n0F0T8',
+      title: 'Madden | Official Teaser',
+      language: 'English',
+    },
+  ],
+  'spider-man: brand new day': [
+    {
+      videoId: 'Atn6k882WAo',
+      title: 'Spider-Man: Brand New Day | Official Trailer | Tom Holland',
+      language: 'English',
+    },
+    {
+      videoId: 'lS6TdzVVusY',
+      title: 'Spider-Man: Brand New Day | Official Teaser',
+      language: 'English',
+    },
+  ],
+  'the odyssey': [
+    {
+      videoId: '2mfqNJTC1QU',
+      title: 'The Odyssey | Official Trailer | Christopher Nolan',
+      language: 'English',
+    },
+    {
+      videoId: 'aUWTVfwdm-c',
+      title: 'The Odyssey | IMAX Special Featurette',
+      language: 'English',
+    },
+  ],
+  'project hail mary': [
+    {
+      videoId: 'Q2UjkMU_ZWQ',
+      title: 'Project Hail Mary | Official Trailer | Ryan Gosling',
+      language: 'English',
+    },
+    {
+      videoId: 'eSGTui-T-4Q',
+      title: 'Project Hail Mary | Official Teaser',
+      language: 'English',
+    },
+  ],
+  'dhurandhar: the revenge': [
+    {
+      videoId: 'NHk7scrb_9I',
+      title: 'Dhurandhar: The Revenge | Official Trailer | Ranveer Singh',
+      language: 'Hindi',
+    },
+    {
+      videoId: 'CN0lNff-zm0',
+      title: 'Dhurandhar: The Revenge | Official Teaser',
+      language: 'Hindi',
+    },
+  ],
+  toxic: [
+    {
+      videoId: 'EfluEyQ5QIA',
+      title: 'Toxic | Official Trailer | Yash',
+      language: 'Kannada',
+    },
+    {
+      videoId: 'JQ7pytcXahw',
+      title: 'Toxic | Official Teaser',
+      language: 'English',
+    },
+  ],
+  'toy story 5': [
+    {
+      videoId: 'xo_Cwmdcu2Y',
+      title: 'Toy Story 5 | Official Trailer | Pixar',
+      language: 'English',
+    },
+    {
+      videoId: '5TeG_J1mBwU',
+      title: 'Toy Story 5 | Official Teaser',
+      language: 'English',
+    },
+  ],
+  'the super mario galaxy movie': [
+    {
+      videoId: '-LLhj6QYQi8',
+      title: 'The Super Mario Galaxy Movie | Official Trailer',
+      language: 'English',
+    },
+    {
+      videoId: 'RjqUFNywK14',
+      title: 'The Super Mario Galaxy Movie | Official Teaser',
+      language: 'English',
+    },
+  ],
+  'disclosure day': [
+    {
+      videoId: '4Lkjgpk1ss4',
+      title: 'Disclosure Day | Official Trailer | Steven Spielberg',
+      language: 'English',
+    },
+    {
+      videoId: 'T1fg57UfR9s',
+      title: 'Disclosure Day | Official Teaser',
+      language: 'English',
+    },
+  ],
   'street fighter': [
     {
       videoId: 'U6sbm1OaJb8',
@@ -358,145 +590,6 @@ const MOVIE_TRAILERS_MAP = {
     {
       videoId: 'Xt4X4FvXk2A',
       title: 'Street Fighter | Official Teaser Trailer',
-      language: 'English',
-    },
-  ],
-  'pushpa 2: the rule': [
-    {
-      videoId: 'g3JUbgOHgdw',
-      title: 'Pushpa 2: The Rule | Official Trailer (Hindi)',
-      language: 'Hindi',
-    },
-    {
-      videoId: '1kVK0MZlbI4',
-      title: 'Pushpa 2: The Rule | Official Teaser',
-      language: 'Telugu',
-    },
-  ],
-  chhaava: [
-    {
-      videoId: '77vRyWNqZjM',
-      title: 'Chhaava | Official Trailer | Vicky Kaushal',
-      language: 'Hindi',
-    },
-    {
-      videoId: 'hP2zR2wPq5A',
-      title: 'Chhaava | Official Teaser | Maddock Films',
-      language: 'Hindi',
-    },
-  ],
-  'kantara: chapter 1': [
-    {
-      videoId: '6oKFao0aISA',
-      title: 'Kantara: Chapter 1 | First Look Teaser | Hombale Films',
-      language: 'Kannada',
-    },
-    {
-      videoId: '8mrVmf239GU',
-      title: 'Kantara | Official Hindi Trailer',
-      language: 'Hindi',
-    },
-  ],
-  'war 2': [
-    {
-      videoId: 'tQ0mzXRk-oM',
-      title: 'War | Official Trailer | Hrithik Roshan | YRF Spy Universe',
-      language: 'Hindi',
-    },
-    {
-      videoId: 'vqu4z34wENw',
-      title: 'YRF Spy Universe | Official Promo',
-      language: 'Hindi',
-    },
-  ],
-  'stree 2: sarkate ka aatank': [
-    {
-      videoId: 'KVnheXywIbY',
-      title: 'Stree 2 | Official Trailer | Shraddha Kapoor, Rajkummar Rao',
-      language: 'Hindi',
-    },
-    {
-      videoId: 'VlvOgk5BHS4',
-      title: 'Stree 2 | Official Teaser | Maddock Supernatural Universe',
-      language: 'Hindi',
-    },
-  ],
-  'kalki 2898 ad': [
-    {
-      videoId: 'kQDd1AhGIHk',
-      title: 'Kalki 2898 AD | Official Trailer | Prabhas, Amitabh Bachchan',
-      language: 'Hindi',
-    },
-    {
-      videoId: 'bC36d8e3bb0',
-      title: 'Kalki 2898 AD | Release Trailer',
-      language: 'Telugu',
-    },
-  ],
-  'dune: part two': [
-    {
-      videoId: 'Way9Dexny3w',
-      title: 'Dune: Part Two | Official Trailer | Warner Bros.',
-      language: 'English',
-    },
-    {
-      videoId: 'U2Qp5pL3ovA',
-      title: 'Dune: Part Two | Official Trailer 2',
-      language: 'English',
-    },
-  ],
-  'deadpool & wolverine': [
-    {
-      videoId: '73_1biulkYk',
-      title: 'Deadpool & Wolverine | Official Trailer | Marvel Studios',
-      language: 'English',
-    },
-    {
-      videoId: 'uJMCNJP2ipI',
-      title: 'Deadpool & Wolverine | Official Teaser',
-      language: 'English',
-    },
-  ],
-  'mission: impossible – final reckoning': [
-    {
-      videoId: 'NOhDyUmT9z0',
-      title: 'Mission: Impossible – The Final Reckoning | Teaser Trailer',
-      language: 'English',
-    },
-    {
-      videoId: 'avz06PDqDbM',
-      title: 'Mission: Impossible | Official Trailer | Paramount Pictures',
-      language: 'English',
-    },
-  ],
-  'bhool bhulaiyaa 3': [
-    {
-      videoId: '6YMY62tMLUA',
-      title: 'Bhool Bhulaiyaa 3 | Official Trailer | Kartik Aaryan, Vidya Balan',
-      language: 'Hindi',
-    },
-    {
-      videoId: 'c3A3yG8a9jU',
-      title: 'Bhool Bhulaiyaa 3 | Official Teaser',
-      language: 'Hindi',
-    },
-  ],
-  'singham again': [
-    {
-      videoId: 'MD7v0-igVIM',
-      title: 'Singham Again | Official Trailer | Ajay Devgn, Rohit Shetty',
-      language: 'Hindi',
-    },
-  ],
-  oppenheimer: [
-    {
-      videoId: 'uYPbbksJxIg',
-      title: 'Oppenheimer | New Trailer | Christopher Nolan',
-      language: 'English',
-    },
-    {
-      videoId: 'bK6ldnjE3Y0',
-      title: 'Oppenheimer | Official Trailer',
       language: 'English',
     },
   ],
@@ -587,30 +680,29 @@ export const DEFAULT_BMS_REVIEWS = [
     _id: 'bms-rev-1',
     user: { name: 'Biswajeet' },
     rating: 10,
-    hashtags: '#Blockbuster',
+    hashtags: '#Blockbuster #SuperDirection',
     comment:
-      'mind blowing movie.. fun to watch.. I enjoyed movie.. animation sence in this movie are mind blowing.. vfx are mind blowing... action sequence of tournament is pure goosebumps!',
+      'Mind-blowing theatrical experience! Visually stunning from the opening frame to the climax, with thunderous sound design and goosebumps-inducing action sequences.',
     likes: 94,
     timeAgo: '1 Day ago',
   },
   {
     _id: 'bms-rev-2',
-    user: { name: 'User' },
+    user: { name: 'Aarav' },
     rating: 10,
-    hashtags:
-      '#SuperDirection #GreatActing #WowMusic #AwesomeStory #Blockbuster #Rocking #Inspiring #Wellmade #Unbelievable',
+    hashtags: '#SuperDirection #GreatActing #WowMusic #AwesomeStory #Blockbuster',
     comment:
-      'Incredible big-screen experience in IMAX 2D! Every fight sequence between Ryu and Ken feels straight out of the classic arcade game with thunderous sound design.',
+      'Incredible big-screen spectacle in IMAX! Every sequence feels larger than life and the background score elevates every dramatic moment.',
     likes: 51,
     timeAgo: '2 Days ago',
   },
   {
     _id: 'bms-rev-3',
-    user: { name: 'User' },
-    rating: 7,
+    user: { name: 'Riya' },
+    rating: 9,
     hashtags: '#Rocking #Wellmade',
     comment:
-      'As a Franchise games Fan the casting director nailed the cast and their acting is like cherry on Top. it was double fun for me as I was also excited to watch it in 4DX!',
+      'Nailed the casting and pacing! Watching it in 4DX with friends made it double the fun—easily one of the most entertaining releases of the season.',
     likes: 23,
     timeAgo: '1 Day ago',
   },
@@ -618,10 +710,9 @@ export const DEFAULT_BMS_REVIEWS = [
     _id: 'bms-rev-4',
     user: { name: 'Sourav' },
     rating: 10,
-    hashtags:
-      '#SuperDirection #GreatActing #WowMusic #AwesomeStory #Blockbuster #Rocking #Inspiring #Wellmade #Unbelievable',
+    hashtags: '#GreatActing #WowMusic #Blockbuster #MustWatch',
     comment:
-      'Best action entertainer of the year! Noah Centineo, Andrew Koji, Callina Liang, Vidyut Jammwal and Jason Momoa deliver knockout performances.',
+      'Powerhouse performances across the entire ensemble cast and top-tier cinematography. Worth watching on the biggest screen near you!',
     likes: 17,
     timeAgo: '1 Day ago',
   },

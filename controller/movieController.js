@@ -107,7 +107,7 @@ const ensureFreshDatabase = async () => {
   const hasLegacyData =
     movies.length === 0 ||
     movies.some((m) => ["G", "PG", "PG-13", "R", "NC-17"].includes(m.rating)) ||
-    !movies.some((m) => m.title === "Street Fighter");
+    !movies.some((m) => m.title === "Ramayana: Rise of a Legend");
 
   if (hasLegacyData) {
     if (!autoSeedPromise) {

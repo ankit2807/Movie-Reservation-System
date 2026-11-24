@@ -20,19 +20,20 @@ const Footer = () => {
     const activitiesInNoida = (movies || []).filter(m => m.type === 'Activity').slice(0, 8);
 
     const fallbackMovies = [
+        { title: 'Ramayana: Rise of a Legend', _id: 'ramayana' },
+        { title: 'The Hunger Games: Sunrise on the Reaping', _id: 'hunger-games' },
+        { title: 'O.M: Operation Mole', _id: 'operation-mole' },
+        { title: 'Godzilla Minus Zero', _id: 'godzilla-minus-zero' },
+        { title: 'Avengers: Doomsday', _id: 'avengers-doomsday' },
+        { title: 'King', _id: 'king' },
+        { title: 'Dune: Part Three', _id: 'dune-part-three' },
         { title: 'Street Fighter', _id: 'ET00481645' },
-        { title: 'Pushpa 2: The Rule', _id: 'pushpa-2' },
-        { title: 'Chhaava', _id: 'chhaava' },
-        { title: 'Kantara: Chapter 1', _id: 'kantara' },
-        { title: 'War 2', _id: 'war-2' },
-        { title: 'Stree 2', _id: 'stree-2' },
-        { title: 'Sikandar', _id: 'sikandar' }
     ];
     const fallbackEvents = [
-        { title: 'Coldplay: Music of the Spheres Tour', _id: 'coldplay' },
-        { title: 'Diljit Dosanjh: Dil-Luminati Tour', _id: 'diljit' },
-        { title: 'Zakir Khan Live – Tathastu & Beyond', _id: 'zakir-khan' },
-        { title: 'Arijit Singh Live in Concert', _id: 'arijit' }
+        { title: 'Coldplay: Music of the Spheres World Tour', _id: 'coldplay' },
+        { title: 'Diljit Dosanjh: Dil-Luminati Finale Tour', _id: 'diljit' },
+        { title: 'Zakir Khan Live – Papa Yaar India Tour', _id: 'zakir-khan' },
+        { title: 'Arijit Singh Live Symphony Tour', _id: 'arijit' },
     ];
     const fallbackPlays = [
         { title: 'Mughal-e-Azam: The Musical', _id: 'mughal-e-azam' },
@@ -82,11 +83,11 @@ const Footer = () => {
     ];
 
     const socialLinks = [
-        { icon: <Facebook size={20} />, href: '#', label: 'Facebook' },
-        { icon: <Twitter size={20} />, href: '#', label: 'Twitter' },
-        { icon: <Instagram size={20} />, href: '#', label: 'Instagram' },
-        { icon: <Youtube size={20} />, href: '#', label: 'YouTube' },
-        { icon: <Linkedin size={20} />, href: '#', label: 'LinkedIn' },
+        { icon: <Facebook size={20} />, href: 'https://www.facebook.com', label: 'Facebook' },
+        { icon: <Twitter size={20} />, href: 'https://x.com', label: 'Twitter' },
+        { icon: <Instagram size={20} />, href: 'https://www.instagram.com', label: 'Instagram' },
+        { icon: <Youtube size={20} />, href: 'https://www.youtube.com', label: 'YouTube' },
+        { icon: <Linkedin size={20} />, href: 'https://www.linkedin.com', label: 'LinkedIn' },
     ];
 
     return (

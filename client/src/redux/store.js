@@ -9,16 +9,26 @@ const loadState = () => {
         if (serializedState === null) {
             return undefined;
         }
-        return JSON.parse(serializedState);
-    } catch (err) {
+        const parsed = JSON.parse(serializedState);
+        return {
+            user: parsed?.user || null,
+            isAuthenticated: Boolean(parsed?.isAuthenticated && parsed?.user),
+            loading: false,
+            error: null,
+            isAuthModalOpen: false,
+        };
+    } catch {
         return undefined;
     }
 };
 
-const saveState = (state) => {
+const saveState = (authState) => {
     try {
-        const serializedState = JSON.stringify(state);
-        localStorage.setItem('authState', serializedState);
+        const persisted = {
+            user: authState?.user || null,
+            isAuthenticated: Boolean(authState?.isAuthenticated && authState?.user),
+        };
+        localStorage.setItem('authState', JSON.stringify(persisted));
     } catch {
         // ignore write errors
     }
@@ -30,7 +40,8 @@ const preloadedState = {
         isAuthenticated: false,
         loading: false,
         error: null,
-    }
+        isAuthModalOpen: false,
+    },
 };
 
 export const store = configureStore({
