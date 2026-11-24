@@ -15,7 +15,7 @@ const Register = () => {
   const navigate = useNavigate();
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   const handleSubmit = async (e) => {
@@ -39,51 +39,62 @@ const Register = () => {
         {error && <p className={styles.error}>{error}</p>}
         <form onSubmit={handleSubmit}>
           <div className={styles.inputGroup}>
-            <label>Name</label>
+            <label htmlFor="register-name">Full Name</label>
             <input
+              id="register-name"
               type="text"
               name="name"
+              autoComplete="name"
               value={formData.name}
               onChange={handleChange}
               required
             />
           </div>
           <div className={styles.inputGroup}>
-            <label>Email</label>
+            <label htmlFor="register-email">Email</label>
             <input
+              id="register-email"
               type="email"
               name="email"
+              autoComplete="username"
+              spellCheck={false}
               value={formData.email}
               onChange={handleChange}
               required
             />
           </div>
           <div className={styles.inputGroup}>
-            <label>Phone</label>
+            <label htmlFor="register-phone">Phone</label>
             <input
+              id="register-phone"
               type="tel"
               name="phone"
+              autoComplete="tel"
+              inputMode="tel"
               value={formData.phone}
               onChange={handleChange}
               required
             />
           </div>
           <div className={styles.inputGroup}>
-            <label>Password</label>
+            <label htmlFor="register-password">Password</label>
             <input
+              id="register-password"
               type="password"
               name="password"
+              autoComplete="new-password"
+              minLength={7}
               value={formData.password}
               onChange={handleChange}
               required
             />
           </div>
           <button type="submit" className="btn btn-primary" disabled={loading}>
-            {loading ? 'Creating...' : 'Register'}
+            {loading ? 'Creating account...' : 'Create Account'}
           </button>
         </form>
         <p className={styles.switchText}>
-          Already have an account? <Link to="/login">Login</Link>
+          Already have an account? <Link to="/login">Sign In</Link>
         </p>
       </div>
     </div>

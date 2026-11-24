@@ -21,11 +21,11 @@ const MovieMultimedia = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    setPlayingVideoId(null);
     const load = async () => {
       try {
         setLoading(true);
         setError(null);
+        setPlayingVideoId(null);
         const res = await api.get(`/movie/find/${id}`);
         setMovie(res.data);
       } catch (err) {
@@ -152,7 +152,6 @@ const MovieMultimedia = () => {
                         className={styles.videoFrame}
                         src={`https://www.youtube.com/embed/${video.videoId}?autoplay=1&enablejsapi=1&modestbranding=1&playsinline=1&fs=1&rel=0`}
                         title={video.title}
-                        frameBorder="0"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                         referrerPolicy="strict-origin-when-cross-origin"
                         allowFullScreen

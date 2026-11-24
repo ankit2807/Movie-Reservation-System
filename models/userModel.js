@@ -11,8 +11,8 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: [true, "Name is required"],
       trim: true,
-      maxLength: [30, "Name cannot exceed 30 characters"],
-      minLength: [4, "Name should have more than 4 characters"],
+      maxLength: [50, "Name cannot exceed 50 characters"],
+      minLength: [2, "Name must have at least 2 characters"],
     },
     email: {
       type: String,
@@ -21,41 +21,31 @@ const userSchema = new mongoose.Schema(
       trim: true,
       lowercase: true,
       validate: {
-        validator: function (value) {
-          return validator.isEmail(value);
-        },
+        validator: (value) => validator.isEmail(value),
         message: "Invalid email format",
       },
     },
     password: {
       type: String,
       required: [true, "Password is required"],
-      minlength: [7, "Password must be at least 7 characters long"],
-      trim: true,
-      validate: {
-        validator: function (value) {
-          return !value.toLowerCase().includes("password");
-        },
-        message: 'Password cannot contain the word "password"',
-      },
     },
     phone: {
       type: String,
       required: [true, "Phone number is required"],
       validate: {
-        validator: function (v) {
-          return /^\d{10}$/.test(v);
-        },
-        message: "Phone number must be exactly 10 digits",
+        validator: (v) => /^\d{10}$/.test(v),
+        message: "Phone number must be 10 digits",
       },
     },
     firstName: {
       type: String,
       trim: true,
+      default: "",
     },
     lastName: {
       type: String,
       trim: true,
+      default: "",
     },
     gender: {
       type: String,
@@ -66,7 +56,9 @@ const userSchema = new mongoose.Schema(
       default: false,
     },
     birthday: {
-      type: String, // Format: dd/mm/yyyy
+      type: String,
+      trim: true,
+      default: "",
     },
   },
   {

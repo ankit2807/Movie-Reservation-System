@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { User, ShoppingBag, Tv, CreditCard, Gift, Monitor, LogOut } from 'lucide-react';
@@ -6,37 +6,30 @@ import api from '../api/axios';
 import { loginSuccess, logout } from '../redux/authSlice';
 import styles from '../styles/Profile.module.css';
 
+const buildFormFromUser = (u) => ({
+    firstName: u?.firstName || '',
+    lastName: u?.lastName || '',
+    email: u?.email || '',
+    phone: u?.phone || '',
+    gender: u?.gender || '',
+    isMarried: Boolean(u?.isMarried),
+    birthday: u?.birthday || '',
+});
+
 const Profile = () => {
     const { user } = useSelector(state => state.auth);
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const [formData, setFormData] = useState({
-        firstName: '',
-        lastName: '',
-        email: '',
-        phone: '',
-        gender: '',
-        isMarried: false,
-        birthday: ''
-    });
+    const [prevUser, setPrevUser] = useState(user);
+    const [formData, setFormData] = useState(() => buildFormFromUser(user));
+    if (prevUser !== user) {
+        setPrevUser(user);
+        setFormData(buildFormFromUser(user));
+    }
 
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState('');
-
-    useEffect(() => {
-        if (user) {
-            setFormData({
-                firstName: user.firstName || '',
-                lastName: user.lastName || '',
-                email: user.email || '',
-                phone: user.phone || '',
-                gender: user.gender || '',
-                isMarried: user.isMarried || false,
-                birthday: user.birthday || ''
-            });
-        }
-    }, [user]);
 
     const handleLogout = async () => {
         try {
@@ -65,13 +58,12 @@ const Profile = () => {
 
         try {
             const res = await api.put('/user/profile', formData);
-            // Updating local user state
             dispatch(loginSuccess(res.data));
             setMessage('Profile updated successfully!');
             setTimeout(() => setMessage(''), 3000);
         } catch (err) {
             console.error(err);
-            setMessage('Failed to update profile.');
+            setMessage(err.response?.data?.message || 'Failed to update profile.');
         } finally {
             setLoading(false);
         }
@@ -157,11 +149,19 @@ const Profile = () => {
                                 <div className={styles.inputGroup}>
                                     <label>Gender (Optional)</label>
                                     <div className={styles.radioGroup}>
-                                        {['Female', 'Male'].map(option => (
-                                            <div 
+                                        {['Female', 'Male', 'Other'].map(option => (
+                                            <div
                                                 key={option}
+                                                role="button"
+                                                tabIndex={0}
                                                 className={`${styles.radioOption} ${formData.gender === option ? styles.selected : ''}`}
                                                 onClick={() => handleRadioChange('gender', option)}
+                                                onKeyDown={(e) => {
+                                                    if (e.key === 'Enter' || e.key === ' ') {
+                                                        e.preventDefault();
+                                                        handleRadioChange('gender', option);
+                                                    }
+                                                }}
                                             >
                                                 {option}
                                             </div>

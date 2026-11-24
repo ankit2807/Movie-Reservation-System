@@ -55,7 +55,7 @@ const DEFAULT_CONFIG = {
     output: "CODE_REVIEW_REPORT.md",
     reviewCategories: ["security", "performance", "best-practices", "code-quality", "react-patterns", "error-handling"],
     maxFilesPerBatch: 5,
-    model: "gemini-2.0-flash",
+    model: "gemini-2.5-flash",
 };
 
 function loadConfig() {

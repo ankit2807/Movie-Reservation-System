@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Calendar, Clock, Ticket, MapPin, Utensils, XCircle, CheckCircle2 } from 'lucide-react';
+import { Calendar, Ticket, MapPin, Utensils, XCircle, CheckCircle2 } from 'lucide-react';
 import { QRCodeCanvas } from 'qrcode.react';
 import api from '../api/axios';
 import { createPosterFallback } from '../utils/moviebookData';
@@ -11,49 +11,54 @@ const MyBookings = () => {
   const [loading, setLoading] = useState(true);
   const [cancellingId, setCancellingId] = useState(null);
 
-  const fetchBookings = async () => {
-    try {
-      setLoading(true);
-      let dbBookings = [];
-      try {
-        const res = await api.get('/movieReservation');
-        dbBookings = Array.isArray(res.data) ? res.data : [];
-      } catch (dbErr) {
-        console.warn('Database bookings fallback to local storage:', dbErr.message);
-      }
-
-      let localBookings = [];
-      try {
-        const saved = localStorage.getItem('my-bookings');
-        if (saved) {
-          localBookings = JSON.parse(saved);
-        }
-      } catch (storageErr) {
-        console.warn('Error reading local bookings:', storageErr);
-      }
-
-      // Deduplicate by bookingId or _id
-      const seen = new Set();
-      const merged = [];
-      [...dbBookings, ...localBookings].forEach((b) => {
-        if (!b || !(b.movie?.title || b.movieTitle)) return;
-        const key = b.bookingId || b._id;
-        if (key && seen.has(key)) return;
-        if (key) seen.add(key);
-        merged.push(b);
-      });
-
-      merged.sort((a, b) => new Date(b.createdAt || b.date) - new Date(a.createdAt || a.date));
-      setBookings(merged);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
+    let isMounted = true;
+    const fetchBookings = async () => {
+      try {
+        setLoading(true);
+        let dbBookings = [];
+        try {
+          const res = await api.get('/movieReservation');
+          dbBookings = Array.isArray(res.data) ? res.data : [];
+        } catch (dbErr) {
+          console.warn('Database bookings fallback to local storage:', dbErr.message);
+        }
+
+        let localBookings = [];
+        try {
+          const saved = localStorage.getItem('my-bookings');
+          if (saved) {
+            localBookings = JSON.parse(saved);
+          }
+        } catch (storageErr) {
+          console.warn('Error reading local bookings:', storageErr);
+        }
+
+        const seen = new Set();
+        const merged = [];
+        [...dbBookings, ...localBookings].forEach((b) => {
+          if (!b || !(b.movie?.title || b.movieTitle)) return;
+          const key = b.bookingId || b._id;
+          if (key && seen.has(key)) return;
+          if (key) seen.add(key);
+          merged.push(b);
+        });
+
+        const sorted = merged.toSorted(
+          (a, b) => new Date(b.createdAt || b.date) - new Date(a.createdAt || a.date)
+        );
+        if (isMounted) setBookings(sorted);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        if (isMounted) setLoading(false);
+      }
+    };
+
     fetchBookings();
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   const handleCancelBooking = async (booking) => {
@@ -109,7 +114,7 @@ const MyBookings = () => {
         <div className={styles.noBookings}>
           <Ticket size={64} className={styles.noBookingsIcon} />
           <h3>No Bookings Found</h3>
-          <p>You haven't booked any tickets yet. Explore the latest 2025–2026 blockbusters and book your seats now!</p>
+          <p>You haven&apos;t booked any tickets yet. Explore the latest 2026 blockbusters and book your seats now!</p>
           <Link to="/" className={styles.exploreCta}>Explore Movies</Link>
         </div>
       ) : (

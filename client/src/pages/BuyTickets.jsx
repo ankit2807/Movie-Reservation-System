@@ -9,6 +9,13 @@ import api from '../api/axios';
 import { getTheatresForCity } from '../utils/moviebookData';
 import styles from '../styles/BuyTickets.module.css';
 
+const toLocalIsoDate = (dateObj) => {
+  const yyyy = dateObj.getFullYear();
+  const mm = String(dateObj.getMonth() + 1).padStart(2, '0');
+  const dd = String(dateObj.getDate()).padStart(2, '0');
+  return `${yyyy}-${mm}-${dd}`;
+};
+
 const generateDates = () => {
   const days = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
   const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
@@ -21,7 +28,7 @@ const generateDates = () => {
       day: days[d.getDay()],
       date: String(d.getDate()).padStart(2, '0'),
       month: months[d.getMonth()],
-      iso: d.toISOString().split('T')[0],
+      iso: toLocalIsoDate(d),
     });
   }
   return list;
@@ -71,9 +78,7 @@ const BuyTickets = () => {
         const res = await api.get(`/movie/find/${id}`);
         const data = res.data;
         setMovie(data);
-        if (!selectedLang) {
-          setSelectedLang(data.languages?.[0] || 'English');
-        }
+        setSelectedLang((prev) => prev || data.languages?.[0] || 'English');
       } catch (err) {
         console.error('Failed to fetch movie for BuyTickets:', err);
         setError('Unable to load showtimes for this movie.');

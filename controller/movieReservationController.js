@@ -11,11 +11,19 @@ const generateBookingId = () =>
 
 const round2 = (n) => Math.round(n * 100) / 100;
 
+const computePromoDiscount = (promoCode, ticketsAmount, foodAmount) => {
+  const code = String(promoCode || "").trim().toUpperCase();
+  if (code === "FIRSTSHOW") return Math.min(150, Math.round(ticketsAmount * 0.15));
+  if (code === "PAYTM150") return ticketsAmount >= 300 ? 150 : 75;
+  if (code === "RUPAY25") return Math.min(120, Math.round((ticketsAmount + foodAmount) * 0.2));
+  return 0;
+};
+
 // Parse "10:15 AM" / "07:30 PM" / "19:30" + "YYYY-MM-DD" into a valid Date
 const parseShowDateTime = (showDate, showTime, fallbackDateTime) => {
   if (fallbackDateTime) {
     const d = new Date(fallbackDateTime);
-    if (!isNaN(d.getTime())) return d;
+    if (!Number.isNaN(d.getTime())) return d;
   }
   const datePart = showDate || new Date().toISOString().split("T")[0];
   if (!showTime) return new Date(datePart);
@@ -30,7 +38,7 @@ const parseShowDateTime = (showDate, showTime, fallbackDateTime) => {
     const hh = String(hours).padStart(2, "0");
     const mm = String(mins).padStart(2, "0");
     const d = new Date(`${datePart}T${hh}:${mm}:00`);
-    if (!isNaN(d.getTime())) return d;
+    if (!Number.isNaN(d.getTime())) return d;
   }
 
   const match24 = String(showTime).trim().match(/^(\d{1,2}):(\d{2})$/);
@@ -38,11 +46,11 @@ const parseShowDateTime = (showDate, showTime, fallbackDateTime) => {
     const hh = String(match24[1]).padStart(2, "0");
     const mm = String(match24[2]).padStart(2, "0");
     const d = new Date(`${datePart}T${hh}:${mm}:00`);
-    if (!isNaN(d.getTime())) return d;
+    if (!Number.isNaN(d.getTime())) return d;
   }
 
   const fallback = new Date(datePart);
-  return isNaN(fallback.getTime()) ? new Date() : fallback;
+  return Number.isNaN(fallback.getTime()) ? new Date() : fallback;
 };
 
 /**
@@ -52,7 +60,7 @@ const parseShowDateTime = (showDate, showTime, fallbackDateTime) => {
 const createShowKeyReservation = async (req, res) => {
   const {
     showKey, movie, movieTitle, posterImage, certification, language, format,
-    theatre, showDate, showTime, showDateTime, seatDetails, food, paymentMethod, contact,
+    theatre, showDate, showTime, showDateTime, seatDetails, food, promoCode, paymentMethod, contact,
   } = req.body;
 
   const seatLines = Array.isArray(seatDetails) ? seatDetails : [];
@@ -89,7 +97,9 @@ const createShowKeyReservation = async (req, res) => {
   const convenienceFee = CONVENIENCE_FEE_PER_TICKET * seatsArray.length;
   const gst = round2(convenienceFee * GST_RATE);
   const foodAmount = foodLines.reduce((sum, f) => sum + f.qty * f.price, 0);
-  const total = round2(ticketsAmount + convenienceFee + gst + foodAmount);
+  const cleanPromo = promoCode ? String(promoCode).trim().toUpperCase() : undefined;
+  const discount = computePromoDiscount(cleanPromo, ticketsAmount, foodAmount);
+  const total = Math.max(0, round2(ticketsAmount + convenienceFee + gst + foodAmount - discount));
 
   const isMovieMongoId = typeof movie === "string" && /^[0-9a-fA-F]{24}$/.test(movie);
 
@@ -116,7 +126,8 @@ const createShowKeyReservation = async (req, res) => {
     seats: seatsArray,
     seatDetails: seatLines.map((s) => ({ seat: String(s.seat).toUpperCase(), tier: s.tier, price: Number(s.price) || 0 })),
     food: foodLines,
-    amounts: { tickets: ticketsAmount, convenienceFee, gst, food: foodAmount, total },
+    amounts: { tickets: ticketsAmount, convenienceFee, gst, food: foodAmount, discount, total },
+    promoCode: discount > 0 ? cleanPromo : undefined,
     paymentMethod,
     contact,
     date: showAt,
@@ -128,13 +139,9 @@ const createShowKeyReservation = async (req, res) => {
 
 /**
  * Create a new reservation.
- * Supports both MongoDB movie IDs and TMDB-style IDs (tmdb_mv_XXX).
- * @param {Object} req - Express request object
- * @param {Object} res - Express response object
  */
 const createReservation = async (req, res) => {
   try {
-    // New MovieBook flow
     if (req.body.showKey) {
       return await createShowKeyReservation(req, res);
     }
@@ -142,12 +149,12 @@ const createReservation = async (req, res) => {
     const { movie, showtime, seats, date } = req.body;
     const userId = req.user.id;
 
-    // Parse seats if it's a string
-    let seatsArray = Array.isArray(seats) ? seats : (typeof seats === "string"
-      ? seats.split(",").map(s => s.replace(/'/g, "").trim())
-      : []);
+    const seatsArray = Array.isArray(seats)
+      ? seats
+      : typeof seats === "string"
+      ? seats.split(",").map((s) => s.replace(/'/g, "").trim().toUpperCase()).filter(Boolean)
+      : [];
 
-    // Basic validation
     if (!userId || !showtime || !seatsArray.length || !date) {
       return res.status(400).json({
         message: "Showtime, seats, and date are required",
@@ -155,11 +162,10 @@ const createReservation = async (req, res) => {
     }
 
     const reservationDate = new Date(date);
-    if (isNaN(reservationDate.getTime())) {
+    if (Number.isNaN(reservationDate.getTime())) {
       return res.status(400).json({ message: "Invalid date format" });
     }
 
-    // Try to find showtime by ID (showtimeId passed directly)
     let existingShowtime = null;
     const isMongoId = /^[0-9a-fA-F]{24}$/.test(showtime);
 
@@ -167,7 +173,6 @@ const createReservation = async (req, res) => {
       existingShowtime = await ShowTime.findById(showtime);
     }
 
-    // If not found by ID, check if showtime is a time string and movie is provided
     if (!existingShowtime && movie) {
       const isMovieMongoId = /^[0-9a-fA-F]{24}$/.test(movie);
       if (isMovieMongoId) {
@@ -178,28 +183,25 @@ const createReservation = async (req, res) => {
       }
     }
 
-    // If no showtime found at all, create a minimal reservation without strict showtime constraint
-    // (For TMDB movies that don't have MongoDB showtimes)
     if (!existingShowtime) {
-      // Create a flexible reservation for TMDB-sourced movies
+      const bookingId = generateBookingId();
       const flexReservation = new Reservation({
         user: userId,
-        movie: mongoose.Types.ObjectId.isValid(movie) ? movie : new mongoose.Types.ObjectId(), // placeholder if TMDB ID
-        showtime: mongoose.Types.ObjectId.isValid(showtime) ? showtime : new mongoose.Types.ObjectId(),
+        bookingId,
+        movie: /^[0-9a-fA-F]{24}$/.test(String(movie || "")) ? movie : undefined,
+        showtime: isMongoId ? showtime : undefined,
         seats: seatsArray,
         date: reservationDate,
       });
 
-      // Skip the showtime validation — save directly
       const saved = await flexReservation.save();
       return res.status(201).json({
         ...saved.toObject(),
-        bookingId: "BMS" + Date.now().toString().slice(-8),
+        bookingId,
         message: "Booking confirmed!",
       });
     }
 
-    // Validate date is within showtime range
     if (
       reservationDate < existingShowtime.startDate ||
       reservationDate > existingShowtime.endDate
@@ -209,9 +211,9 @@ const createReservation = async (req, res) => {
       });
     }
 
-    // Check for seat conflicts
     const conflictingReservations = await Reservation.find({
       showtime: existingShowtime._id,
+      status: { $ne: "CANCELLED" },
       date: reservationDate,
       seats: { $in: seatsArray },
     });
@@ -222,8 +224,10 @@ const createReservation = async (req, res) => {
       });
     }
 
+    const bookingId = generateBookingId();
     const newReservation = new Reservation({
       user: userId,
+      bookingId,
       movie: existingShowtime.movieId,
       showtime: existingShowtime._id,
       seats: seatsArray,
@@ -233,7 +237,7 @@ const createReservation = async (req, res) => {
     const savedReservation = await newReservation.save();
     return res.status(201).json({
       ...savedReservation.toObject(),
-      bookingId: "BMS" + Date.now().toString().slice(-8),
+      bookingId,
       message: "Booking confirmed!",
     });
   } catch (err) {
@@ -268,7 +272,6 @@ const getOccupiedSeats = async (req, res) => {
   try {
     const { showtimeId, date, showKey } = req.query;
 
-    // New flow: occupied seats by show key
     if (showKey) {
       const reservations = await Reservation.find({
         showKey: String(showKey),
@@ -290,11 +293,10 @@ const getOccupiedSeats = async (req, res) => {
     }
 
     const reservationDate = new Date(date);
-    if (isNaN(reservationDate.getTime())) {
+    if (Number.isNaN(reservationDate.getTime())) {
       return res.status(400).json({ message: "Invalid date format" });
     }
 
-    // Query reservations on this showtimeId and date (start of day to end of day)
     const startOfDay = new Date(reservationDate);
     startOfDay.setHours(0, 0, 0, 0);
     const endOfDay = new Date(reservationDate);
@@ -307,14 +309,9 @@ const getOccupiedSeats = async (req, res) => {
         $gte: startOfDay,
         $lte: endOfDay,
       },
-    });
+    }).select("seats");
 
-    // Flatten seats array
-    const occupiedSeats = reservations.reduce((acc, curr) => {
-      return acc.concat(curr.seats);
-    }, []);
-
-    return res.status(200).json(occupiedSeats);
+    return res.status(200).json(reservations.flatMap((r) => r.seats));
   } catch (err) {
     console.error("Get occupied seats error:", err);
     return res.status(500).json({ message: "Internal server error" });
@@ -343,12 +340,14 @@ const getReservationById = async (req, res) => {
 
 /**
  * Cancel a reservation owned by the logged-in user.
- * Allowed until 20 minutes before the show. Ticket + F&B amount is refunded;
+ * Allowed until 20 minutes before the show. Ticket + F&B (less promo discount) is refunded;
  * convenience fees are non-refundable.
  */
 const cancelReservation = async (req, res) => {
   try {
-    const reservation = await Reservation.findOne({ _id: req.params.id, user: req.user.id });
+    const { id } = req.params;
+    const query = /^[0-9a-fA-F]{24}$/.test(id) ? { _id: id } : { bookingId: id };
+    const reservation = await Reservation.findOne({ ...query, user: req.user.id });
     if (!reservation) {
       return res.status(404).json({ message: "Booking not found" });
     }
@@ -356,12 +355,26 @@ const cancelReservation = async (req, res) => {
       return res.status(400).json({ message: "Booking is already cancelled" });
     }
 
+    if (reservation.showDateTime) {
+      const showMs = new Date(reservation.showDateTime).getTime();
+      if (!Number.isNaN(showMs) && showMs - Date.now() < CANCELLATION_CUTOFF_MS) {
+        return res.status(400).json({
+          message: "Cancellations are only permitted up to 20 minutes before showtime.",
+        });
+      }
+    }
+
     const amounts = reservation.amounts || {};
     const fallbackTicketRefund = (reservation.seats?.length || 1) * 250;
     reservation.status = "CANCELLED";
     reservation.cancelledAt = new Date();
-    reservation.refundAmount = round2(
-      amounts.tickets ? (amounts.tickets || 0) + (amounts.food || 0) : fallbackTicketRefund
+    reservation.refundAmount = Math.max(
+      0,
+      round2(
+        amounts.tickets
+          ? (amounts.tickets || 0) + (amounts.food || 0) - (amounts.discount || 0)
+          : fallbackTicketRefund
+      )
     );
     await reservation.save();
 

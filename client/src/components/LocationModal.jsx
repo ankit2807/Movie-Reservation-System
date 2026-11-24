@@ -100,21 +100,26 @@ const LocationModal = ({ isOpen, onClose }) => {
     const inputRef = useRef(null);
     const modalRef = useRef(null);
 
-    // Reset state and focus input when modal opens
+    // Focus search input when modal opens
     useEffect(() => {
         if (modalOpen) {
-            setSearchTerm('');
-            setShowAllCities(false);
-            setHighlightedIndex(0);
-            setHoveredCity(null);
-            setTimeout(() => inputRef.current?.focus(), 60);
+            const timer = setTimeout(() => inputRef.current?.focus(), 60);
+            return () => clearTimeout(timer);
         }
     }, [modalOpen]);
+
+    const resetModalState = () => {
+        setSearchTerm('');
+        setShowAllCities(false);
+        setHighlightedIndex(0);
+        setHoveredCity(null);
+    };
 
     // Close on Escape key
     useEffect(() => {
         const handleEsc = (e) => {
             if (e.key === 'Escape' && hasSelectedCity) {
+                resetModalState();
                 if (isOpen) onClose();
                 else setInternalIsOpen(false);
             }
@@ -126,6 +131,7 @@ const LocationModal = ({ isOpen, onClose }) => {
     // Close on backdrop click
     const handleOverlayClick = (e) => {
         if (modalRef.current && !modalRef.current.contains(e.target) && hasSelectedCity) {
+            resetModalState();
             if (isOpen) onClose();
             else setInternalIsOpen(false);
         }
@@ -134,6 +140,7 @@ const LocationModal = ({ isOpen, onClose }) => {
     if (!modalOpen) return null;
 
     const closeModal = () => {
+        resetModalState();
         if (isOpen) onClose();
         else setInternalIsOpen(false);
     };
@@ -181,7 +188,7 @@ const LocationModal = ({ isOpen, onClose }) => {
     };
 
     const popularCities = CITY_DATA.slice(0, 10);
-    const otherCities = [...CITY_DATA.slice(10)].sort((a, b) => a.name.localeCompare(b.name));
+    const otherCities = CITY_DATA.slice(10).toSorted((a, b) => a.name.localeCompare(b.name));
 
     const query = searchTerm.trim().toLowerCase();
     const filteredCities = query

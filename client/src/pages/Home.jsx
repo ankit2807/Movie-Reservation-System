@@ -331,7 +331,7 @@ const ExperienceCard = ({ item, city = 'Noida', badgeText }) => {
 };
 
 /* ─── MovieBook Square Live Event Category Tile ("The Best Of Live Events") ─── */
-const LiveEventSquareTile = ({ title, countText, gradient, accentColor, icon: Icon, to }) => (
+const LiveEventSquareTile = ({ title, countText, gradient, accentColor, icon, to }) => (
   <Link
     to={to}
     className={styles.liveEventSquare}
@@ -343,7 +343,7 @@ const LiveEventSquareTile = ({ title, countText, gradient, accentColor, icon: Ic
       <span>{countText}</span>
     </div>
     <div className={styles.squareBottomIcon}>
-      <Icon size={58} strokeWidth={1.5} />
+      {React.createElement(icon, { size: 58, strokeWidth: 1.5 })}
     </div>
   </Link>
 );
@@ -408,30 +408,30 @@ const Home = ({ type, pageMode }) => {
 
   const activeCity = currentCity || 'Noida';
 
-  const [activeFilters, setActiveFilters] = useState({
-    Languages: [],
-    Genres: [],
-    Format: [],
-    Categories: [],
-  });
+  const urlFilter = searchParams.get('filter') || '';
+  const filterSyncKey = `${type || ''}|${urlFilter}`;
 
-  // Sync filter from SubNavbar mega menu (?filter=...)
-  const urlFilter = searchParams.get('filter');
-  useEffect(() => {
-    if (!urlFilter) {
-      setActiveFilters({ Languages: [], Genres: [], Format: [], Categories: [] });
-      return;
-    }
+  const buildFiltersFromParam = (filterParam) => {
+    const empty = { Languages: [], Genres: [], Format: [], Categories: [] };
+    if (!filterParam) return empty;
     const languagesList = ['English', 'Hindi', 'Tamil', 'Telugu', 'Kannada', 'Malayalam', 'Bengali', 'Marathi'];
     const formatList = ['2D', '3D', 'IMAX 2D', 'IMAX 3D', '4DX', '4DX 3D', 'MX4D 3D'];
-    if (languagesList.includes(urlFilter)) {
-      setActiveFilters({ Languages: [urlFilter], Genres: [], Format: [], Categories: [] });
-    } else if (formatList.includes(urlFilter)) {
-      setActiveFilters({ Languages: [], Genres: [], Format: [urlFilter], Categories: [] });
-    } else {
-      setActiveFilters({ Languages: [], Genres: [urlFilter], Format: [], Categories: [] });
+    if (languagesList.includes(filterParam)) {
+      return { ...empty, Languages: [filterParam] };
     }
-  }, [urlFilter, type]);
+    if (formatList.includes(filterParam)) {
+      return { ...empty, Format: [filterParam] };
+    }
+    return { ...empty, Genres: [filterParam] };
+  };
+
+  const [prevFilterKey, setPrevFilterKey] = useState(filterSyncKey);
+  const [activeFilters, setActiveFilters] = useState(() => buildFiltersFromParam(urlFilter));
+
+  if (prevFilterKey !== filterSyncKey) {
+    setPrevFilterKey(filterSyncKey);
+    setActiveFilters(buildFiltersFromParam(urlFilter));
+  }
 
   const toggleFilter = (category, item) => {
     setActiveFilters((prev) => {
@@ -605,6 +605,15 @@ const Home = ({ type, pageMode }) => {
     const recommendedMovies = cinemaMovies.slice(0, 10);
     const premiereMovies = (streamMovies.length > 0 ? streamMovies : cinemaMovies.slice(0, 6)).slice(0, 8);
 
+    const formatCardDate = (releaseDate, fallback) =>
+      releaseDate
+        ? new Date(releaseDate).toLocaleDateString('en-IN', {
+            weekday: 'short',
+            day: 'numeric',
+            month: 'short',
+          })
+        : fallback;
+
     // Music Studio items (Music concerts + festivals)
     const musicStudioItems = [
       ...eventItems.filter((e) => e.genre?.toLowerCase().includes('music') || e.genre?.toLowerCase().includes('concert')),
@@ -613,7 +622,7 @@ const Home = ({ type, pageMode }) => {
       .filter((v, i, a) => a.findIndex((t) => t._id === v._id) === i)
       .map((item, idx) => ({
         ...item,
-        dateText: ['Sun, 15 Nov', 'Sun, 26 Oct', 'Sun, 8 Nov', 'Mon, 28 Dec', 'Sat, 31 Oct'][idx % 5],
+        dateText: formatCardDate(item.releaseDate, ['Sat, 5 Dec', 'Sun, 29 Nov', 'Sat, 12 Dec', 'Mon, 28 Dec', 'Sun, 6 Dec'][idx % 5]),
         venue: [
           `JLN Stadium: Delhi-NCR`,
           `Expocentre Arena: ${activeCity}`,
@@ -633,7 +642,7 @@ const Home = ({ type, pageMode }) => {
       .slice(0, 8)
       .map((item, idx) => ({
         ...item,
-        dateText: ['Sat, 17 Oct onwards', 'Sun, 18 Oct', 'Sat, 24 Oct', 'Sun, 25 Oct', 'Fri, 30 Oct'][idx % 5],
+        dateText: formatCardDate(item.releaseDate, ['Sat, 28 Nov onwards', 'Sun, 29 Nov', 'Wed, 2 Dec', 'Sun, 6 Dec', 'Tue, 8 Dec'][idx % 5]),
         venue: [
           `Entertainment City, Sector 38A: ${activeCity}`,
           `Gardens Galleria Mall: ${activeCity}`,
@@ -653,7 +662,7 @@ const Home = ({ type, pageMode }) => {
       .filter((v, i, a) => a.findIndex((t) => t._id === v._id) === i)
       .map((item, idx) => ({
         ...item,
-        dateText: ['Tue, 20 Oct', 'Sun, 25 Oct', 'Sun, 18 Oct', 'Sat, 24 Oct', 'Fri, 23 Oct'][idx % 5],
+        dateText: formatCardDate(item.releaseDate, ['Sat, 28 Nov', 'Sun, 6 Dec', 'Fri, 27 Nov', 'Sat, 5 Dec', 'Sat, 12 Dec'][idx % 5]),
         venue: [
           `The Laugh Store: DLF Mall of India, ${activeCity}`,
           `Hideout Comedy Club: Sector 18, ${activeCity}`,
@@ -667,7 +676,7 @@ const Home = ({ type, pageMode }) => {
     // Popular Events
     const popularEventsList = [...eventItems, ...activityItems].slice(0, 8).map((item, idx) => ({
       ...item,
-      dateText: ['Sat, 24 Oct', 'Sun, 25 Oct', 'Sat, 31 Oct', 'Sun, 1 Nov'][idx % 4],
+      dateText: formatCardDate(item.releaseDate, ['Sat, 28 Nov', 'Sun, 29 Nov', 'Sat, 5 Dec', 'Sun, 6 Dec'][idx % 4]),
       venue: `Multiple Venues: ${activeCity} / NCR`,
       priceText: '₹ 599 onwards',
     }));
@@ -675,7 +684,7 @@ const Home = ({ type, pageMode }) => {
     // The Latest Plays
     const latestPlaysList = (playItems.length > 0 ? playItems : cinemaMovies.slice(0, 5)).map((item, idx) => ({
       ...item,
-      dateText: ['Sun, 18 Oct', 'Sat, 24 Oct', 'Thu, 29 Oct', 'Mon, 2 Nov'][idx % 4],
+      dateText: formatCardDate(item.releaseDate, ['Sun, 29 Nov', 'Fri, 4 Dec', 'Fri, 11 Dec', 'Sat, 19 Dec'][idx % 4]),
       venue: [
         `Kamani Auditorium: Delhi-NCR`,
         `Shri Ram Centre: Mandi House`,
@@ -688,7 +697,7 @@ const Home = ({ type, pageMode }) => {
     // Top Games & Sport Events
     const topSportsList = (sportItems.length > 0 ? sportItems : cinemaMovies.slice(0, 5)).map((item, idx) => ({
       ...item,
-      dateText: ['Sat, 24 Oct', 'Sun, 25 Oct', 'Fri, 30 Oct', 'Thu, 5 Nov'][idx % 4],
+      dateText: formatCardDate(item.releaseDate, ['Wed, 2 Dec', 'Mon, 14 Dec', 'Tue, 8 Dec', 'Sun, 6 Dec'][idx % 4]),
       venue: [
         `Arun Jaitley Stadium: Delhi-NCR`,
         `Buddh International Circuit: Greater ${activeCity}`,

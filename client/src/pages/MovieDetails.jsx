@@ -3,7 +3,7 @@ import { useParams, useNavigate, Link, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   Star, Share2, Play, ChevronRight, ChevronLeft, ThumbsUp, ThumbsDown,
-  X, Check, ExternalLink, Copy
+  X, Check, Copy
 } from 'lucide-react';
 import { setAuthModalOpen } from '../redux/authSlice';
 import api from '../api/axios';
@@ -74,7 +74,6 @@ const MovieDetails = ({ initialMultimedia = false }) => {
   const location = useLocation();
   const dispatch = useDispatch();
   const { isAuthenticated } = useSelector((state) => state.auth);
-  const { currentCity } = useSelector((state) => state.location);
 
   const [movie, setMovie] = useState(null);
   const [recommended, setRecommended] = useState([]);
@@ -85,9 +84,13 @@ const MovieDetails = ({ initialMultimedia = false }) => {
   // Interactive MovieBook states
   const [showStickyHeader, setShowStickyHeader] = useState(false);
   const [isLangFormatModalOpen, setIsLangFormatModalOpen] = useState(false);
-  const [isTrailerModalOpen, setIsTrailerModalOpen] = useState(
-    initialMultimedia || location.pathname.endsWith('/multimedia')
-  );
+  const shouldOpenMultimedia = initialMultimedia || location.pathname.endsWith('/multimedia');
+  const [prevMultimediaFlag, setPrevMultimediaFlag] = useState(shouldOpenMultimedia);
+  const [isTrailerModalOpen, setIsTrailerModalOpen] = useState(shouldOpenMultimedia);
+  if (prevMultimediaFlag !== shouldOpenMultimedia) {
+    setPrevMultimediaFlag(shouldOpenMultimedia);
+    setIsTrailerModalOpen(shouldOpenMultimedia);
+  }
   const [playingVideoId, setPlayingVideoId] = useState(null);
   const [selectedTrailerLang, setSelectedTrailerLang] = useState('All');
   const [selectedOffer, setSelectedOffer] = useState(null);
@@ -120,10 +123,6 @@ const MovieDetails = ({ initialMultimedia = false }) => {
   }, []);
 
   useEffect(() => {
-    setIsTrailerModalOpen(initialMultimedia || location.pathname.endsWith('/multimedia'));
-  }, [initialMultimedia, location.pathname]);
-
-  useEffect(() => {
     window.scrollTo(0, 0);
     const fetchDetails = async () => {
       try {
@@ -146,7 +145,8 @@ const MovieDetails = ({ initialMultimedia = false }) => {
 
         try {
           const revRes = await api.get(`/reviews/${movieData._id}`);
-          setReviews(Array.isArray(revRes.data) ? revRes.data : []);
+          const payload = Array.isArray(revRes.data) ? revRes.data : revRes.data?.data;
+          setReviews(Array.isArray(payload) ? payload : []);
         } catch {
           setReviews([]);
         }
@@ -265,7 +265,8 @@ const MovieDetails = ({ initialMultimedia = false }) => {
         rating: reviewRating,
         comment: fullText,
       });
-      setReviews((prev) => [res.data, ...prev]);
+      const savedReview = res.data?.data || res.data;
+      setReviews((prev) => [savedReview, ...prev.filter((r) => r._id !== savedReview?._id)]);
       setReviewComment('');
       setIsReviewModalOpen(false);
     } catch (err) {
@@ -703,7 +704,7 @@ const MovieDetails = ({ initialMultimedia = false }) => {
                               <div className={styles.verifiedTag}>
                                 <span>Booked on</span>
                                 <span className={styles.bmsLogoInline}>
-                                  book<span className={styles.bmsMyBadge}>my</span>show
+                                  movie<span className={styles.bmsMyBadge}>book</span>
                                 </span>
                               </div>
                             </div>
@@ -998,7 +999,6 @@ const MovieDetails = ({ initialMultimedia = false }) => {
                           height="405"
                           src={`https://www.youtube.com/embed/${trailer.videoId}?autoplay=1&enablejsapi=1&modestbranding=1&playsinline=1&fs=1&rel=0`}
                           title={trailer.title}
-                          frameBorder="0"
                           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                           referrerPolicy="strict-origin-when-cross-origin"
                           allowFullScreen
