@@ -48,8 +48,9 @@ const showTimeSchema = new Schema<IShowTime>(
       type: Date,
       required: [true, "End date is required"],
       validate: {
-        validator: function (this: IShowTime, value: Date): boolean {
-          return value > this.startDate;
+        validator: function (value: Date): boolean {
+          const doc = this as Partial<IShowTime>;
+          return !doc.startDate || value > doc.startDate;
         },
         message: "End date must be after start date",
       },

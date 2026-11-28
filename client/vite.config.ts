@@ -21,13 +21,23 @@ export default defineConfig({
     },
   },
   build: {
-    rollupOptions: {
+    rolldownOptions: {
       output: {
-        manualChunks: {
-          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
-          'redux-vendor': ['@reduxjs/toolkit', 'react-redux'],
-          'ui-vendor': ['lucide-react', 'qrcode.react'],
-          'stripe-vendor': ['@stripe/stripe-js', '@stripe/react-stripe-js'],
+        manualChunks(id) {
+          if (!id.includes('node_modules')) return undefined;
+          if (id.includes('/react-dom/') || id.includes('/react-router') || id.includes('/react/')) {
+            return 'react-vendor';
+          }
+          if (id.includes('/@reduxjs/toolkit/') || id.includes('/react-redux/')) {
+            return 'redux-vendor';
+          }
+          if (id.includes('/lucide-react/') || id.includes('/qrcode.react/')) {
+            return 'ui-vendor';
+          }
+          if (id.includes('/@stripe/')) {
+            return 'stripe-vendor';
+          }
+          return undefined;
         },
       },
     },

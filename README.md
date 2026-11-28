@@ -4,8 +4,8 @@
 [![Node.js](https://img.shields.io/badge/Node.js-v20+-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
 [![Express.js](https://img.shields.io/badge/Express.js-4.22-000000?logo=express&logoColor=white)](https://expressjs.com/)
 [![React](https://img.shields.io/badge/React-19.3-61DAFB?logo=react&logoColor=black)](https://react.dev/)
-[![Vite](https://img.shields.io/badge/Vite-7.3-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
-[![MongoDB](https://img.shields.io/badge/MongoDB-Mongoose_8.24-47A248?logo=mongodb&logoColor=white)](https://www.mongodb.com/)
+[![Vite](https://img.shields.io/badge/Vite-8.4-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
+[![MongoDB](https://img.shields.io/badge/MongoDB-Mongoose_9.13-47A248?logo=mongodb&logoColor=white)](https://www.mongodb.com/)
 [![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?logo=docker&logoColor=white)](https://www.docker.com/)
 [![Redux Toolkit](https://img.shields.io/badge/Redux-Toolkit-764ABC?logo=redux&logoColor=white)](https://redux-toolkit.js.org/)
 [![License: ISC](https://img.shields.io/badge/License-ISC-blue.svg)](https://opensource.org/licenses/ISC)
@@ -53,32 +53,37 @@ A full-stack, enterprise-grade movie ticketing and entertainment reservation pla
 
 ### 🔒 Enterprise Security & Reliability
 - **HTTP Security Headers**: Powered by `helmet` to mitigate clickjacking and MIME sniffing.
-- **Injection Protection**: Sanitization against NoSQL query injection (`express-mongo-sanitize`) and XSS attacks (`xss-clean`).
+- **Injection Protection**: Sanitization against NoSQL query injection (`express-mongo-sanitize`) and custom recursive XSS / prototype-pollution sanitization.
 - **HTTP Parameter Pollution**: Protected using `hpp`.
 - **Rate Limiting**: Tiered IP rate limiting with stricter limits on authentication routes (`express-rate-limit`).
 - **Secure Authentication**: Password hashing with `bcrypt` (10 rounds) and HTTP-only, SameSite JWT authentication cookies.
-- **Automated Database Seeding**: Preloaded with a realistic 2025–2026 entertainment catalog, demo accounts, showtimes, and reviews on first boot.
+- **Stripe Payments Integration**: Server-priced `PaymentIntents`, `@stripe/react-stripe-js` Elements checkout, atomic seat-conflict auto-refunds, cancellation refunds, and raw-body signed webhooks.
+- **Automated Database Seeding**: Preloaded with a realistic late-2026 entertainment catalog, demo accounts, showtimes, and reviews on first boot.
 
 ---
 
 ## 🛠️ Architecture & Tech Stack
 
 ### Frontend
-- **Framework**: [React 19](https://react.dev/) + [Vite 7](https://vitejs.dev/)
+- **Language**: [TypeScript](https://www.typescriptlang.org/) (`strict: true`)
+- **Framework**: [React 19](https://react.dev/) + [Vite](https://vitejs.dev/)
 - **Routing**: [React Router DOM v7](https://reactrouter.com/)
-- **State Management**: [Redux Toolkit](https://redux-toolkit.js.org/) + `react-redux` (Auth, Location, Movie filters)
+- **State Management**: [Redux Toolkit](https://redux-toolkit.js.org/) + `react-redux` (Typed `useAppDispatch` / `useAppSelector`)
+- **Payments**: [Stripe Elements](https://stripe.com/docs/payments/elements) (`@stripe/stripe-js`, `@stripe/react-stripe-js`)
 - **HTTP Client**: [Axios](https://axios-http.com/) (configured with credentials for HTTP-only cookies)
 - **Icons**: [Lucide React](https://lucide.dev/)
 - **QR Code Engine**: [qrcode.react](https://github.com/zpao/qrcode.react)
-- **Styling**: Vanilla CSS Modules (`*.module.css`) + CSS Design System Tokens
+- **Styling**: Vanilla CSS Modules (`*.module.css`) + Responsive Container Queries & Design Tokens
 
 ### Backend
-- **Runtime**: [Node.js](https://nodejs.org/) (v18+)
-- **Web Framework**: [Express.js](https://expressjs.com/) (v4.21)
-- **Database**: [MongoDB](https://www.mongodb.com/) via [Mongoose ODM](https://mongoosejs.com/) (v8.9)
+- **Language**: [TypeScript](https://www.typescriptlang.org/) compiled via `tsc` to `dist/` (`tsx` for dev)
+- **Runtime**: [Node.js](https://nodejs.org/) (v20+)
+- **Web Framework**: [Express.js](https://expressjs.com/) (v4.22)
+- **Database**: [MongoDB](https://www.mongodb.com/) via [Mongoose ODM](https://mongoosejs.com/)
+- **Payments**: [Stripe Node SDK](https://github.com/stripe/stripe-node)
 - **Authentication**: [JSON Web Tokens (JWT)](https://jwt.io/) & [cookie-parser](https://github.com/expressjs/cookie-parser)
 - **Password Security**: [bcrypt](https://github.com/kelektiv/node.bcrypt.js)
-- **Media Uploads**: [Multer](https://github.com/expressjs/multer) & [Cloudinary](https://cloudinary.com/)
+- **Media Uploads**: [Multer](https://github.com/expressjs/multer) with binary magic-byte validation
 - **External Movie Sync**: [The Movie Database (TMDB) API](https://www.themoviedb.org/documentation/api)
 
 ---
@@ -105,7 +110,7 @@ flowchart TD
     subgraph Server ["Express.js REST API"]
         Router["API Routers"]
         Controllers["Controllers (Movie, Booking, User, Admin)"]
-        AutoSeed["Auto-Seed Engine (utils/seedData.js)"]
+        AutoSeed["Auto-Seed Engine (utils/seedData.ts)"]
     end
 
     subgraph DataStore ["Data & External Services"]
@@ -131,70 +136,81 @@ flowchart TD
 Movie-Reservation-System/
 ├── .env.example             # Template for backend environment variables
 ├── .env                     # Local environment configuration (git-ignored)
-├── index.js                 # Express server entry point & middleware pipeline
-├── package.json             # Root backend dependencies & review scripts
+├── tsconfig.json            # Strict backend TypeScript configuration (outputs to dist/)
+├── index.ts                 # Express server entry point & middleware pipeline
+├── package.json             # Root backend dependencies & scripts
+├── types/
+│   ├── express.d.ts         # Express Request.user JWT payload augmentation
+│   └── modules.d.ts         # Third-party middleware type declarations
 ├── database/
-│   └── db.js                # MongoDB connection handler via Mongoose
+│   └── db.ts                # MongoDB connection handler via Mongoose
 ├── controller/
-│   ├── adminController.js   # Admin signup & authentication logic
-│   ├── movieController.js   # Movie catalog CRUD & TMDB sync logic
-│   ├── movieReservationController.js # Seat booking, conflict checks & cancellations
-│   ├── reviewController.js  # Audience ratings & reviews handling
-│   ├── showTimeController.js# Showtime scheduling and date queries
-│   └── userController.js    # User authentication, profiles & session cookies
+│   ├── adminController.ts   # Admin auth & real-time dashboard analytics
+│   ├── movieController.ts   # Movie catalog CRUD & TMDB sync logic
+│   ├── movieReservationController.ts # Seat booking, conflict checks & cancellations
+│   ├── paymentController.ts # Stripe PaymentIntents, refunds & signed webhooks
+│   ├── reviewController.ts  # Audience ratings & reviews handling
+│   ├── showTimeController.ts# Showtime scheduling and date queries
+│   └── userController.ts    # User authentication, profiles & session cookies
 ├── models/
-│   ├── adminModel.js        # Admin credentials schema
-│   ├── movieModel.js        # Movie & entertainment title schema
-│   ├── movieReservationModel.js # Booking snapshot, seat tiers & payment schema
-│   ├── reviewModel.js       # User review and rating schema
-│   ├── showTimeModel.js     # Cinema screen, slots & pricing schema
-│   └── userModel.js         # User registration & profile schema
+│   ├── adminModel.ts        # Admin credentials schema
+│   ├── movieModel.ts        # Movie & entertainment title schema
+│   ├── movieReservationModel.ts # Booking snapshot, seat tiers & payment schema
+│   ├── reviewModel.ts       # User review and rating schema
+│   ├── showTimeModel.ts     # Cinema screen, slots & pricing schema
+│   └── userModel.ts         # User registration & profile schema
 ├── routes/
-│   ├── adminRoutes.js       # Admin auth endpoints (/api/admin)
-│   ├── movieReservationRoutes.js # Reservation endpoints (/api/movieReservation)
-│   ├── movieRoutes.js       # Movies endpoints (/api/movie)
-│   ├── reviewRoutes.js      # Reviews endpoints (/api/reviews)
-│   ├── showTimeRoutes.js    # Showtime endpoints (/api/showtimes)
-│   └── userRoutes.js        # User auth & profile endpoints (/api/user)
+│   ├── adminRoutes.ts       # Admin auth & stats endpoints (/api/admin)
+│   ├── movieReservationRoutes.ts # Reservation endpoints (/api/movieReservation)
+│   ├── movieRoutes.ts       # Movies endpoints (/api/movie)
+│   ├── paymentRoutes.ts     # Stripe config & PaymentIntent endpoints (/api/payments)
+│   ├── reviewRoutes.ts      # Reviews endpoints (/api/reviews)
+│   ├── showTimeRoutes.ts    # Showtime endpoints (/api/showtimes)
+│   └── userRoutes.ts        # User auth & profile endpoints (/api/user)
 ├── utils/
-│   ├── imageUpload.js       # Multer file upload setup with size limits
-│   ├── rateLimiter.js       # Express rate limiter presets
-│   ├── seedData.js          # Comprehensive 2025–2026 catalog seed script
-│   └── tokenVerification.js # JWT verification and role-guard middlewares
+│   ├── imageUpload.ts       # Multer file upload setup with magic-byte validation
+│   ├── pricing.ts           # Authoritative server-side seat, F&B & promo pricing
+│   ├── rateLimiter.ts       # Express rate limiter presets
+│   ├── seedData.ts          # Comprehensive late-2026 catalog seed script
+│   └── tokenVerification.ts # JWT verification and role-guard middlewares
 ├── tools/
-│   ├── code-review-agent.js # Gemini-powered static code review agent
+│   ├── code-review-agent.ts # Gemini-powered static code review agent
 │   └── .codereviewrc.json   # Code review scanner rules & targets
 ├── public/                  # Static assets and uploaded images
-└── client/                  # Frontend Vite React Single Page Application
+└── client/                  # Frontend Vite React + TypeScript Single Page Application
     ├── index.html           # HTML5 document template
     ├── package.json         # Frontend dependencies and Vite scripts
-    ├── vite.config.js       # Vite build configuration
+    ├── tsconfig.json        # Strict frontend TypeScript configuration
+    ├── vite.config.ts       # Vite build & chunking configuration
     └── src/
-        ├── App.jsx          # Master application layout and route declarations
-        ├── main.jsx         # React DOM root mounting with Redux Provider
+        ├── App.tsx          # Master application layout and route declarations
+        ├── main.tsx         # React DOM root mounting with Redux Provider
+        ├── types/
+        │   └── index.ts     # Shared TypeScript domain interfaces
         ├── api/
-        │   └── axios.js     # Centralized Axios instance with base URL
+        │   └── axios.ts     # Centralized Axios instance with base URL
         ├── redux/
-        │   ├── authSlice.js     # User authentication state
-        │   ├── locationSlice.js # Active city and geography state
-        │   ├── movieSlice.js    # Active movie query and filter state
-        │   └── store.js         # Redux store configuration
+        │   ├── authSlice.ts     # User authentication state
+        │   ├── hooks.ts         # Typed useAppDispatch & useAppSelector hooks
+        │   ├── locationSlice.ts # Active city and geography state
+        │   ├── movieSlice.ts    # Active movie query and filter state
+        │   └── store.ts         # Redux store configuration
         ├── pages/
-        │   ├── Home.jsx         # Hero banner, category carousels & city catalog
-        │   ├── MovieDetails.jsx # Movie overview, trailer, cast, and reviews
-        │   ├── BuyTickets.jsx   # Date bar, cinema theater listing & showtimes
-        │   ├── Booking.jsx      # Interactive seat matrix, F&B snacks & checkout
-        │   ├── MyBookings.jsx   # Booking history, QR ticket display & cancel
-        │   ├── Profile.jsx      # User profile view and update
-        │   ├── SearchResults.jsx# Real-time search query listing
-        │   ├── Login.jsx / Register.jsx # Authentication screens
+        │   ├── Home.tsx         # Hero banner, category carousels & city catalog
+        │   ├── MovieDetails.tsx # Movie overview, trailer, cast, and reviews
+        │   ├── BuyTickets.tsx   # Date bar, cinema theater listing & showtimes
+        │   ├── Booking.tsx      # Interactive seat matrix, F&B snacks & Stripe checkout
+        │   ├── MyBookings.tsx   # Booking history, QR ticket display & cancel
+        │   ├── Profile.tsx      # User profile view and update
+        │   ├── SearchResults.tsx# Real-time search query listing
+        │   ├── Login.tsx / Register.tsx # Authentication screens
         │   └── admin/
-        │       ├── AdminLogin.jsx      # Admin sign-in portal
-        │       ├── AdminDashboard.jsx  # Admin overview & management
-        │       ├── AddMovie.jsx        # Admin movie creation form
-        │       └── AddShowtime.jsx     # Admin showtime scheduling form
-        ├── components/      # Navbar, SubNavbar, LocationModal, Footer, Toast, etc.
-        └── styles/          # Modular CSS and design tokens
+        │       ├── AdminLogin.tsx      # Admin sign-in portal
+        │       ├── AdminDashboard.tsx  # Admin overview & management
+        │       ├── AddMovie.tsx        # Admin movie creation & editing form
+        │       └── AddShowtime.tsx     # Admin showtime scheduling form
+        ├── components/      # Navbar, SubNavbar, StripePaymentForm, ConfirmDialog, etc.
+        └── styles/          # Modular CSS and responsive design tokens
 ```
 
 ---
@@ -414,7 +430,7 @@ $$\text{Grand Total} = \text{Base Ticket Total} + \text{Convenience Fee} + \text
 
 ## 🤖 Automated AI Code Review Agent
 
-This repository includes a built-in static analysis and AI-driven code review agent located in `tools/code-review-agent.js`.
+This repository includes a built-in static analysis and AI-driven code review agent located in `tools/code-review-agent.ts`.
 
 ### How to Run:
 ```bash
