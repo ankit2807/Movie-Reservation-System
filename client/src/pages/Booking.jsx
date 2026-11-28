@@ -7,7 +7,9 @@ import {
 } from 'lucide-react';
 import { QRCodeCanvas } from 'qrcode.react';
 import { setAuthModalOpen } from '../redux/authSlice';
+import { showToast } from '../redux/locationSlice';
 import api from '../api/axios';
+import StripePaymentForm from '../components/StripePaymentForm';
 import {
   SEAT_TIERS,
   getTierForSeat,
@@ -172,8 +174,8 @@ const Booking = () => {
   const [promoCode, setPromoCode] = useState('');
   const [appliedPromo, setAppliedPromo] = useState(null);
   const [paymentMethod, setPaymentMethod] = useState('UPI');
-  const [contactEmail, setContactEmail] = useState(user?.email || 'aditi@example.com');
-  const [contactPhone, setContactPhone] = useState(user?.phone || '9876543210');
+  const [contactEmail, setContactEmail] = useState(user?.email || '');
+  const [contactPhone, setContactPhone] = useState(user?.phone || '');
   const userContactKey = `${user?.email || ''}|${user?.phone || ''}`;
   const [prevContactKey, setPrevContactKey] = useState(userContactKey);
   if (prevContactKey !== userContactKey) {
@@ -183,7 +185,43 @@ const Booking = () => {
   }
 
   const [isProcessing, setIsProcessing] = useState(false);
+  const [checkoutError, setCheckoutError] = useState('');
   const [confirmedBooking, setConfirmedBooking] = useState(null);
+
+  // Stripe Payment Gateway state
+  const [paymentConfig, setPaymentConfig] = useState({
+    stripeEnabled: false,
+    publishableKey: null,
+    mode: 'demo',
+    loaded: false,
+  });
+  const [stripeClientSecret, setStripeClientSecret] = useState('');
+  const [stripeIntentLoading, setStripeIntentLoading] = useState(false);
+  const [stripeIntentError, setStripeIntentError] = useState('');
+
+  useEffect(() => {
+    let isMounted = true;
+    api
+      .get('/payments/config')
+      .then((res) => {
+        if (isMounted && res.data) {
+          setPaymentConfig({
+            stripeEnabled: Boolean(res.data.stripeEnabled),
+            publishableKey: res.data.publishableKey || null,
+            mode: res.data.mode || 'demo',
+            loaded: true,
+          });
+        }
+      })
+      .catch(() => {
+        if (isMounted) {
+          setPaymentConfig((prev) => ({ ...prev, loaded: true }));
+        }
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   // Resolve Movie, Theatre, and Showtimes even on hard refresh
   useEffect(() => {
@@ -298,7 +336,7 @@ const Booking = () => {
 
     const loadOccupiedSeats = async () => {
       const baseline = generateBaselineOccupiedSeats(currentShowKey);
-      let localSaved = [];
+      let localSaved;
       try {
         localSaved = JSON.parse(localStorage.getItem(`occupied-${currentShowKey}`) || '[]');
       } catch {
@@ -536,18 +574,107 @@ const Booking = () => {
 
   const grandTotal = Math.max(0, Math.round((ticketsAmount + convenienceFeeTotal + foodAmount - discountAmount) * 100) / 100);
 
+  // Create/refresh Stripe PaymentIntent whenever checkout total changes while Stripe is active
+  const intentSignature = useMemo(
+    () =>
+      JSON.stringify({
+        showKey: currentShowKey,
+        seats: selectedSeats,
+        food: foodLineItems.map((f) => `${f.id}:${f.qty}`),
+        promo: appliedPromo || '',
+      }),
+    [currentShowKey, selectedSeats, foodLineItems, appliedPromo]
+  );
+
+  useEffect(() => {
+    if (
+      step !== 'checkout' ||
+      !paymentConfig.stripeEnabled ||
+      !isAuthenticated ||
+      selectedSeats.length === 0 ||
+      !currentShowKey
+    ) {
+      return undefined;
+    }
+
+    let isActive = true;
+    const timer = setTimeout(async () => {
+      setStripeIntentLoading(true);
+      setStripeIntentError('');
+      try {
+        const res = await api.post('/payments/create-payment-intent', {
+          showKey: currentShowKey,
+          movieTitle: movie?.title,
+          theatre: {
+            id: theatre?.id || 'moviemax-gulshan-noida',
+            name: theatre?.name || 'MovieMax Laserplex: Gulshan One 29 Mall, Noida',
+            address: theatre?.address || 'Sector 129, Noida',
+            screen: activeShow?.screen || 'AUDI 01',
+          },
+          showDate: bookingDate,
+          showTime: activeShow?.time || '03:45 PM',
+          seatDetails,
+          food: foodLineItems.map((f) => ({ id: f.id, qty: f.qty })),
+          promoCode: appliedPromo || undefined,
+          contact: { email: contactEmail || user?.email || '' },
+        });
+        if (isActive && res.data?.clientSecret) {
+          setStripeClientSecret(res.data.clientSecret);
+        }
+      } catch (err) {
+        if (!isActive) return;
+        const msg =
+          err.response?.data?.message || 'Unable to prepare Stripe payment session.';
+        setStripeIntentError(msg);
+        setStripeClientSecret('');
+      } finally {
+        if (isActive) setStripeIntentLoading(false);
+      }
+    }, 350);
+
+    return () => {
+      isActive = false;
+      clearTimeout(timer);
+    };
+  }, [
+    step,
+    paymentConfig.stripeEnabled,
+    isAuthenticated,
+    intentSignature,
+    selectedSeats.length,
+    currentShowKey,
+    movie?.title,
+    theatre?.id,
+    theatre?.name,
+    theatre?.address,
+    activeShow?.screen,
+    activeShow?.time,
+    bookingDate,
+    seatDetails,
+    foodLineItems,
+    appliedPromo,
+    contactEmail,
+    user?.email,
+  ]);
+
   const handleApplyPromo = (codeToApply) => {
     const clean = (codeToApply || promoCode).trim().toUpperCase();
     if (['FIRSTSHOW', 'PAYTM150', 'RUPAY25'].includes(clean)) {
       setAppliedPromo(clean);
       setPromoCode(clean);
+      dispatch(showToast({ message: `Promo code ${clean} applied!`, type: 'success' }));
     } else {
-      alert('Try valid Movie Book promo codes: FIRSTSHOW, PAYTM150, or RUPAY25');
+      dispatch(
+        showToast({
+          message: 'Try valid MovieBook promo codes: FIRSTSHOW, PAYTM150, or RUPAY25',
+          type: 'info',
+        })
+      );
     }
   };
 
-  /* ─── Complete Booking (Saves to MongoDB + LocalStorage backup) ─── */
-  const handleConfirmPayment = async () => {
+  /* ─── Complete Booking (Saves to MongoDB; verifies Stripe PaymentIntent when active) ─── */
+  const handleConfirmPayment = async (verifiedPaymentIntentId = null) => {
     if (!isAuthenticated) {
       dispatch(setAuthModalOpen(true));
       return;
@@ -555,6 +682,7 @@ const Booking = () => {
     if (selectedSeats.length === 0) return;
 
     setIsProcessing(true);
+    setCheckoutError('');
 
     try {
       const payload = {
@@ -581,71 +709,67 @@ const Booking = () => {
           price: f.price,
         })),
         promoCode: appliedPromo || undefined,
-        paymentMethod,
+        paymentMethod: verifiedPaymentIntentId ? 'STRIPE' : paymentMethod,
+        ...(verifiedPaymentIntentId ? { paymentIntentId: verifiedPaymentIntentId } : {}),
         contact: {
           email: contactEmail,
           phone: contactPhone,
         },
       };
 
-      let bookingId = 'MB' + Date.now().toString(36).toUpperCase().slice(-7);
       let savedRecord = null;
-
       try {
         const res = await api.post('/movieReservation', payload);
         savedRecord = res.data;
-        if (savedRecord?.bookingId) bookingId = savedRecord.bookingId;
       } catch (apiErr) {
-        if (apiErr.response?.status === 409) {
-          alert(apiErr.response.data.message || 'Selected seats were just taken. Please pick other seats.');
-          setIsProcessing(false);
+        const status = apiErr.response?.status;
+        if (status === 401) {
+          dispatch(setAuthModalOpen(true));
+          dispatch(
+            showToast({
+              message: 'Your session expired. Please sign in again to complete your booking.',
+              type: 'error',
+            })
+          );
+          return;
+        }
+        if (status === 409) {
+          const taken = apiErr.response?.data?.takenSeats || [];
+          if (taken.length > 0) {
+            setOccupiedSeats((prev) => Array.from(new Set([...prev, ...taken])));
+            setSelectedSeats((prev) => prev.filter((s) => !taken.includes(s)));
+          }
+          dispatch(
+            showToast({
+              message:
+                apiErr.response?.data?.message || 'Selected seats were just taken. Please pick other seats.',
+              type: 'error',
+            })
+          );
           setStep('seats');
           return;
         }
-        console.warn('Saving to local backup:', apiErr.message);
+        const errMsg =
+          apiErr.response?.data?.message || 'Unable to confirm booking right now. Please try again.';
+        setCheckoutError(errMsg);
+        dispatch(
+          showToast({
+            message: errMsg,
+            type: 'error',
+          })
+        );
+        return;
       }
 
-      // Persist occupied seats locally as well
+      const bookingId =
+        savedRecord?.bookingId || 'MB' + Date.now().toString(36).toUpperCase().slice(-7);
+      const authoritativeTotal =
+        typeof savedRecord?.amounts?.total === 'number' ? savedRecord.amounts.total : grandTotal;
+
+      // Update occupied seats immediately in UI
       const nextOccupied = Array.from(new Set([...occupiedSeats, ...selectedSeats]));
       setOccupiedSeats(nextOccupied);
       localStorage.setItem(`occupied-${currentShowKey}`, JSON.stringify(nextOccupied));
-
-      // Also save in localStorage my-bookings for instant fallback
-      const localEntry = {
-        _id: savedRecord?._id || `local-${Date.now()}`,
-        bookingId,
-        status: 'CONFIRMED',
-        movieTitle: movie?.title,
-        posterImage: movie?.posterImage,
-        certification: movie?.certification || 'UA',
-        language: activeShow?.language || 'English',
-        format: activeShow?.format || '2D',
-        theatre: {
-          id: theatre?.id,
-          name: theatre?.name,
-          address: theatre?.address,
-          screen: activeShow?.screen || 'AUDI 01',
-        },
-        showDate: bookingDate,
-        showTime: activeShow?.time,
-        seats: selectedSeats,
-        seatDetails,
-        food: foodLineItems,
-        amounts: {
-          tickets: ticketsAmount,
-          convenienceFee: baseFee,
-          gst: igst,
-          food: foodAmount,
-          discount: discountAmount,
-          total: grandTotal,
-        },
-        date: new Date().toISOString(),
-      };
-
-      if (!savedRecord?._id) {
-        const prevLocal = JSON.parse(localStorage.getItem('my-bookings') || '[]');
-        localStorage.setItem('my-bookings', JSON.stringify([localEntry, ...prevLocal]));
-      }
 
       const tierNames = Array.from(new Set(seatDetails.map((s) => s.tier))).join(', ');
       const formattedDateStr = parseIsoLocalDate(bookingDate).toLocaleDateString('en-IN', {
@@ -669,10 +793,11 @@ const Booking = () => {
         seats: selectedSeats,
         tierSummary: tierNames,
         food: foodLineItems,
-        total: grandTotal,
-        email: contactEmail,
+        total: authoritativeTotal,
+        email: contactEmail || user?.email || 'your account',
       });
 
+      dispatch(showToast({ message: `M-Ticket ${bookingId} confirmed!`, type: 'success' }));
       setSelectedSeats([]);
       setFoodCart({});
     } finally {
@@ -910,7 +1035,12 @@ const Booking = () => {
       {/* ═══════ 6A. STEP 1: AUDITORIUM SEAT MAP VIEW (Exact MovieBook Layout) ═══════ */}
       {step === 'seats' && (
         <div className={styles.auditoriumContainer}>
-          <div className={styles.seatCanvas}>
+          <div
+            className={styles.seatCanvas}
+            tabIndex={0}
+            role="region"
+            aria-label="Auditorium seat map — scroll horizontally to view all seats"
+          >
             <div
               className={styles.seatGridZoomWrap}
               style={{ transform: `scale(${zoomLevel})`, transformOrigin: 'top center' }}
@@ -1228,18 +1358,25 @@ const Booking = () => {
               <h3 className={styles.checkoutSubHeading}>Share Your Contact Details (For M-Ticket)</h3>
               <div className={styles.contactGrid}>
                 <div className={styles.contactField}>
-                  <label>Email Address</label>
+                  <label htmlFor="checkout-email">Email Address</label>
                   <input
+                    id="checkout-email"
+                    name="contactEmail"
                     type="email"
+                    autoComplete="email"
                     value={contactEmail}
                     onChange={(e) => setContactEmail(e.target.value)}
                     placeholder="yourname@email.com"
                   />
                 </div>
                 <div className={styles.contactField}>
-                  <label>Mobile Number</label>
+                  <label htmlFor="checkout-phone">Mobile Number</label>
                   <input
+                    id="checkout-phone"
+                    name="contactPhone"
                     type="tel"
+                    autoComplete="tel"
+                    inputMode="tel"
                     value={contactPhone}
                     onChange={(e) => setContactPhone(e.target.value)}
                     placeholder="+91 9876543210"
@@ -1247,28 +1384,72 @@ const Booking = () => {
                 </div>
               </div>
 
-              <h3 className={styles.checkoutSubHeading} style={{ marginTop: '20px' }}>Preferred Payment Option</h3>
-              <div className={styles.paymentMethodGrid}>
-                {[
-                  { id: 'UPI', label: 'UPI (GPay / PhonePe / Paytm)', icon: Smartphone },
-                  { id: 'CARD', label: 'Credit / Debit Card', icon: CreditCard },
-                  { id: 'WALLET', label: 'Paytm / Amazon Pay Wallet', icon: Wallet },
-                  { id: 'NETBANKING', label: 'Net Banking', icon: Building2 },
-                ].map((pm) => {
-                  const Icon = pm.icon;
-                  return (
+              <h3 className={styles.checkoutSubHeading} style={{ marginTop: '20px' }}>
+                {paymentConfig.stripeEnabled ? 'Pay Securely with Stripe' : 'Preferred Payment Option'}
+              </h3>
+
+              {paymentConfig.stripeEnabled ? (
+                !isAuthenticated ? (
+                  <div className={styles.stripeSignInPrompt}>
+                    <p>Sign in to initialize secure Stripe card, Apple Pay, Google Pay, or UPI checkout.</p>
                     <button
-                      key={pm.id}
                       type="button"
-                      className={`${styles.pmOption} ${paymentMethod === pm.id ? styles.pmOptionActive : ''}`}
-                      onClick={() => setPaymentMethod(pm.id)}
+                      className="btn btn-primary"
+                      onClick={() => dispatch(setAuthModalOpen(true))}
                     >
-                      <Icon size={16} />
-                      <span>{pm.label}</span>
+                      Sign In to Pay with Stripe
                     </button>
-                  );
-                })}
-              </div>
+                  </div>
+                ) : stripeIntentError ? (
+                  <div role="alert" className={styles.stripeErrorBanner}>
+                    {stripeIntentError}
+                  </div>
+                ) : (
+                  <StripePaymentForm
+                    clientSecret={stripeIntentLoading ? '' : stripeClientSecret}
+                    publishableKey={paymentConfig.publishableKey}
+                    amount={grandTotal}
+                    mode={paymentConfig.mode}
+                    customerEmail={contactEmail || user?.email}
+                    isSubmittingBooking={isProcessing}
+                    onPaymentSucceeded={(piId) => handleConfirmPayment(piId)}
+                    onPaymentError={(msg) => setCheckoutError(msg)}
+                  />
+                )
+              ) : (
+                <>
+                  <div className={styles.stripeReadyNotice}>
+                    <ShieldCheck size={16} color="#635bff" style={{ flexShrink: 0 }} />
+                    <span>
+                      <strong>Stripe Payment Gateway Integrated:</strong> Add{' '}
+                      <code>STRIPE_SECRET_KEY</code> &amp; <code>STRIPE_PUBLISHABLE_KEY</code> in{' '}
+                      <code>.env</code> for live/test Stripe card checkout. Running instant demo
+                      checkout below.
+                    </span>
+                  </div>
+                  <div className={styles.paymentMethodGrid}>
+                    {[
+                      { id: 'UPI', label: 'UPI (GPay / PhonePe / Paytm)', icon: Smartphone },
+                      { id: 'CARD', label: 'Credit / Debit Card', icon: CreditCard },
+                      { id: 'WALLET', label: 'Paytm / Amazon Pay Wallet', icon: Wallet },
+                      { id: 'NETBANKING', label: 'Net Banking', icon: Building2 },
+                    ].map((pm) => {
+                      const Icon = pm.icon;
+                      return (
+                        <button
+                          key={pm.id}
+                          type="button"
+                          className={`${styles.pmOption} ${paymentMethod === pm.id ? styles.pmOptionActive : ''}`}
+                          onClick={() => setPaymentMethod(pm.id)}
+                        >
+                          <Icon size={16} />
+                          <span>{pm.label}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </>
+              )}
             </div>
           </div>
 
@@ -1351,7 +1532,10 @@ const Booking = () => {
                 <div className={styles.promoInputRow}>
                   <Tag size={14} color="#f84464" />
                   <input
+                    id="checkout-promo-code"
+                    name="promoCode"
                     type="text"
+                    aria-label="Promo code"
                     placeholder="Have a Promo Code? (e.g. FIRSTSHOW)"
                     value={promoCode}
                     onChange={(e) => setPromoCode(e.target.value)}
@@ -1384,15 +1568,45 @@ const Booking = () => {
                 <strong>Rs. {grandTotal.toFixed(2)}</strong>
               </div>
 
+              {checkoutError && (
+                <div
+                  role="alert"
+                  style={{
+                    marginBottom: '12px',
+                    padding: '10px 12px',
+                    borderRadius: '8px',
+                    background: '#fef2f2',
+                    border: '1px solid #fecaca',
+                    color: '#b91c1c',
+                    fontSize: '12.5px',
+                    fontWeight: 500,
+                  }}
+                >
+                  {checkoutError}
+                </div>
+              )}
+
               <button
                 type="button"
                 id="confirm-payment-btn"
                 className={styles.proceedPayBtn}
                 disabled={isProcessing}
-                onClick={handleConfirmPayment}
+                onClick={() => {
+                  if (paymentConfig.stripeEnabled) {
+                    const stripeBtn = document.getElementById('stripe-pay-submit-btn');
+                    if (stripeBtn) {
+                      stripeBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                      stripeBtn.click();
+                    } else if (!isAuthenticated) {
+                      dispatch(setAuthModalOpen(true));
+                    }
+                  } else {
+                    handleConfirmPayment();
+                  }
+                }}
               >
                 <span>TOTAL: Rs. {grandTotal.toFixed(2)}</span>
-                <span>Proceed</span>
+                <span>{paymentConfig.stripeEnabled ? 'Pay via Stripe' : 'Proceed'}</span>
               </button>
 
               <p className={styles.cancellationNote}>

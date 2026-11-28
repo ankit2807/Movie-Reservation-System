@@ -2,13 +2,15 @@ const jwt = require("jsonwebtoken");
 
 const authenticateRequest = (req, res) => {
   const token = req.cookies?.access_token;
-  if (!token) {
+  if (!token || typeof token !== "string") {
     res.status(401).json({ message: "You are not authenticated!" });
     return null;
   }
 
   try {
-    const user = jwt.verify(token, process.env.JWT_SECRET);
+    const user = jwt.verify(token, process.env.JWT_SECRET, {
+      algorithms: ["HS256"],
+    });
     req.user = user;
     return user;
   } catch (err) {

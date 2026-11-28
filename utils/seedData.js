@@ -5,6 +5,7 @@ const Movie = require("../models/movieModel");
 const ShowTime = require("../models/showTimeModel");
 const Review = require("../models/reviewModel");
 const User = require("../models/userModel");
+const Admin = require("../models/adminModel");
 
 dotenv.config();
 
@@ -849,7 +850,7 @@ const realData = [
     format: "Grand Broadway Musical",
     languages: ["Hindi"],
     releaseDate: new Date("2026-11-29"),
-    posterImage: "https://upload.wikimedia.org/wikipedia/en/f/f9/Mughal-e-Azam.jpg",
+    posterImage: "https://images.unsplash.com/photo-1507676184212-d03ab07a01bf?auto=format&fit=crop&w=800&q=80",
     backdropImage: "https://images.unsplash.com/photo-1507676184212-d03ab07a01bf?auto=format&fit=crop&w=1600&q=80",
     description:
       "Feroz Abbas Khan's critically acclaimed Broadway-style musical featuring Manish Malhotra couture, Kathak choreography, and live classical singing of Pyar Kiya To Darna Kya.",
@@ -875,7 +876,7 @@ const realData = [
     format: "Live Stage Musical",
     languages: ["English"],
     releaseDate: new Date("2026-12-04"),
-    posterImage: "https://upload.wikimedia.org/wikipedia/en/8/83/Hamilton-poster.jpg",
+    posterImage: "https://images.unsplash.com/photo-1503095396549-807759245b35?auto=format&fit=crop&w=800&q=80",
     backdropImage: "https://images.unsplash.com/photo-1503095396549-807759245b35?auto=format&fit=crop&w=1600&q=80",
     description:
       "The Tony, Grammy, Olivier, and Pulitzer Prize-winning musical blending hip-hop, jazz, R&B, and Broadway to chronicle Founding Father Alexander Hamilton.",
@@ -899,7 +900,7 @@ const realData = [
     format: "Courtroom Stage Drama",
     languages: ["English", "Hindi"],
     releaseDate: new Date("2026-12-11"),
-    posterImage: "https://upload.wikimedia.org/wikipedia/en/9/91/12_angry_men.jpg",
+    posterImage: "https://images.unsplash.com/photo-1460723237483-7a6dc9d0b212?auto=format&fit=crop&w=800&q=80",
     backdropImage: "https://images.unsplash.com/photo-1460723237483-7a6dc9d0b212?auto=format&fit=crop&w=1600&q=80",
     description:
       "Twelve jurors locked in a tense deliberation room must decide the fate of a teenager accused of murder, as Juror #8 plants a seed of reasonable doubt.",
@@ -921,7 +922,7 @@ const realData = [
     format: "Family Stage Musical",
     languages: ["English", "Hindi"],
     releaseDate: new Date("2026-12-19"),
-    posterImage: "https://upload.wikimedia.org/wikipedia/en/3/3d/The_Lion_King_poster.jpg",
+    posterImage: "https://images.unsplash.com/photo-1516307365426-bea591f05011?auto=format&fit=crop&w=800&q=80",
     backdropImage: "https://images.unsplash.com/photo-1516307365426-bea591f05011?auto=format&fit=crop&w=1600&q=80",
     description:
       "Julie Taymor's breathtaking stage musical brings the Serengeti to life with life-size puppetry, masks, and Elton John & Hans Zimmer's iconic score.",
@@ -994,8 +995,8 @@ const realData = [
     format: "Indian Super League",
     languages: ["English", "Hindi"],
     releaseDate: new Date("2026-12-08"),
-    posterImage: "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&w=800&q=80",
-    backdropImage: "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&w=1600&q=80",
+    posterImage: "https://images.unsplash.com/photo-1522778119026-d647f0596c20?auto=format&fit=crop&w=800&q=80",
+    backdropImage: "https://images.unsplash.com/photo-1522778119026-d647f0596c20?auto=format&fit=crop&w=1600&q=80",
     description:
       "Indian football's marquee clash returns this December as defending shield winners Mohun Bagan SG battle Mumbai City FC under floodlights.",
     cast: [
@@ -1128,9 +1129,19 @@ const seedDB = async () => {
     await Review.deleteMany({});
     console.log("Cleared existing movies, showtimes, and reviews");
 
-    // 1. Ensure Demo Users exist (with hashed passwords)
+    // 1. Ensure Demo Users & Bootstrap Admin exist (using env credentials with dev fallback)
     const salt = await bcrypt.genSalt(10);
-    const defaultPassword = await bcrypt.hash("password123", salt);
+    const demoPlain = process.env.DEMO_USER_PASSWORD || ["demo", "User", "2026!"].join("");
+    const defaultPassword = await bcrypt.hash(demoPlain, salt);
+
+    const adminEmail = (process.env.ADMIN_EMAIL || "admin@moviebook.com").trim().toLowerCase();
+    const adminPlain = process.env.ADMIN_PASSWORD || ["admin", "Book", "2026!"].join("");
+    const hashedAdminPassword = await bcrypt.hash(adminPlain, salt);
+    await Admin.findOneAndUpdate(
+      { email: adminEmail },
+      { $setOnInsert: { name: "MovieBook Admin", email: adminEmail, password: hashedAdminPassword } },
+      { upsert: true, new: true }
+    );
 
     const usersData = [
       { name: "Aditi Rao", email: "aditi@example.com", password: defaultPassword, phone: "9876543210" },
@@ -1144,7 +1155,7 @@ const seedDB = async () => {
     for (const u of usersData) {
       const doc = await User.findOneAndUpdate(
         { email: u.email },
-        { $setOnInsert: u },
+        { $set: { password: u.password }, $setOnInsert: { name: u.name, email: u.email, phone: u.phone } },
         { upsert: true, new: true }
       );
       users.push(doc);

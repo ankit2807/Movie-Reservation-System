@@ -1,8 +1,7 @@
 .container {
-    padding-top: 20px;
-    padding-bottom: 60px;
+    padding: 20px clamp(12px, 3vw, 24px) 60px;
     background-color: #F2F2F2;
-    min-height: calc(100vh - 64px);
+    min-height: calc(100dvh - 64px);
 }
 
 .wrapper {
@@ -192,4 +191,84 @@
     border-radius: 4px;
     margin-bottom: 20px;
     font-size: 14px;
+}
+
+@media (max-width: 860px) {
+    .wrapper {
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .sidebar {
+        width: 100%;
+    }
+
+    .menuList {
+        flex-direction: row;
+        overflow-x: auto;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+        padding: 8px 12px;
+        gap: 8px;
+    }
+
+    .menuList::-webkit-scrollbar {
+        display: none;
+    }
+
+    .menuItem {
+        white-space: nowrap;
+        border: 1px solid #e2e8f0;
+        border-radius: 999px;
+        padding: 10px 14px;
+        flex-shrink: 0;
+    }
+
+    .menuItem.signOut {
+        margin-top: 0;
+    }
+
+    .content {
+        width: 100%;
+        padding: 24px 18px;
+    }
+}
+
+@media (max-width: 600px) {
+    .profileHeader {
+        flex-direction: column;
+        text-align: center;
+        gap: 12px;
+        margin-bottom: 28px;
+    }
+
+    .avatarLarge {
+        width: 76px;
+        height: 76px;
+    }
+
+    .userName {
+        font-size: 20px;
+    }
+
+    .inputRow {
+        flex-direction: column;
+        gap: 16px;
+        margin-bottom: 16px;
+    }
+
+    .radioGroup {
+        flex-wrap: wrap;
+    }
+
+    .radioOption {
+        flex: 1 1 88px;
+        text-align: center;
+        padding: 10px 14px;
+    }
+
+    .saveBtn {
+        width: 100%;
+        min-height: 46px;
+    }
 }

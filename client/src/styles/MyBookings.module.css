@@ -54,6 +54,32 @@
   font-weight: 700;
 }
 
+.filterTabsRow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  padding: 4px;
+  border-radius: 10px;
+  margin-bottom: 22px;
+}
+
+.filterTabBtn {
+  padding: 7px 14px;
+  border-radius: 7px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #64748b;
+  background: transparent;
+  transition: all 0.15s;
+}
+
+.filterTabActive {
+  background: #f84464;
+  color: #ffffff;
+}
+
 .noBookings {
   text-align: center;
   padding: 72px 20px;
@@ -95,7 +121,7 @@
 
 .bookingGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 360px), 1fr));
   gap: 24px;
   padding-bottom: 60px;
 }
@@ -327,6 +353,31 @@
   color: #1f2533;
 }
 
+.ticketActionsGroup {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.printBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #ffffff;
+  color: #334155;
+  border: 1px solid #cbd5e1;
+  padding: 4px 9px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  transition: all 0.15s;
+}
+
+.printBtn:hover {
+  background: #f1f5f9;
+  border-color: #94a3b8;
+}
+
 .cancelBtn {
   background: transparent;
   color: #dc2626;
@@ -343,8 +394,82 @@
   border-color: #dc2626;
 }
 
+@media print {
+  body * {
+    visibility: hidden;
+  }
+
+  .bookingGrid,
+  .bookingGrid * {
+    visibility: visible;
+  }
+
+  .bookingGrid {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    display: block;
+  }
+
+  .ticketCard {
+    break-inside: avoid;
+    margin-bottom: 20px;
+    box-shadow: none;
+    border: 1px solid #94a3b8;
+  }
+
+  .ticketActionsGroup {
+    display: none !important;
+  }
+}
+
 @media (max-width: 576px) {
+  .bookingsHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    margin-top: 20px;
+  }
+
+  .filterTabsRow {
+    display: flex;
+    width: 100%;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .filterTabBtn {
+    flex: 1;
+    white-space: nowrap;
+  }
+
   .bookingGrid {
     grid-template-columns: 1fr;
+    gap: 18px;
+  }
+}
+
+@media (max-width: 420px) {
+  .ticketMain {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .detailRow,
+  .seatsInfo,
+  .foodRow {
+    justify-content: center;
+  }
+
+  .ticketStub {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .stubBottomRow {
+    flex-direction: column;
+    gap: 10px;
   }
 }

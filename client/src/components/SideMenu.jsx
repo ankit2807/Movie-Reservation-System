@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { Bell, ShoppingBag, Tv, CreditCard, MessageCircle, Settings, Gift, Star, ChevronRight, User, Info } from 'lucide-react';
+import { Bell, ShoppingBag, Tv, CreditCard, MessageCircle, Settings, Gift, Star, ChevronRight, User, Info, ShieldCheck } from 'lucide-react';
 import { logout, setAuthModalOpen } from '../redux/authSlice';
 import api from '../api/axios';
 import styles from '../styles/SideMenu.module.css';
@@ -51,7 +51,25 @@ const SideMenu = ({ isOpen, onClose }) => {
                 </div>
 
                 {/* Promo Strip */}
-                <div className={styles.promoStrip}>
+                <div
+                    className={styles.promoStrip}
+                    role="button"
+                    tabIndex={0}
+                    style={{ cursor: 'pointer' }}
+                    onClick={() => {
+                        onClose();
+                        if (isAuthenticated) navigate('/profile');
+                        else dispatch(setAuthModalOpen(true));
+                    }}
+                    onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            onClose();
+                            if (isAuthenticated) navigate('/profile');
+                            else dispatch(setAuthModalOpen(true));
+                        }
+                    }}
+                >
                      <div className={styles.promoIcon}>
                          <Info size={16} color="#666" />
                      </div>
@@ -64,6 +82,16 @@ const SideMenu = ({ isOpen, onClose }) => {
 
                 {/* Menu Items */}
                 <div className={styles.menuItems}>
+                    {(user?.isAdmin || user?.role === 'admin') && (
+                        <Link to="/admin/dashboard" className={styles.menuItem} onClick={onClose}>
+                            <ShieldCheck size={20} className={styles.menuIcon} style={{ color: '#f84464' }} />
+                            <div className={styles.menuText}>
+                                <div className={styles.itemTitle}>Admin Control Center</div>
+                                <div className={styles.itemSubtitle}>Manage catalog, showtimes &amp; bookings</div>
+                            </div>
+                            <ChevronRight size={16} className={styles.chevron} />
+                        </Link>
+                    )}
                     <Link to="/notifications" className={styles.menuItem} onClick={onClose}>
                         <Bell size={20} className={styles.menuIcon} /> 
                         <div className={styles.menuText}>

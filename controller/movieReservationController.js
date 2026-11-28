@@ -1,140 +1,189 @@
 const Reservation = require("../models/movieReservationModel");
 const ShowTime = require("../models/showTimeModel");
-const mongoose = require("mongoose");
-
-const CONVENIENCE_FEE_PER_TICKET = 30; // base fee per ticket (₹)
-const GST_RATE = 0.18; // GST on convenience fee
-const CANCELLATION_CUTOFF_MS = 20 * 60 * 1000; // cancellations allowed until 20 min before show
+const {
+  CANCELLATION_CUTOFF_MS,
+  round2,
+  validateAndPriceShowKeyBooking,
+} = require("../utils/pricing");
+const { isStripeConfigured, getStripeClient } = require("./paymentController");
 
 const generateBookingId = () =>
-  "MB" + Date.now().toString(36).toUpperCase().slice(-6) + Math.random().toString(36).slice(2, 5).toUpperCase();
-
-const round2 = (n) => Math.round(n * 100) / 100;
-
-const computePromoDiscount = (promoCode, ticketsAmount, foodAmount) => {
-  const code = String(promoCode || "").trim().toUpperCase();
-  if (code === "FIRSTSHOW") return Math.min(150, Math.round(ticketsAmount * 0.15));
-  if (code === "PAYTM150") return ticketsAmount >= 300 ? 150 : 75;
-  if (code === "RUPAY25") return Math.min(120, Math.round((ticketsAmount + foodAmount) * 0.2));
-  return 0;
-};
-
-// Parse "10:15 AM" / "07:30 PM" / "19:30" + "YYYY-MM-DD" into a valid Date
-const parseShowDateTime = (showDate, showTime, fallbackDateTime) => {
-  if (fallbackDateTime) {
-    const d = new Date(fallbackDateTime);
-    if (!Number.isNaN(d.getTime())) return d;
-  }
-  const datePart = showDate || new Date().toISOString().split("T")[0];
-  if (!showTime) return new Date(datePart);
-
-  const match12 = String(showTime).trim().match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i);
-  if (match12) {
-    let hours = parseInt(match12[1], 10);
-    const mins = parseInt(match12[2], 10);
-    const period = match12[3].toUpperCase();
-    if (period === "PM" && hours < 12) hours += 12;
-    if (period === "AM" && hours === 12) hours = 0;
-    const hh = String(hours).padStart(2, "0");
-    const mm = String(mins).padStart(2, "0");
-    const d = new Date(`${datePart}T${hh}:${mm}:00`);
-    if (!Number.isNaN(d.getTime())) return d;
-  }
-
-  const match24 = String(showTime).trim().match(/^(\d{1,2}):(\d{2})$/);
-  if (match24) {
-    const hh = String(match24[1]).padStart(2, "0");
-    const mm = String(match24[2]).padStart(2, "0");
-    const d = new Date(`${datePart}T${hh}:${mm}:00`);
-    if (!Number.isNaN(d.getTime())) return d;
-  }
-
-  const fallback = new Date(datePart);
-  return Number.isNaN(fallback.getTime()) ? new Date() : fallback;
-};
+  "MB" +
+  Date.now().toString(36).toUpperCase().slice(-6) +
+  Math.random().toString(36).slice(2, 5).toUpperCase();
 
 /**
  * Create a booking for a cinema show identified by `showKey`.
- * Stores a full snapshot of the show so it can be rendered without external lookups.
+ * Strictly computes seat & food prices from authoritative server catalogs,
+ * verifies Stripe PaymentIntent when Stripe is active, and auto-refunds on seat-race conflicts.
  */
 const createShowKeyReservation = async (req, res) => {
   const {
-    showKey, movie, movieTitle, posterImage, certification, language, format,
-    theatre, showDate, showTime, showDateTime, seatDetails, food, promoCode, paymentMethod, contact,
+    movie,
+    movieTitle,
+    posterImage,
+    certification,
+    language,
+    format,
+    theatre,
+    showDate,
+    showTime,
+    paymentMethod,
+    paymentIntentId,
+    contact,
   } = req.body;
 
-  const seatLines = Array.isArray(seatDetails) ? seatDetails : [];
-  const seatsArray = seatLines.map((s) => String(s.seat || "").toUpperCase());
-
-  if (!seatsArray.length || seatsArray.length > 10) {
-    return res.status(400).json({ message: "Select between 1 and 10 seats" });
-  }
-  if (!showDate || !showTime || !theatre?.name) {
-    return res.status(400).json({ message: "Show details are incomplete" });
+  const priced = validateAndPriceShowKeyBooking(req.body);
+  if (priced.error) {
+    return res.status(400).json({ message: priced.error });
   }
 
-  const showAt = parseShowDateTime(showDate, showTime, showDateTime);
+  const stripeActive = isStripeConfigured();
+  const cleanPaymentIntentId = paymentIntentId ? String(paymentIntentId).trim() : "";
 
-  // Seat conflict check (cancelled bookings free their seats)
+  let resolvedPaymentProvider = "DEMO";
+  let resolvedPaymentStatus = "PAID";
+  let resolvedPaymentMethod = String(paymentMethod || "UPI").slice(0, 30);
+
+  if (stripeActive || cleanPaymentIntentId) {
+    const stripe = getStripeClient();
+    if (!stripe) {
+      return res.status(503).json({ message: "Stripe gateway is unavailable." });
+    }
+    if (!cleanPaymentIntentId) {
+      return res.status(402).json({
+        message: "Payment verification required. Complete Stripe checkout before confirming.",
+      });
+    }
+
+    // Idempotency: return existing booking if this PaymentIntent was already confirmed
+    const existingForIntent = await Reservation.findOne({
+      paymentIntentId: cleanPaymentIntentId,
+      user: req.user.id,
+    });
+    if (existingForIntent) {
+      return res.status(200).json({
+        ...existingForIntent.toObject(),
+        message: "Booking already confirmed!",
+      });
+    }
+
+    let intent;
+    try {
+      intent = await stripe.paymentIntents.retrieve(cleanPaymentIntentId);
+    } catch {
+      return res.status(400).json({ message: "Invalid Stripe payment reference." });
+    }
+
+    if (intent.status !== "succeeded") {
+      return res.status(402).json({
+        message: `Payment not completed (status: ${intent.status}). Please finish checkout.`,
+      });
+    }
+    if (intent.metadata?.userId !== String(req.user.id)) {
+      return res.status(403).json({ message: "Payment does not belong to the signed-in user." });
+    }
+    if (intent.metadata?.showKey !== priced.cleanShowKey) {
+      return res.status(400).json({ message: "Payment showtime mismatch." });
+    }
+    if (intent.amount !== priced.amountInPaise) {
+      return res.status(400).json({
+        message: "Payment amount mismatch. Please refresh checkout and try again.",
+      });
+    }
+
+    resolvedPaymentProvider = "STRIPE";
+    resolvedPaymentStatus = "PAID";
+    resolvedPaymentMethod = "STRIPE";
+  }
+
+  // Pre-check seat conflict
   const conflict = await Reservation.findOne({
-    showKey,
+    showKey: priced.cleanShowKey,
     status: { $ne: "CANCELLED" },
-    seats: { $in: seatsArray },
+    seats: { $in: priced.uniqueSeats },
   });
   if (conflict) {
-    const taken = conflict.seats.filter((s) => seatsArray.includes(s));
+    const taken = conflict.seats.filter((s) => priced.uniqueSeats.includes(s));
+    let autoRefundNote = "";
+    if (resolvedPaymentProvider === "STRIPE" && cleanPaymentIntentId) {
+      try {
+        const stripe = getStripeClient();
+        await stripe.refunds.create({
+          payment_intent: cleanPaymentIntentId,
+          reason: "requested_by_customer",
+        });
+        autoRefundNote = " Your Stripe payment has been automatically refunded in full.";
+      } catch (refundErr) {
+        console.error("Auto-refund failed after seat conflict:", refundErr.message);
+      }
+    }
     return res.status(409).json({
-      message: `Seat${taken.length > 1 ? "s" : ""} ${taken.join(", ")} just got booked. Please choose different seats.`,
+      message: `Seat${taken.length > 1 ? "s" : ""} ${taken.join(", ")} just got booked. Please choose different seats.${autoRefundNote}`,
       takenSeats: taken,
     });
   }
-
-  // Recompute amounts server-side from line items
-  const foodLines = (Array.isArray(food) ? food : [])
-    .filter((f) => f && Number(f.qty) > 0)
-    .map((f) => ({ id: String(f.id), name: String(f.name), qty: Number(f.qty), price: Number(f.price) || 0 }));
-  const ticketsAmount = seatLines.reduce((sum, s) => sum + (Number(s.price) || 0), 0);
-  const convenienceFee = CONVENIENCE_FEE_PER_TICKET * seatsArray.length;
-  const gst = round2(convenienceFee * GST_RATE);
-  const foodAmount = foodLines.reduce((sum, f) => sum + f.qty * f.price, 0);
-  const cleanPromo = promoCode ? String(promoCode).trim().toUpperCase() : undefined;
-  const discount = computePromoDiscount(cleanPromo, ticketsAmount, foodAmount);
-  const total = Math.max(0, round2(ticketsAmount + convenienceFee + gst + foodAmount - discount));
 
   const isMovieMongoId = typeof movie === "string" && /^[0-9a-fA-F]{24}$/.test(movie);
 
   const reservation = new Reservation({
     user: req.user.id,
     movie: isMovieMongoId ? movie : undefined,
-    showKey,
+    showKey: priced.cleanShowKey,
     bookingId: generateBookingId(),
-    movieRef: movie ? String(movie) : undefined,
-    movieTitle,
-    posterImage,
-    certification,
-    language,
-    format,
+    movieRef: movie ? String(movie).slice(0, 80) : undefined,
+    movieTitle: String(movieTitle || "").slice(0, 150),
+    posterImage: String(posterImage || "").slice(0, 500),
+    certification: String(certification || "UA").slice(0, 16),
+    language: String(language || "English").slice(0, 40),
+    format: String(format || "2D").slice(0, 60),
     theatre: {
-      id: theatre.id,
-      name: theatre.name,
-      address: theatre.address,
-      screen: theatre.screen,
+      id: String(theatre.id || "").slice(0, 80),
+      name: String(theatre.name || "").slice(0, 160),
+      address: String(theatre.address || "").slice(0, 240),
+      screen: String(theatre.screen || "AUDI 01").slice(0, 40),
     },
-    showDate,
-    showTime,
-    showDateTime: showAt,
-    seats: seatsArray,
-    seatDetails: seatLines.map((s) => ({ seat: String(s.seat).toUpperCase(), tier: s.tier, price: Number(s.price) || 0 })),
-    food: foodLines,
-    amounts: { tickets: ticketsAmount, convenienceFee, gst, food: foodAmount, discount, total },
-    promoCode: discount > 0 ? cleanPromo : undefined,
-    paymentMethod,
-    contact,
-    date: showAt,
+    showDate: String(showDate).slice(0, 20),
+    showTime: String(showTime).slice(0, 20),
+    showDateTime: priced.showAt,
+    seats: priced.uniqueSeats,
+    seatDetails: priced.verifiedSeatDetails,
+    food: priced.verifiedFoodLines,
+    amounts: priced.amounts,
+    promoCode: priced.cleanPromo,
+    paymentMethod: resolvedPaymentMethod,
+    paymentProvider: resolvedPaymentProvider,
+    paymentStatus: resolvedPaymentStatus,
+    paymentIntentId: cleanPaymentIntentId || undefined,
+    contact: {
+      email: String(contact?.email || "").trim().slice(0, 120),
+      phone: String(contact?.phone || "").trim().slice(0, 20),
+    },
+    date: priced.showAt,
   });
 
-  const saved = await reservation.save();
-  return res.status(201).json({ ...saved.toObject(), message: "Booking confirmed!" });
+  try {
+    const saved = await reservation.save();
+    return res.status(201).json({ ...saved.toObject(), message: "Booking confirmed!" });
+  } catch (saveErr) {
+    // Handle concurrent race condition where unique multikey index rejected duplicate seat
+    if (saveErr.code === 11000 && resolvedPaymentProvider === "STRIPE" && cleanPaymentIntentId) {
+      try {
+        const stripe = getStripeClient();
+        await stripe.refunds.create({
+          payment_intent: cleanPaymentIntentId,
+          reason: "requested_by_customer",
+        });
+      } catch (refundErr) {
+        console.error("Race-condition Stripe auto-refund error:", refundErr.message);
+      }
+      return res.status(409).json({
+        message:
+          "One or more selected seats were just booked by another user. Your Stripe payment has been automatically refunded.",
+      });
+    }
+    throw saveErr;
+  }
 };
 
 /**
@@ -149,15 +198,19 @@ const createReservation = async (req, res) => {
     const { movie, showtime, seats, date } = req.body;
     const userId = req.user.id;
 
-    const seatsArray = Array.isArray(seats)
+    const rawSeats = Array.isArray(seats)
       ? seats
       : typeof seats === "string"
-      ? seats.split(",").map((s) => s.replace(/'/g, "").trim().toUpperCase()).filter(Boolean)
+      ? seats
+          .split(",")
+          .map((s) => s.replace(/'/g, "").trim().toUpperCase())
+          .filter(Boolean)
       : [];
+    const seatsArray = [...new Set(rawSeats)];
 
-    if (!userId || !showtime || !seatsArray.length || !date) {
+    if (!userId || !showtime || !seatsArray.length || seatsArray.length > 10 || !date) {
       return res.status(400).json({
-        message: "Showtime, seats, and date are required",
+        message: "Showtime, 1–10 seats, and date are required",
       });
     }
 
@@ -167,18 +220,18 @@ const createReservation = async (req, res) => {
     }
 
     let existingShowtime = null;
-    const isMongoId = /^[0-9a-fA-F]{24}$/.test(showtime);
+    const isMongoId = /^[0-9a-fA-F]{24}$/.test(String(showtime));
 
     if (isMongoId) {
       existingShowtime = await ShowTime.findById(showtime);
     }
 
     if (!existingShowtime && movie) {
-      const isMovieMongoId = /^[0-9a-fA-F]{24}$/.test(movie);
+      const isMovieMongoId = /^[0-9a-fA-F]{24}$/.test(String(movie));
       if (isMovieMongoId) {
         existingShowtime = await ShowTime.findOne({
-          movieId: movie,
-          startAt: showtime,
+          movieId: String(movie),
+          startAt: String(showtime),
         });
       }
     }
@@ -241,6 +294,12 @@ const createReservation = async (req, res) => {
       message: "Booking confirmed!",
     });
   } catch (err) {
+    if (err.code === 11000) {
+      return res.status(409).json({
+        message:
+          "One or more selected seats were just booked by another user. Please choose different seats.",
+      });
+    }
     console.error("Create reservation error:", err);
     if (err.name === "ValidationError") {
       return res.status(400).json({ message: err.message });
@@ -303,7 +362,7 @@ const getOccupiedSeats = async (req, res) => {
     endOfDay.setHours(23, 59, 59, 999);
 
     const reservations = await Reservation.find({
-      showtime: showtimeId,
+      showtime: String(showtimeId),
       status: { $ne: "CANCELLED" },
       date: {
         $gte: startOfDay,
@@ -324,7 +383,7 @@ const getOccupiedSeats = async (req, res) => {
 const getReservationById = async (req, res) => {
   try {
     const { id } = req.params;
-    const query = /^[0-9a-fA-F]{24}$/.test(id) ? { _id: id } : { bookingId: id };
+    const query = /^[0-9a-fA-F]{24}$/.test(id) ? { _id: id } : { bookingId: String(id) };
     const reservation = await Reservation.findOne({ ...query, user: req.user.id })
       .populate("movie")
       .populate("showtime");
@@ -339,14 +398,12 @@ const getReservationById = async (req, res) => {
 };
 
 /**
- * Cancel a reservation owned by the logged-in user.
- * Allowed until 20 minutes before the show. Ticket + F&B (less promo discount) is refunded;
- * convenience fees are non-refundable.
+ * Cancel a reservation owned by the logged-in user (automatically triggers Stripe refund if paid via Stripe).
  */
 const cancelReservation = async (req, res) => {
   try {
     const { id } = req.params;
-    const query = /^[0-9a-fA-F]{24}$/.test(id) ? { _id: id } : { bookingId: id };
+    const query = /^[0-9a-fA-F]{24}$/.test(id) ? { _id: id } : { bookingId: String(id) };
     const reservation = await Reservation.findOne({ ...query, user: req.user.id });
     if (!reservation) {
       return res.status(404).json({ message: "Booking not found" });
@@ -366,9 +423,7 @@ const cancelReservation = async (req, res) => {
 
     const amounts = reservation.amounts || {};
     const fallbackTicketRefund = (reservation.seats?.length || 1) * 250;
-    reservation.status = "CANCELLED";
-    reservation.cancelledAt = new Date();
-    reservation.refundAmount = Math.max(
+    const refundAmount = Math.max(
       0,
       round2(
         amounts.tickets
@@ -376,11 +431,42 @@ const cancelReservation = async (req, res) => {
           : fallbackTicketRefund
       )
     );
+
+    if (
+      reservation.paymentProvider === "STRIPE" &&
+      reservation.paymentIntentId &&
+      refundAmount > 0
+    ) {
+      const stripe = getStripeClient();
+      if (stripe) {
+        try {
+          const refund = await stripe.refunds.create({
+            payment_intent: reservation.paymentIntentId,
+            amount: Math.round(refundAmount * 100),
+            reason: "requested_by_customer",
+          });
+          reservation.stripeRefundId = refund.id;
+          reservation.paymentStatus =
+            amounts.total && refundAmount >= amounts.total ? "REFUNDED" : "PARTIALLY_REFUNDED";
+        } catch (stripeErr) {
+          console.error("Stripe cancellation refund error:", stripeErr.message);
+          return res.status(502).json({
+            message: "Unable to initiate Stripe refund right now. Please retry shortly.",
+          });
+        }
+      }
+    }
+
+    reservation.status = "CANCELLED";
+    reservation.cancelledAt = new Date();
+    reservation.refundAmount = refundAmount;
     await reservation.save();
 
     return res.status(200).json({
       ...reservation.toObject(),
-      message: "Booking cancelled. Refund will be processed in 5-7 working days.",
+      message: reservation.stripeRefundId
+        ? `Booking cancelled. Stripe refund (${reservation.stripeRefundId}) initiated for ₹${refundAmount}.`
+        : "Booking cancelled. Refund will be processed in 5-7 working days.",
     });
   } catch (err) {
     console.error("Cancel reservation error:", err);

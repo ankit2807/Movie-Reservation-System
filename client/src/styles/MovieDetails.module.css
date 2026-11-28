@@ -177,7 +177,7 @@
 }
 
 .heroTitle {
-  font-size: 36px;
+  font-size: clamp(1.5rem, 1.1rem + 1.6vw, 2.25rem);
   font-weight: 700;
   color: #ffffff;
   line-height: 1.15;
@@ -398,7 +398,7 @@
   border: 1.5px dashed #e2c066;
   border-radius: 8px;
   padding: 16px;
-  width: 345px;
+  width: min(345px, 82vw);
   flex-shrink: 0;
   display: flex;
   align-items: center;
@@ -585,8 +585,8 @@
 }
 
 .reviewCard {
-  width: 430px;
-  min-height: 245px;
+  width: min(430px, 84vw);
+  min-height: 235px;
   flex-shrink: 0;
   border: 1px solid #cccccc;
   border-radius: 8px;
@@ -860,7 +860,7 @@
   border-radius: 8px;
   width: 360px;
   max-width: 92vw;
-  max-height: calc(100vh - 200px);
+  max-height: calc(100dvh - 48px);
   overflow: hidden auto;
   box-shadow: none;
   animation: modalPop 0.16s ease-out;
@@ -1316,17 +1316,158 @@
   font-size: 14px;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
+  .floatingRightArrow {
+    right: 4px;
+  }
+}
+
+@media (max-width: 820px) {
+  .heroBanner {
+    padding: 22px 0 28px;
+  }
+
   .heroContainer {
     flex-direction: column;
     text-align: center;
+    gap: 20px;
+  }
+
+  .shareBtn {
+    position: static;
+    align-self: flex-end;
+    padding: 8px 14px;
+    font-size: 13px;
+  }
+
+  .posterCard {
+    width: min(210px, 56vw);
+  }
+
+  .posterImgBox {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 2 / 3;
   }
 
   .heroInfoCol {
     align-items: center;
+    width: 100%;
+    gap: 14px;
+  }
+
+  .ratingBox {
+    width: 100%;
+    max-width: 420px;
+    padding: 12px 14px;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+
+  .ratingValue,
+  .votesText,
+  .rateNowBtn {
+    font-size: 14px;
+  }
+
+  .metaBulletLine {
+    justify-content: center;
+    font-size: 13.5px;
+    gap: 6px;
+  }
+
+  .tagsStack {
+    justify-content: center;
+  }
+
+  .tagPill,
+  .tagLinkBtn {
+    font-size: 13.5px;
+  }
+
+  .heroCtaWrap {
+    width: 100%;
+    max-width: 340px;
+  }
+
+  .bookTicketsBtn {
+    width: 100%;
+    padding: 13px 24px;
+    min-height: 46px;
+  }
+
+  .stickyBarInner {
+    height: auto;
+    min-height: 58px;
+    padding-block: 8px;
+  }
+
+  .stickyMovieTitle {
+    font-size: 16px;
+    line-height: 1.25;
+  }
+
+  .stickyBookBtn {
+    padding: 10px 18px;
+    font-size: 13.5px;
+    white-space: nowrap;
+  }
+
+  .pageSection {
+    padding: 22px 0;
+  }
+
+  .sectionHeading {
+    font-size: 20px;
+  }
+
+  .aboutDescription {
+    font-size: 14.5px;
+  }
+
+  .peopleCarousel {
+    gap: 18px;
+  }
+
+  .personCard {
+    width: 96px;
+  }
+
+  .personAvatarWrap {
+    width: 96px;
+    height: 96px;
+  }
+
+  .personName {
+    font-size: 14px;
+  }
+
+  .personRole {
+    font-size: 12px;
   }
 
   .reviewCard {
-    width: 310px;
+    padding: 16px;
+  }
+
+  .recCard {
+    width: 152px;
+  }
+
+  .recPosterWrap {
+    width: 152px;
+    height: auto;
+    aspect-ratio: 2 / 3;
+  }
+
+  .breadcrumbFooter {
+    flex-wrap: wrap;
+  }
+}
+
+@media (pointer: coarse) {
+  .floatingRightArrow {
+    display: none;
   }
 }

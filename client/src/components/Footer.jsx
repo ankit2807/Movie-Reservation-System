@@ -208,12 +208,15 @@ const Footer = () => {
                 <div className={styles.section}>
                     <h5 className={styles.sectionLabel}>MOVIES BY GENRE</h5>
                     <div className={styles.linkRow}>
-                        {movieGenres.map((genre, i) => (
-                            <React.Fragment key={genre}>
-                                <Link to="/movies" className={styles.footerLink}>{genre}</Link>
-                                {i < movieGenres.length - 1 && <span className={styles.separator}>|</span>}
-                            </React.Fragment>
-                        ))}
+                        {movieGenres.map((genre, i) => {
+                            const filterKeyword = genre.replace(/\s+Movies$/i, '');
+                            return (
+                                <React.Fragment key={genre}>
+                                    <Link to={`/movies?filter=${encodeURIComponent(filterKeyword)}`} className={styles.footerLink}>{genre}</Link>
+                                    {i < movieGenres.length - 1 && <span className={styles.separator}>|</span>}
+                                </React.Fragment>
+                            );
+                        })}
                     </div>
                 </div>
 

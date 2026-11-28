@@ -1,27 +1,37 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Calendar, Ticket, MapPin, Utensils, XCircle, CheckCircle2 } from 'lucide-react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Calendar, Ticket, MapPin, Utensils, XCircle, CheckCircle2, Printer } from 'lucide-react';
 import { QRCodeCanvas } from 'qrcode.react';
 import api from '../api/axios';
+import { setAuthModalOpen } from '../redux/authSlice';
+import { showToast } from '../redux/locationSlice';
 import { createPosterFallback } from '../utils/moviebookData';
+import ConfirmDialog from '../components/ConfirmDialog';
 import styles from '../styles/MyBookings.module.css';
 
 const MyBookings = () => {
+  const dispatch = useDispatch();
+  const { isAuthenticated, authChecked } = useSelector((state) => state.auth);
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [statusFilter, setStatusFilter] = useState('ALL');
+  const [bookingToCancel, setBookingToCancel] = useState(null);
   const [cancellingId, setCancellingId] = useState(null);
 
   useEffect(() => {
+    if (!authChecked) return undefined;
     let isMounted = true;
     const fetchBookings = async () => {
       try {
-        setLoading(true);
         let dbBookings = [];
-        try {
-          const res = await api.get('/movieReservation');
-          dbBookings = Array.isArray(res.data) ? res.data : [];
-        } catch (dbErr) {
-          console.warn('Database bookings fallback to local storage:', dbErr.message);
+        if (isAuthenticated) {
+          try {
+            const res = await api.get('/movieReservation');
+            dbBookings = Array.isArray(res.data) ? res.data : [];
+          } catch (dbErr) {
+            console.warn('Database bookings fetch error:', dbErr.message);
+          }
         }
 
         let localBookings = [];
@@ -59,18 +69,26 @@ const MyBookings = () => {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [authChecked, isAuthenticated]);
 
-  const handleCancelBooking = async (booking) => {
-    if (!window.confirm('Are you sure you want to cancel this M-Ticket?')) return;
+  const executeCancelBooking = async () => {
+    if (!bookingToCancel) return;
+    const booking = bookingToCancel;
     setCancellingId(booking._id);
 
     try {
-      if (booking._id && !String(booking._id).startsWith('local-') && !String(booking._id).startsWith('mock-')) {
-        await api.patch(`/movieReservation/${booking._id}/cancel`);
+      let refundSummary = '';
+      if (
+        booking._id &&
+        !String(booking._id).startsWith('local-') &&
+        !String(booking._id).startsWith('mock-')
+      ) {
+        const res = await api.patch(`/movieReservation/${booking._id}/cancel`);
+        if (res.data?.refundAmount !== undefined) {
+          refundSummary = ` Refund of ₹${res.data.refundAmount} initiated.`;
+        }
       }
 
-      // Also update localStorage backup if present
       const saved = JSON.parse(localStorage.getItem('my-bookings') || '[]');
       const updatedLocal = saved.map((item) =>
         item._id === booking._id || item.bookingId === booking.bookingId
@@ -84,12 +102,47 @@ const MyBookings = () => {
           item._id === booking._id ? { ...item, status: 'CANCELLED' } : item
         )
       );
+      dispatch(
+        showToast({
+          message: `M-Ticket cancelled.${refundSummary}`,
+          type: 'success',
+        })
+      );
     } catch (err) {
-      alert(err.response?.data?.message || 'Unable to cancel booking.');
+      dispatch(
+        showToast({
+          message: err.response?.data?.message || 'Unable to cancel booking.',
+          type: 'error',
+        })
+      );
     } finally {
       setCancellingId(null);
+      setBookingToCancel(null);
     }
   };
+
+  const handlePrintTicket = () => {
+    window.print();
+  };
+
+  const counts = useMemo(() => {
+    const cancelled = bookings.filter((b) => b.status === 'CANCELLED').length;
+    return {
+      all: bookings.length,
+      confirmed: bookings.length - cancelled,
+      cancelled,
+    };
+  }, [bookings]);
+
+  const visibleBookings = useMemo(() => {
+    if (statusFilter === 'CONFIRMED') {
+      return bookings.filter((b) => b.status !== 'CANCELLED');
+    }
+    if (statusFilter === 'CANCELLED') {
+      return bookings.filter((b) => b.status === 'CANCELLED');
+    }
+    return bookings;
+  }, [bookings, statusFilter]);
 
   if (loading) {
     return (
@@ -100,29 +153,97 @@ const MyBookings = () => {
     );
   }
 
+  const cancelEstimate = bookingToCancel
+    ? Math.max(
+        0,
+        (bookingToCancel.amounts?.total || (bookingToCancel.seats?.length || 1) * 290) -
+          (bookingToCancel.amounts?.convenienceFee || (bookingToCancel.seats?.length || 1) * 30) -
+          (bookingToCancel.amounts?.gst || 0)
+      )
+    : 0;
+
   return (
     <div className="container">
       <div className={styles.bookingsHeader}>
         <div>
-          <h2>Your Orders & M-Tickets</h2>
-          <p className={styles.headerSub}>Show the QR code at the cinema entrance for hassle-free entry</p>
+          <h2>Your Orders &amp; M-Tickets</h2>
+          <p className={styles.headerSub}>
+            Show the QR code at the cinema entrance for hassle-free paperless entry
+          </p>
         </div>
-        <span className={styles.ticketCount}>{bookings.length} {bookings.length === 1 ? 'Order' : 'Orders'}</span>
+        <span className={styles.ticketCount}>
+          {bookings.length} {bookings.length === 1 ? 'Order' : 'Orders'}
+        </span>
       </div>
 
-      {bookings.length === 0 ? (
+      {bookings.length > 0 && (
+        <div className={styles.filterTabsRow} role="tablist" aria-label="Filter bookings by status">
+          {[
+            { id: 'ALL', label: `All (${counts.all})` },
+            { id: 'CONFIRMED', label: `Confirmed (${counts.confirmed})` },
+            { id: 'CANCELLED', label: `Cancelled (${counts.cancelled})` },
+          ].map((tab) => (
+            <button
+              key={tab.id}
+              type="button"
+              role="tab"
+              aria-selected={statusFilter === tab.id}
+              className={`${styles.filterTabBtn} ${statusFilter === tab.id ? styles.filterTabActive : ''}`}
+              onClick={() => setStatusFilter(tab.id)}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {visibleBookings.length === 0 ? (
         <div className={styles.noBookings}>
           <Ticket size={64} className={styles.noBookingsIcon} />
-          <h3>No Bookings Found</h3>
-          <p>You haven&apos;t booked any tickets yet. Explore the latest 2026 blockbusters and book your seats now!</p>
-          <Link to="/" className={styles.exploreCta}>Explore Movies</Link>
+          <h3>
+            {!isAuthenticated && bookings.length === 0
+              ? 'Sign in to view your M-Tickets'
+              : bookings.length === 0
+              ? 'No Bookings Found'
+              : 'No Matching Tickets'}
+          </h3>
+          <p>
+            {!isAuthenticated && bookings.length === 0
+              ? 'Sign in to access your confirmed QR M-Tickets, seat passes, and cancellation options.'
+              : bookings.length === 0
+              ? 'You have not booked any tickets yet. Explore the latest blockbusters and live events now!'
+              : 'No orders match the selected filter tab.'}
+          </p>
+          {!isAuthenticated && bookings.length === 0 ? (
+            <button
+              type="button"
+              className={styles.exploreCta}
+              onClick={() => dispatch(setAuthModalOpen(true))}
+            >
+              Sign In
+            </button>
+          ) : bookings.length === 0 ? (
+            <Link to="/" className={styles.exploreCta}>
+              Explore Movies
+            </Link>
+          ) : (
+            <button
+              type="button"
+              className={styles.exploreCta}
+              onClick={() => setStatusFilter('ALL')}
+            >
+              Show All Orders
+            </button>
+          )}
         </div>
       ) : (
         <div className={styles.bookingGrid}>
-          {bookings.map((booking) => {
+          {visibleBookings.map((booking) => {
             const movieTitle = booking.movie?.title || booking.movieTitle || 'Movie';
-            const posterImage = booking.movie?.posterImage || booking.posterImage || createPosterFallback(movieTitle);
-            const showTime = booking.showTime || booking.showtime?.startAt || booking.time || '07:30 PM';
+            const posterImage =
+              booking.movie?.posterImage || booking.posterImage || createPosterFallback(movieTitle);
+            const showTime =
+              booking.showTime || booking.showtime?.startAt || booking.time || '07:30 PM';
             const rawDate = booking.showDate || booking.date;
             const formattedDate = rawDate
               ? new Date(rawDate).toLocaleDateString('en-IN', {
@@ -156,7 +277,11 @@ const MyBookings = () => {
               >
                 <div className={styles.ticketTopStatus}>
                   <span className={styles.mTicketTag}>M-TICKET</span>
-                  <span className={`${styles.statusBadge} ${isCancelled ? styles.statusCancelled : styles.statusConfirmed}`}>
+                  <span
+                    className={`${styles.statusBadge} ${
+                      isCancelled ? styles.statusCancelled : styles.statusConfirmed
+                    }`}
+                  >
                     {isCancelled ? (
                       <>
                         <XCircle size={13} /> CANCELLED
@@ -174,6 +299,7 @@ const MyBookings = () => {
                     <img
                       src={posterImage}
                       alt={movieTitle}
+                      loading="lazy"
                       onError={(e) => {
                         e.target.onerror = null;
                         e.target.src = createPosterFallback(movieTitle);
@@ -190,17 +316,22 @@ const MyBookings = () => {
 
                     <div className={styles.detailRow}>
                       <MapPin size={14} className={styles.detailIcon} />
-                      <span>{theatreName} ({screenName})</span>
+                      <span>
+                        {theatreName} ({screenName})
+                      </span>
                     </div>
 
                     <div className={styles.detailRow}>
                       <Calendar size={14} className={styles.detailIcon} />
-                      <span>{formattedDate} | {showTime}</span>
+                      <span>
+                        {formattedDate} | {showTime}
+                      </span>
                     </div>
 
                     <div className={styles.seatsInfo}>
                       <span className={styles.seatsLabel}>
-                        {booking.seats?.length || 1} {(booking.seats?.length || 1) === 1 ? 'Ticket' : 'Tickets'}
+                        {booking.seats?.length || 1}{' '}
+                        {(booking.seats?.length || 1) === 1 ? 'Ticket' : 'Tickets'}
                       </span>
                       <span className={styles.seatsValue}>{booking.seats?.join(', ')}</span>
                     </div>
@@ -231,20 +362,40 @@ const MyBookings = () => {
                   </div>
                   <div className={styles.stubRight}>
                     <div className={styles.stubMetaRow}>
-                      <span className={styles.bookingIdLabel}>BOOKING ID</span>
+                      <span className={styles.bookingIdLabel}>
+                        BOOKING ID{' '}
+                        {booking.paymentProvider === 'STRIPE' && (
+                          <strong style={{ color: '#635bff', marginLeft: '6px' }}>• STRIPE</strong>
+                        )}
+                      </span>
                       <span className={styles.bookingId}>{bookingCode}</span>
+                      {booking.stripeRefundId && (
+                        <span style={{ fontSize: '10.5px', color: '#059669', marginTop: '2px' }}>
+                          Stripe Refund: {booking.stripeRefundId}
+                        </span>
+                      )}
                     </div>
                     <div className={styles.stubBottomRow}>
                       <span className={styles.paidAmount}>Total Paid: ₹{totalAmount}</span>
                       {!isCancelled && (
-                        <button
-                          type="button"
-                          className={styles.cancelBtn}
-                          disabled={cancellingId === booking._id}
-                          onClick={() => handleCancelBooking(booking)}
-                        >
-                          {cancellingId === booking._id ? 'Cancelling...' : 'Cancel Ticket'}
-                        </button>
+                        <div className={styles.ticketActionsGroup}>
+                          <button
+                            type="button"
+                            className={styles.printBtn}
+                            onClick={handlePrintTicket}
+                            title="Print or save PDF ticket"
+                          >
+                            <Printer size={12} /> Print
+                          </button>
+                          <button
+                            type="button"
+                            className={styles.cancelBtn}
+                            disabled={cancellingId === booking._id}
+                            onClick={() => setBookingToCancel(booking)}
+                          >
+                            {cancellingId === booking._id ? 'Cancelling...' : 'Cancel'}
+                          </button>
+                        </div>
                       )}
                     </div>
                   </div>
@@ -254,6 +405,32 @@ const MyBookings = () => {
           })}
         </div>
       )}
+
+      <ConfirmDialog
+        isOpen={Boolean(bookingToCancel)}
+        title="Cancel this M-Ticket?"
+        description={
+          bookingToCancel
+            ? `Release seats ${(bookingToCancel.seats || []).join(', ')} for "${
+                bookingToCancel.movie?.title || bookingToCancel.movieTitle || 'Movie'
+              }"? Cancellations are permitted up to 20 minutes before showtime.`
+            : ''
+        }
+        details={
+          bookingToCancel ? (
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 600 }}>
+              <span>Estimated Refund (Tickets + F&amp;B):</span>
+              <span style={{ color: '#059669' }}>₹{Math.round(cancelEstimate * 100) / 100}</span>
+            </div>
+          ) : null
+        }
+        confirmLabel="Confirm Cancellation"
+        cancelLabel="Keep Ticket"
+        variant="danger"
+        loading={Boolean(cancellingId)}
+        onConfirm={executeCancelBooking}
+        onCancel={() => setBookingToCancel(null)}
+      />
     </div>
   );
 };

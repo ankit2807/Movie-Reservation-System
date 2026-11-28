@@ -27,6 +27,17 @@
   color: var(--text-dark);
 }
 
+.error {
+  background: #fdecea;
+  color: #b71c1c;
+  border: 1px solid #f5c6cb;
+  border-radius: 6px;
+  padding: 10px 12px;
+  font-size: 13px;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
 .inputGroup {
   margin-bottom: 16px;
 }
@@ -52,16 +63,15 @@
   border-color: var(--primary-color);
 }
 
-/* New Logic for Inline Errors */
-.inputError {
-    border-color: #c62828 !important;
+.inputGroup input.inputError {
+  border-color: #c62828;
 }
 
 .inlineError {
-    display: block;
-    color: #c62828;
-    font-size: 12px;
-    margin-top: 4px;
+  display: block;
+  color: #c62828;
+  font-size: 12px;
+  margin-top: 4px;
 }
 
 .authBox button {

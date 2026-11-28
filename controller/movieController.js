@@ -1,18 +1,38 @@
 const Movie = require("../models/movieModel");
 const { seedDB } = require("../utils/seedData");
 
-// ─── TMDB Configuration (Optional enrichment with fast timeout) ───────────────
+// ─── TMDB Configuration (Optional enrichment via env variable only) ───────────
 const TMDB_BASE = "https://api.themoviedb.org/3";
 const TMDB_IMAGE = "https://image.tmdb.org/t/p/w500";
 const TMDB_IMAGE_ORIGINAL = "https://image.tmdb.org/t/p/original";
-const TMDB_KEY = process.env.TMDB_API_KEY || "8265bd1679663a7ea12ac168da84d2e8";
 
-const GENRE_MAP = {
-  28: "Action", 12: "Adventure", 16: "Animation", 35: "Comedy",
-  80: "Crime", 99: "Documentary", 18: "Drama", 10751: "Family",
-  14: "Fantasy", 36: "History", 27: "Horror", 10402: "Music",
-  9648: "Mystery", 10749: "Romance", 878: "Sci-Fi",
-  10770: "TV Movie", 53: "Thriller", 10752: "War", 37: "Western"
+const ALLOWED_MOVIE_FIELDS = [
+  "title",
+  "description",
+  "posterImage",
+  "backdropImage",
+  "duration",
+  "genre",
+  "languages",
+  "format",
+  "type",
+  "rating",
+  "votes",
+  "tagline",
+  "releaseDate",
+  "certification",
+  "cast",
+  "crew",
+];
+
+const pickAllowedMovieFields = (body = {}) => {
+  const clean = {};
+  for (const field of ALLOWED_MOVIE_FIELDS) {
+    if (body[field] !== undefined) {
+      clean[field] = body[field];
+    }
+  }
+  return clean;
 };
 
 const fmtRuntime = (mins) => {
@@ -28,7 +48,6 @@ const fmtRuntime = (mins) => {
 };
 
 const getCertification = (voteAvg) => {
-  if (voteAvg >= 8) return "UA";
   if (voteAvg >= 6) return "UA";
   return "A";
 };
@@ -37,7 +56,7 @@ const getCertification = (voteAvg) => {
 const normalizeMongoMovie = (doc) => {
   const m = doc.toObject ? doc.toObject() : doc;
   const isLegacyMpaa = ["G", "PG", "PG-13", "R", "NC-17"].includes(m.rating);
-  const numericRating = isLegacyMpaa ? "8.7" : (m.rating || "8.6");
+  const numericRating = isLegacyMpaa ? "8.7" : m.rating || "8.6";
 
   return {
     ...m,
@@ -58,56 +77,22 @@ const normalizeMongoMovie = (doc) => {
       Array.isArray(m.crew) && m.crew.length > 0
         ? m.crew
         : [
-            { name: "Sukumar", role: "Director" },
+            { name: "Nitesh Tiwari", role: "Director" },
             { name: "A. R. Rahman", role: "Music Director" },
-            { name: "Dinesh Vijan", role: "Producer" },
+            { name: "Namit Malhotra", role: "Producer" },
           ],
-  };
-};
-
-const formatTMDB = (item, isTv = false) => {
-  const genreIds = item.genre_ids || [];
-  const genreNames = genreIds.map((id) => GENRE_MAP[id] || "").filter(Boolean);
-  const genres = genreNames.slice(0, 3).join(", ") || "Action, Drama";
-  const poster = item.poster_path
-    ? `${TMDB_IMAGE}${item.poster_path}`
-    : "https://placehold.co/500x750?text=No+Image";
-  const backdrop = item.backdrop_path
-    ? `${TMDB_IMAGE_ORIGINAL}${item.backdrop_path}`
-    : poster;
-  const title = item.title || item.name || "Unknown";
-  const releaseDate = item.release_date || item.first_air_date || new Date().toISOString();
-  const rating = item.vote_average ? item.vote_average.toFixed(1) : "8.5";
-  const votes = item.vote_count ? `${Math.max(1, Math.floor(item.vote_count / 100) / 10)}K` : "28.4K";
-
-  return {
-    _id: `tmdb_${isTv ? "tv" : "mv"}_${item.id}`,
-    tmdbId: item.id,
-    mediaType: isTv ? "tv" : "movie",
-    title,
-    genre: genres,
-    duration: fmtRuntime(item.runtime),
-    rating,
-    votes,
-    type: "Movie",
-    description: item.overview || "Experience this blockbuster in cinemas near you.",
-    posterImage: poster,
-    backdropImage: backdrop,
-    releaseDate,
-    languages: ["Hindi", "English"],
-    certification: getCertification(item.vote_average || 7.5),
-    format: "2D, IMAX 2D, 4DX",
-    popularity: item.popularity || 0,
   };
 };
 
 let autoSeedPromise = null;
 const ensureFreshDatabase = async () => {
   const movies = await Movie.find();
+  if (process.env.AUTO_SEED === "false") {
+    return movies;
+  }
   const hasLegacyData =
     movies.length === 0 ||
-    movies.some((m) => ["G", "PG", "PG-13", "R", "NC-17"].includes(m.rating)) ||
-    !movies.some((m) => m.title === "Ramayana: Rise of a Legend");
+    movies.some((m) => ["G", "PG", "PG-13", "R", "NC-17"].includes(m.rating));
 
   if (hasLegacyData) {
     if (!autoSeedPromise) {
@@ -126,7 +111,8 @@ const ensureFreshDatabase = async () => {
  */
 const addMovie = async (req, res) => {
   try {
-    const newMovie = new Movie(req.body);
+    const payload = pickAllowedMovieFields(req.body);
+    const newMovie = new Movie(payload);
     const savedMovie = await newMovie.save();
     return res.status(201).json(normalizeMongoMovie(savedMovie));
   } catch (err) {
@@ -146,9 +132,13 @@ const addMovie = async (req, res) => {
  */
 const updateMovie = async (req, res) => {
   try {
+    if (!/^[0-9a-fA-F]{24}$/.test(req.params.id)) {
+      return res.status(400).json({ message: "Invalid movie ID" });
+    }
+    const payload = pickAllowedMovieFields(req.body);
     const updatedMovie = await Movie.findByIdAndUpdate(
       req.params.id,
-      { $set: req.body },
+      { $set: payload },
       { new: true, runValidators: true }
     );
     if (!updatedMovie) {
@@ -169,6 +159,9 @@ const updateMovie = async (req, res) => {
  */
 const deleteMovie = async (req, res) => {
   try {
+    if (!/^[0-9a-fA-F]{24}$/.test(req.params.id)) {
+      return res.status(400).json({ message: "Invalid movie ID" });
+    }
     const deletedMovie = await Movie.findByIdAndDelete(req.params.id);
     if (!deletedMovie) {
       return res.status(404).json({ message: "Movie not found" });
@@ -186,32 +179,29 @@ const deleteMovie = async (req, res) => {
 const getMovieById = async (req, res) => {
   try {
     await ensureFreshDatabase();
-    const id = req.params.id;
+    const id = String(req.params.id || "");
 
-    // 0. MovieBook ET code or slug (e.g. ET00481645 or street-fighter)
     if (id === "ET00481645" || id.toLowerCase() === "street-fighter") {
       const sfMovie = await Movie.findOne({ title: /street fighter/i });
       if (sfMovie) return res.status(200).json(normalizeMongoMovie(sfMovie));
     }
 
-    // 1. MongoDB ObjectId
-    const isMongoId = /^[0-9a-fA-F]{24}$/.test(id);
-    if (isMongoId) {
+    if (/^[0-9a-fA-F]{24}$/.test(id)) {
       const movie = await Movie.findById(id);
       if (movie) return res.status(200).json(normalizeMongoMovie(movie));
     }
 
-    // 2. TMDB prefixed ID: tmdb_mv_XXX or tmdb_tv_XXX
     const tmdbMovieMatch = id.match(/^tmdb_mv_(\d+)$/);
     const tmdbTvMatch = id.match(/^tmdb_tv_(\d+)$/);
+    const tmdbKey = process.env.TMDB_API_KEY;
 
-    if (tmdbMovieMatch || tmdbTvMatch) {
-      const isTv = !!tmdbTvMatch;
+    if ((tmdbMovieMatch || tmdbTvMatch) && tmdbKey) {
+      const isTv = Boolean(tmdbTvMatch);
       const tmdbId = isTv ? tmdbTvMatch[1] : tmdbMovieMatch[1];
       const endpoint = isTv ? "tv" : "movie";
 
       try {
-        const url = `${TMDB_BASE}/${endpoint}/${tmdbId}?api_key=${TMDB_KEY}&append_to_response=credits`;
+        const url = `${TMDB_BASE}/${endpoint}/${tmdbId}?api_key=${encodeURIComponent(tmdbKey)}&append_to_response=credits`;
         const response = await fetch(url, { signal: AbortSignal.timeout(2500) });
         if (response.ok) {
           const data = await response.json();
@@ -255,12 +245,11 @@ const getMovieById = async (req, res) => {
             tagline: data.tagline || "",
           });
         }
-      } catch (tmdbErr) {
-        // Fallback to first MongoDB movie if TMDB is unreachable
+      } catch {
+        // Fallback to local catalog if TMDB is unreachable
       }
     }
 
-    // Fallback: search by title or return first movie so page never breaks
     const fallbackMovie = await Movie.findOne();
     if (fallbackMovie) {
       return res.status(200).json(normalizeMongoMovie(fallbackMovie));
@@ -274,9 +263,8 @@ const getMovieById = async (req, res) => {
 
 /**
  * Get all movies, streams, events, plays, sports, and activities.
- * Serves the latest curated 2025-2026 catalog from MongoDB immediately.
  */
-const getMovies = async (req, res) => {
+const getMovies = async (_req, res) => {
   try {
     const dbMovies = await ensureFreshDatabase();
     const normalized = dbMovies.map(normalizeMongoMovie);
@@ -288,14 +276,16 @@ const getMovies = async (req, res) => {
 };
 
 /**
- * Search movies across MongoDB (instant, offline-safe) + optional fast TMDB lookup.
+ * Search movies across MongoDB safely with escaped regex & bounded input length.
  */
 const searchMovies = async (req, res) => {
   try {
     const { q } = req.query;
-    if (!q || q.trim().length === 0) return res.status(200).json([]);
+    if (!q || typeof q !== "string" || q.trim().length === 0) {
+      return res.status(200).json([]);
+    }
 
-    const query = q.trim();
+    const query = q.trim().slice(0, 100);
     const regex = new RegExp(query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i");
 
     const dbMovies = await ensureFreshDatabase();

@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { X, Mail } from 'lucide-react';
 import { loginStart, loginSuccess, loginFailure, setAuthModalOpen } from '../redux/authSlice';
+import { showToast } from '../redux/locationSlice';
 import api from '../api/axios';
 import styles from '../styles/AuthModal.module.css';
 
@@ -64,6 +66,7 @@ const AuthModal = () => {
         password: formData.password,
       });
       dispatch(loginSuccess(res.data));
+      dispatch(showToast({ message: `Welcome back, ${res.data?.name || 'Guest'}!`, type: 'success' }));
       handleClose();
     } catch (err) {
       const msg = err.response?.data?.message || 'Login failed';
@@ -260,8 +263,9 @@ const AuthModal = () => {
         </div>
 
         <p className={styles.terms}>
-          I agree to the <a href="/help" onClick={handleClose}>Terms &amp; Conditions</a> &amp;{' '}
-          <a href="/help" onClick={handleClose}>Privacy Policy</a>
+          I agree to the <Link to="/help" onClick={handleClose}>Terms &amp; Conditions</Link> &amp;{' '}
+          <Link to="/help" onClick={handleClose}>Privacy Policy</Link> •{' '}
+          <Link to="/admin/login" onClick={handleClose}>Admin Portal</Link>
         </p>
       </div>
     </div>

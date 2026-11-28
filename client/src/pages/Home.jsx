@@ -4,11 +4,11 @@ import { Link, useNavigate, useSearchParams, useParams } from 'react-router-dom'
 import {
   ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Star, ThumbsUp, Play,
   Sparkles, Mic, Music, Palette, Theater, Baby, Trophy, Compass, FerrisWheel,
-  MapPin, Tag, Gift, Building2, Megaphone, X
+  MapPin, Tag, Gift, Building2, Megaphone, X, Copy, Check
 } from 'lucide-react';
 import api from '../api/axios';
 import { fetchMoviesStart, fetchMoviesSuccess, fetchMoviesFailure } from '../redux/movieSlice';
-import { setCity } from '../redux/locationSlice';
+import { setCity, showToast } from '../redux/locationSlice';
 import { createPosterFallback, getTheatresForCity } from '../utils/moviebookData';
 import styles from '../styles/Home.module.css';
 
@@ -107,7 +107,7 @@ const HeroCarousel = ({ movies, currentCity }) => {
           className={styles.bmsBannerTrack}
           style={{ transform: `translateX(-${currentSlide * 100}%)` }}
         >
-          {slides.map((slide) => (
+          {slides.map((slide, idx) => (
             <div key={slide.id} className={styles.bmsBannerSlide}>
               <div className={`container ${styles.bmsBannerCardWrap}`}>
                 <Link to={`/movie/${slide.id}`} className={styles.bmsBannerCard}>
@@ -143,6 +143,10 @@ const HeroCarousel = ({ movies, currentCity }) => {
                       <img
                         src={slide.poster}
                         alt={slide.title}
+                        width={172}
+                        height={252}
+                        fetchPriority={idx === 0 ? 'high' : 'low'}
+                        loading={idx === 0 ? undefined : 'lazy'}
                         className={styles.bmsBannerPoster}
                         onError={(e) => {
                           e.target.onerror = null;
@@ -375,6 +379,338 @@ const PremiereCard = ({ movie }) => {
   );
 };
 
+/* ─── Interactive SubNavbar Hubs (Offers, Gift Cards, Partner/Support, Corporates) ─── */
+const SpecialHubView = ({ pageMode, activeCity, dispatch }) => {
+  const [copiedCode, setCopiedCode] = useState('');
+  const [giftAmount, setGiftAmount] = useState(1000);
+  const [giftTheme, setGiftTheme] = useState('Blockbuster Night Out');
+  const [giftRecipient, setGiftRecipient] = useState('');
+  const [giftEmail, setGiftEmail] = useState('');
+  const [giftMessage, setGiftMessage] = useState('Enjoy a movie night & popcorn on me!');
+
+  const [partnerForm, setPartnerForm] = useState({
+    orgName: '',
+    contactEmail: '',
+    category: pageMode === 'corporates' ? 'Bulk Employee Movie Vouchers' : 'Live Music / Comedy Event',
+    notes: '',
+  });
+
+  const handleCopyPromo = (code) => {
+    navigator.clipboard?.writeText(code).catch(() => {});
+    setCopiedCode(code);
+    dispatch(
+      showToast({
+        message: `Promo code ${code} copied! Apply it at ticket checkout.`,
+        type: 'success',
+      })
+    );
+    setTimeout(() => setCopiedCode(''), 2500);
+  };
+
+  const handleGiftSubmit = (e) => {
+    e.preventDefault();
+    const generatedPin = `MBGC-${Math.random().toString(36).slice(2, 6).toUpperCase()}-${giftAmount}`;
+    dispatch(
+      showToast({
+        message: `₹${giftAmount} E-Gift Card (${generatedPin}) sent to ${giftEmail || 'recipient'}!`,
+        type: 'success',
+      })
+    );
+    setGiftRecipient('');
+    setGiftEmail('');
+  };
+
+  const handlePartnerSubmit = (e) => {
+    e.preventDefault();
+    dispatch(
+      showToast({
+        message: `Request received for ${partnerForm.orgName || 'your organization'}! Our ${activeCity} desk will reply within 24 hours.`,
+        type: 'success',
+      })
+    );
+    setPartnerForm((prev) => ({ ...prev, orgName: '', contactEmail: '', notes: '' }));
+  };
+
+  const promoDeals = [
+    {
+      code: 'FIRSTSHOW',
+      badge: 'BANK & NEW USER',
+      title: '15% Instant Discount (Up to ₹150)',
+      desc: 'Valid on all Movie, IMAX 2D, and 4DX ticket bookings across India.',
+    },
+    {
+      code: 'PAYTM150',
+      badge: 'UPI CASHBACK',
+      title: 'Flat ₹150 Off on Orders ₹300+',
+      desc: 'Applicable on cinema tickets and stadium/event passes paid via UPI.',
+    },
+    {
+      code: 'RUPAY25',
+      badge: 'CARD + F&B COMBO',
+      title: '20% Off Tickets + Grab a Bite Combos',
+      desc: 'Save up to ₹120 when bundling Caramel Popcorn, Nachos, or Beverages.',
+    },
+  ];
+
+  return (
+    <div className={styles.specialOptionPage}>
+      <div className="container">
+        <div className={styles.specialBannerCard}>
+          <div className={styles.specialBannerText}>
+            <span className={styles.specialTag}>MOVIEBOOK {pageMode.replace(/-/g, ' ').toUpperCase()}</span>
+            <h1>
+              {pageMode === 'offers' && `Verified Bank, UPI & Cinema Offers in ${activeCity}`}
+              {pageMode === 'gift-cards' && 'MovieBook Instant Digital E-Gift Cards'}
+              {pageMode === 'list-your-show' && 'Host Your Show, Concert, Play & Customer Help Desk'}
+              {pageMode === 'corporates' && 'Corporate Entertainment Vouchers & Bulk Bookings'}
+            </h1>
+            <p>
+              {pageMode === 'offers' &&
+                'Copy any active coupon code below and apply it during checkout for server-verified instant savings.'}
+              {pageMode === 'gift-cards' &&
+                'Customize an instant E-Gift Card redeemable across movies, concerts, stand-up comedy, plays, and sports.'}
+              {pageMode === 'list-your-show' &&
+                'Partner with MovieBook across 4,500+ screens and live arenas, or browse instant ticketing FAQs below.'}
+              {pageMode === 'corporates' &&
+                'Delight teams and clients with branded MovieBook voucher codes for blockbusters and live events.'}
+            </p>
+          </div>
+        </div>
+
+        {pageMode === 'offers' && (
+          <div className={styles.hubCouponGrid}>
+            {promoDeals.map((deal) => (
+              <div key={deal.code} className={styles.hubCouponCard}>
+                <span className={styles.hubCouponBadge}>{deal.badge}</span>
+                <h3>{deal.title}</h3>
+                <p>{deal.desc}</p>
+                <div className={styles.hubCouponFooter}>
+                  <code className={styles.hubPromoCode}>{deal.code}</code>
+                  <button
+                    type="button"
+                    className={styles.hubCopyBtn}
+                    onClick={() => handleCopyPromo(deal.code)}
+                  >
+                    {copiedCode === deal.code ? <Check size={14} /> : <Copy size={14} />}
+                    {copiedCode === deal.code ? 'Copied' : 'Copy Code'}
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {pageMode === 'gift-cards' && (
+          <div className={styles.hubSplitGrid}>
+            <div className={styles.giftPreviewCard}>
+              <div className={styles.giftPreviewTop}>
+                <span className={styles.giftBrandBadge}>moviebook E-GIFT</span>
+                <span className={styles.giftAmountDisplay}>₹{giftAmount.toLocaleString('en-IN')}</span>
+              </div>
+              <h3 className={styles.giftPreviewTheme}>{giftTheme}</h3>
+              <p className={styles.giftPreviewMsg}>&ldquo;{giftMessage || 'Enjoy the show!'}&rdquo;</p>
+              <div className={styles.giftPreviewFooter}>
+                <span>For: {giftRecipient || 'Your Favourite Movie Buff'}</span>
+                <span>Valid 12 Months • All Cities</span>
+              </div>
+            </div>
+
+            <form className={styles.hubInteractiveForm} onSubmit={handleGiftSubmit}>
+              <h3>Configure Instant E-Gift Card</h3>
+              <div className={styles.hubDenomRow}>
+                {[500, 1000, 2000, 5000].map((amt) => (
+                  <button
+                    key={amt}
+                    type="button"
+                    className={`${styles.hubDenomPill} ${giftAmount === amt ? styles.hubDenomActive : ''}`}
+                    onClick={() => setGiftAmount(amt)}
+                  >
+                    ₹{amt.toLocaleString('en-IN')}
+                  </button>
+                ))}
+              </div>
+              <div className={styles.hubField}>
+                <label htmlFor="gc-theme">Occasion Theme</label>
+                <select id="gc-theme" value={giftTheme} onChange={(e) => setGiftTheme(e.target.value)}>
+                  <option value="Blockbuster Night Out">Blockbuster Night Out</option>
+                  <option value="Happy Birthday Special">Happy Birthday Special</option>
+                  <option value="Anniversary Premiere">Anniversary Premiere</option>
+                  <option value="Festive Celebration">Festive Celebration</option>
+                </select>
+              </div>
+              <div className={styles.hubFieldRow}>
+                <div className={styles.hubField}>
+                  <label htmlFor="gc-name">Recipient Name *</label>
+                  <input
+                    id="gc-name"
+                    required
+                    placeholder="Aditi Rao"
+                    value={giftRecipient}
+                    onChange={(e) => setGiftRecipient(e.target.value)}
+                  />
+                </div>
+                <div className={styles.hubField}>
+                  <label htmlFor="gc-email">Recipient Email *</label>
+                  <input
+                    id="gc-email"
+                    type="email"
+                    required
+                    placeholder="aditi@example.com"
+                    value={giftEmail}
+                    onChange={(e) => setGiftEmail(e.target.value)}
+                  />
+                </div>
+              </div>
+              <div className={styles.hubField}>
+                <label htmlFor="gc-msg">Personal Note</label>
+                <input
+                  id="gc-msg"
+                  value={giftMessage}
+                  onChange={(e) => setGiftMessage(e.target.value)}
+                />
+              </div>
+              <button type="submit" className="btn btn-primary" style={{ width: '100%', padding: '12px' }}>
+                Send ₹{giftAmount.toLocaleString('en-IN')} Gift Card Instantly
+              </button>
+            </form>
+          </div>
+        )}
+
+        {(pageMode === 'list-your-show' || pageMode === 'corporates') && (
+          <div className={styles.hubSplitGrid}>
+            <form className={styles.hubInteractiveForm} onSubmit={handlePartnerSubmit}>
+              <h3>
+                {pageMode === 'corporates'
+                  ? 'Request Corporate Voucher Quote'
+                  : `Partner / Support Inquiry (${activeCity})`}
+              </h3>
+              <div className={styles.hubField}>
+                <label htmlFor="partner-org">Organization / Organizer Name *</label>
+                <input
+                  id="partner-org"
+                  required
+                  placeholder="Horizon Live Productions"
+                  value={partnerForm.orgName}
+                  onChange={(e) => setPartnerForm({ ...partnerForm, orgName: e.target.value })}
+                />
+              </div>
+              <div className={styles.hubFieldRow}>
+                <div className={styles.hubField}>
+                  <label htmlFor="partner-email">Work Email *</label>
+                  <input
+                    id="partner-email"
+                    type="email"
+                    required
+                    placeholder="events@company.com"
+                    value={partnerForm.contactEmail}
+                    onChange={(e) => setPartnerForm({ ...partnerForm, contactEmail: e.target.value })}
+                  />
+                </div>
+                <div className={styles.hubField}>
+                  <label htmlFor="partner-cat">Category</label>
+                  <select
+                    id="partner-cat"
+                    value={partnerForm.category}
+                    onChange={(e) => setPartnerForm({ ...partnerForm, category: e.target.value })}
+                  >
+                    <option value="Live Music / Comedy Event">Live Music / Comedy Event</option>
+                    <option value="Theatre / Stage Play">Theatre / Stage Play</option>
+                    <option value="Sports / Arena Tournament">Sports / Arena Tournament</option>
+                    <option value="Bulk Employee Movie Vouchers">Bulk Employee Movie Vouchers</option>
+                    <option value="Customer Booking Assistance">Customer Booking Assistance</option>
+                  </select>
+                </div>
+              </div>
+              <div className={styles.hubField}>
+                <label htmlFor="partner-notes">Venue / Expected Attendance / Notes</label>
+                <textarea
+                  id="partner-notes"
+                  rows={3}
+                  placeholder={`Share venue details in ${activeCity}, expected dates, or ticket query...`}
+                  value={partnerForm.notes}
+                  onChange={(e) => setPartnerForm({ ...partnerForm, notes: e.target.value })}
+                />
+              </div>
+              <button type="submit" className="btn btn-primary" style={{ width: '100%', padding: '12px' }}>
+                Submit Inquiry
+              </button>
+            </form>
+
+            <div className={styles.hubFaqStack}>
+              <h3>Frequently Asked Questions</h3>
+              <details className={styles.faqItem} open>
+                <summary>How does M-Ticket QR cinema entry work?</summary>
+                <p>
+                  Every confirmed booking generates an instant QR M-Ticket under My Bookings. Simply scan the QR code at
+                  the multiplex gate and F&amp;B counter — no paper printout required.
+                </p>
+              </details>
+              <details className={styles.faqItem}>
+                <summary>What is the ticket cancellation &amp; refund cutoff?</summary>
+                <p>
+                  Confirmed tickets can be cancelled directly from My Bookings up to 20 minutes prior to showtime. Base
+                  ticket and F&amp;B amounts are refunded to your original payment method.
+                </p>
+              </details>
+              <details className={styles.faqItem}>
+                <summary>Which promo codes can I use during checkout?</summary>
+                <p>
+                  Enter FIRSTSHOW (15% off up to ₹150), PAYTM150 (flat ₹150 off on ₹300+), or RUPAY25 (20% off tickets +
+                  snacks) in the checkout summary panel.
+                </p>
+              </details>
+            </div>
+          </div>
+        )}
+
+        <div className={styles.specialCardsGrid} style={{ marginTop: '24px' }}>
+          {[
+            {
+              icon: Tag,
+              title: 'YES Private & ICICI Sapphiro Offers',
+              sub: 'Use code FIRSTSHOW at checkout — Up to ₹150 instant off on movie tickets',
+              cta: 'Browse Movies',
+              to: '/movies',
+            },
+            {
+              icon: Gift,
+              title: 'Instant Digital Gift Cards',
+              sub: 'Send personalized entertainment vouchers valid across 4,500+ screens',
+              cta: 'Configure Gift Card',
+              to: '/gift-cards',
+            },
+            {
+              icon: Megaphone,
+              title: 'Live Concerts, Stand-up & Stadium Events',
+              sub: `Explore concerts, comedy tours, plays & sports in ${activeCity}`,
+              cta: 'Explore Events',
+              to: '/events',
+            },
+            {
+              icon: Building2,
+              title: `Multiplex Cinemas in ${activeCity}`,
+              sub: `PVR Superplex, INOX Megaplex & Cinépolis IMAX screens in ${activeCity}`,
+              cta: 'Explore Cinemas',
+              to: '/movies',
+            },
+          ].map((card, i) => (
+            <Link key={i} to={card.to} className={styles.specialFeatureCard}>
+              <div className={styles.specialIconWrap}>
+                {React.createElement(card.icon, { size: 24, color: '#f84464' })}
+              </div>
+              <div>
+                <h3>{card.title}</h3>
+                <p>{card.sub}</p>
+                <span className={styles.specialCardLink}>{card.cta} ›</span>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 /* ═══════════════════════════════════════════════════════════
    ─── Main MovieBook Home & Explore Page Component ───
    ═══════════════════════════════════════════════════════════ */
@@ -512,80 +848,7 @@ const Home = ({ type, pageMode }) => {
 
   /* ─── Special SubNavbar Option Views (Offers / Gift Cards / ListYourShow / Corporates) ─── */
   if (pageMode) {
-    return (
-      <div className={styles.specialOptionPage}>
-        <div className="container">
-          <div className={styles.specialBannerCard}>
-            <div className={styles.specialBannerText}>
-              <span className={styles.specialTag}>MOVIE BOOK {pageMode.toUpperCase()}</span>
-              <h1>
-                {pageMode === 'offers' && `Exciting Bank, UPI & Cinema Offers in ${activeCity}`}
-                {pageMode === 'gift-cards' && 'Movie Book Instant Gift Cards'}
-                {pageMode === 'list-your-show' && 'Host Your Show, Concert, Play or Sport Event'}
-                {pageMode === 'corporates' && 'Corporate Vouchers & Bulk Movie Bookings'}
-              </h1>
-              <p>
-                {pageMode === 'offers' &&
-                  'Apply promo codes FIRSTSHOW, PAYTM150, or RUPAY25 during ticket checkout to unlock instant discounts.'}
-                {pageMode === 'gift-cards' &&
-                  'Gift the joy of movies, concerts, plays, and sports to your friends and family.'}
-                {pageMode === 'list-your-show' &&
-                  'Partner with India’s largest entertainment ticketing platform across 4,500+ screens.'}
-                {pageMode === 'corporates' &&
-                  'Reward employees and delight clients with customizable movie & event vouchers.'}
-              </p>
-            </div>
-          </div>
-
-          <div className={styles.specialCardsGrid}>
-            {[
-              {
-                icon: Tag,
-                title: 'YES Private & ICICI Sapphiro Buy 1 Get 1',
-                sub: 'Use code FIRSTSHOW at checkout — Up to ₹150 instant off on movie tickets',
-                cta: 'Browse Movies',
-                to: '/movies',
-              },
-              {
-                icon: Gift,
-                title: 'Paytm & RuPay Platinum Cinema Cashback',
-                sub: 'Use code PAYTM150 or RUPAY25 on tickets and Grab a Bite combos',
-                cta: 'Book Tickets Now',
-                to: '/movies',
-              },
-              {
-                icon: Megaphone,
-                title: 'Live Concerts, Stand-up & Stadium Events',
-                sub: `Explore Coldplay, Diljit Dosanjh, Zakir Khan & TATA IPL in ${activeCity}`,
-                cta: 'Explore Events',
-                to: '/events',
-              },
-              {
-                icon: Building2,
-                title: `Multiplex Cinemas in ${activeCity}`,
-                sub: `PVR Superplex, INOX Megaplex & Cinépolis IMAX screens in ${activeCity}`,
-                cta: 'Explore Cinemas',
-                to: '/movies',
-              },
-            ].map((card, i) => {
-              const Icon = card.icon;
-              return (
-                <Link key={i} to={card.to} className={styles.specialFeatureCard}>
-                  <div className={styles.specialIconWrap}>
-                    <Icon size={24} color="#f84464" />
-                  </div>
-                  <div>
-                    <h3>{card.title}</h3>
-                    <p>{card.sub}</p>
-                    <span className={styles.specialCardLink}>{card.cta} ›</span>
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
-        </div>
-      </div>
-    );
+    return <SpecialHubView pageMode={pageMode} activeCity={activeCity} dispatch={dispatch} />;
   }
 
   const isLandingPage = !type;

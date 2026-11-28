@@ -1,33 +1,62 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { ArrowLeft, CalendarClock } from 'lucide-react';
 import api from '../../api/axios';
-import styles from '../../styles/Auth.module.css';
+import { showToast } from '../../redux/locationSlice';
+import styles from '../../styles/AdminDashboard.module.css';
+
+const getTodayIso = () => new Date().toISOString().split('T')[0];
+const getFutureIso = (days = 14) => {
+  const d = new Date();
+  d.setDate(d.getDate() + days);
+  return d.toISOString().split('T')[0];
+};
+
+const POPULAR_VENUES = [
+  'PVR: Logix City Centre Mall, Noida',
+  'INOX: DLF Mall of India, Sector 18, Noida',
+  'Cinépolis: Grand Venice Mall, Greater Noida',
+  'PVR Director’s Cut: Ambience Mall, Vasant Kunj',
+  'PVR ICON: Phoenix Palladium, Lower Parel, Mumbai',
+  'INOX Megaplex: Mall of Asia, Bengaluru',
+];
 
 const AddShowtime = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [movies, setMovies] = useState([]);
+  const [saving, setSaving] = useState(false);
+
   const [formData, setFormData] = useState({
     movieId: '',
-    theatre: 'PVR: Logix City Centre Mall, Noida',
+    theatre: POPULAR_VENUES[0],
     screen: 'AUDI 01',
     format: 'IMAX 2D',
     price: 320,
-    startAt: '',
-    startDate: '',
-    endDate: '',
+    startAt: '07:30 PM',
+    startDate: getTodayIso(),
+    endDate: getFutureIso(14),
   });
 
   useEffect(() => {
-    const fetchMovies = async () => {
-      try {
-        const res = await api.get('/movie');
-        setMovies(Array.isArray(res.data) ? res.data : []);
-      } catch (err) {
-        console.error('Failed to fetch movies:', err);
-      }
+    let isMounted = true;
+    api
+      .get('/movie')
+      .then((res) => {
+        if (isMounted) {
+          setMovies(Array.isArray(res.data) ? res.data : []);
+        }
+      })
+      .catch(() => {
+        if (isMounted) {
+          dispatch(showToast({ message: 'Unable to load catalog list.', type: 'error' }));
+        }
+      });
+    return () => {
+      isMounted = false;
     };
-    fetchMovies();
-  }, []);
+  }, [dispatch]);
 
   const handleChange = (e) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -35,62 +64,101 @@ const AddShowtime = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setSaving(true);
     try {
       await api.post('/showtimes', {
         ...formData,
-        price: Number(formData.price) || 250,
+        price: Number(formData.price) || 290,
       });
-      alert('Showtime added successfully');
+      dispatch(showToast({ message: 'Showtime slot scheduled successfully!', type: 'success' }));
       navigate('/admin/dashboard');
     } catch (err) {
-      alert(err.response?.data?.message || 'Error adding showtime');
+      dispatch(
+        showToast({
+          message: err.response?.data?.message || 'Error scheduling showtime.',
+          type: 'error',
+        })
+      );
+    } finally {
+      setSaving(false);
     }
   };
 
   return (
-    <div className="container" style={{ padding: '40px 0' }}>
-      <div className={styles.authBox} style={{ maxWidth: '520px', margin: '0 auto' }}>
-        <h2>Add Showtime</h2>
+    <div className={`container ${styles.formPage}`}>
+      <div className={styles.formCard} style={{ maxWidth: '640px' }}>
+        <div className={styles.formTopRow}>
+          <div>
+            <p className={styles.eyebrow}>Cinema Operations</p>
+            <h1 className={styles.pageTitle} style={{ fontSize: '22px' }}>
+              Schedule Multiplex Showtime
+            </h1>
+          </div>
+          <Link to="/admin/dashboard" className={styles.backLink}>
+            <ArrowLeft size={15} /> Back to Dashboard
+          </Link>
+        </div>
+
         <form onSubmit={handleSubmit}>
-          <div className={styles.inputGroup}>
-            <label htmlFor="st-movie">Select Movie</label>
+          <div className={styles.fieldGroup}>
+            <label htmlFor="st-movie">Select Catalog Title *</label>
             <select
               id="st-movie"
               name="movieId"
               value={formData.movieId}
               onChange={handleChange}
               required
-              style={{ width: '100%', padding: '10px' }}
             >
-              <option value="">-- Select Movie --</option>
+              <option value="">-- Choose a Movie or Event --</option>
               {movies.map((m) => (
                 <option key={m._id} value={m._id}>
-                  {m.title}
+                  {m.title} ({m.type || 'Movie'})
                 </option>
               ))}
             </select>
           </div>
-          <div className={styles.inputGroup}>
-            <label htmlFor="st-theatre">Theatre</label>
+
+          <div className={styles.fieldGroup}>
+            <label htmlFor="st-theatre">Multiplex / Venue *</label>
             <input
               id="st-theatre"
               name="theatre"
+              list="venue-presets"
               value={formData.theatre}
               onChange={handleChange}
               required
             />
+            <datalist id="venue-presets">
+              {POPULAR_VENUES.map((v) => (
+                <option key={v} value={v} />
+              ))}
+            </datalist>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px' }}>
-            <div className={styles.inputGroup}>
-              <label htmlFor="st-screen">Screen</label>
-              <input id="st-screen" name="screen" value={formData.screen} onChange={handleChange} required />
+
+          <div className={styles.formGridThree}>
+            <div className={styles.fieldGroup}>
+              <label htmlFor="st-screen">Auditorium / Screen *</label>
+              <input
+                id="st-screen"
+                name="screen"
+                value={formData.screen}
+                onChange={handleChange}
+                required
+              />
             </div>
-            <div className={styles.inputGroup}>
-              <label htmlFor="st-format">Format</label>
-              <input id="st-format" name="format" value={formData.format} onChange={handleChange} required />
+            <div className={styles.fieldGroup}>
+              <label htmlFor="st-format">Projection Format *</label>
+              <select id="st-format" name="format" value={formData.format} onChange={handleChange}>
+                <option value="2D">2D</option>
+                <option value="3D">3D</option>
+                <option value="IMAX 2D">IMAX 2D</option>
+                <option value="IMAX 3D">IMAX 3D</option>
+                <option value="4DX">4DX</option>
+                <option value="ICE">ICE</option>
+              </select>
             </div>
-            <div className={styles.inputGroup}>
-              <label htmlFor="st-price">Base Price (₹)</label>
+            <div className={styles.fieldGroup}>
+              <label htmlFor="st-price">Base Ticket Price (₹) *</label>
               <input
                 id="st-price"
                 type="number"
@@ -102,20 +170,21 @@ const AddShowtime = () => {
               />
             </div>
           </div>
-          <div className={styles.inputGroup}>
-            <label htmlFor="st-time">Start Time (e.g. 07:30 PM)</label>
-            <input
-              id="st-time"
-              name="startAt"
-              placeholder="07:30 PM"
-              value={formData.startAt}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-            <div className={styles.inputGroup}>
-              <label htmlFor="st-start-date">Start Date</label>
+
+          <div className={styles.formGridThree}>
+            <div className={styles.fieldGroup}>
+              <label htmlFor="st-time">Show Start Time *</label>
+              <input
+                id="st-time"
+                name="startAt"
+                placeholder="07:30 PM"
+                value={formData.startAt}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className={styles.fieldGroup}>
+              <label htmlFor="st-start-date">Window Start Date *</label>
               <input
                 id="st-start-date"
                 type="date"
@@ -125,8 +194,8 @@ const AddShowtime = () => {
                 required
               />
             </div>
-            <div className={styles.inputGroup}>
-              <label htmlFor="st-end-date">End Date</label>
+            <div className={styles.fieldGroup}>
+              <label htmlFor="st-end-date">Window End Date *</label>
               <input
                 id="st-end-date"
                 type="date"
@@ -138,9 +207,15 @@ const AddShowtime = () => {
             </div>
           </div>
 
-          <button type="submit" className="btn btn-primary">
-            Save Showtime
-          </button>
+          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px', marginTop: '8px' }}>
+            <Link to="/admin/dashboard" className={styles.secondaryActionBtn}>
+              Cancel
+            </Link>
+            <button type="submit" disabled={saving} className={styles.primaryActionBtn}>
+              <CalendarClock size={16} />
+              {saving ? 'Scheduling...' : 'Save Showtime'}
+            </button>
+          </div>
         </form>
       </div>
     </div>
