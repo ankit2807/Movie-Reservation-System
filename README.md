@@ -1,5 +1,6 @@
 # 🎬 Movie Reservation System
 
+[![TypeScript](https://img.shields.io/badge/TypeScript-Strict-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Node.js](https://img.shields.io/badge/Node.js-v20+-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
 [![Express.js](https://img.shields.io/badge/Express.js-4.22-000000?logo=express&logoColor=white)](https://expressjs.com/)
 [![React](https://img.shields.io/badge/React-19.3-61DAFB?logo=react&logoColor=black)](https://react.dev/)
@@ -433,20 +434,23 @@ The review agent:
 ### Root Backend Directory
 | Command | Purpose |
 | :--- | :--- |
-| `npm start` | Launches the production-safe Express server (`node index.js`) |
-| `npm run dev` | Launches the Express server with `nodemon` auto-reload |
-| `npm run build` | Installs client dependencies and builds `client/dist` for single-origin serving |
+| `npm start` | Launches the compiled production Express server (`node dist/index.js`) |
+| `npm run dev` | Launches the TypeScript Express server with `tsx watch index.ts` |
+| `npm run typecheck` | Runs strict TypeScript typechecking across both backend and frontend |
+| `npm run build` | Compiles backend TypeScript (`dist/`) and builds frontend SPA (`client/dist/`) |
+| `npm run build:server` | Compiles backend TypeScript sources into `dist/` |
 | `npm run seed` | Seeds MongoDB with 41 catalog titles, showtimes, reviews, demo users & admin |
-| `npm run lint` | Runs ESLint 10 across the React frontend |
-| `npm run review` | Runs the automated AI code review audit |
+| `npm run lint` | Runs ESLint 10 + `typescript-eslint` across the React TypeScript frontend |
+| `npm run review` | Runs the automated AI code review audit (`tools/code-review-agent.ts`) |
 
 ### Client Directory (`client/`)
 | Command | Purpose |
 | :--- | :--- |
 | `npm run dev` | Starts the Vite local development server (`http://localhost:5173`) |
-| `npm run build` | Compiles optimized production bundle into `client/dist` |
+| `npm run typecheck` | Runs strict TypeScript verification on app and Vite configs |
+| `npm run build` | Typechecks and compiles optimized production bundle into `client/dist` |
 | `npm run preview` | Locally previews the production build bundle |
-| `npm run lint` | Runs ESLint across client JSX and JS source files |
+| `npm run lint` | Runs ESLint + `typescript-eslint` across client `.ts` and `.tsx` source files |
 
 ---
 

@@ -2,17 +2,20 @@
   "name": "moviebook-reservation-system",
   "version": "1.0.0",
   "description": "Production-ready full-stack Movie & Live Entertainment Reservation System (MovieBook)",
-  "main": "index.js",
+  "main": "dist/index.js",
   "engines": {
     "node": ">=20.0.0"
   },
   "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon index.js",
-    "build": "npm ci --prefix client --include=dev && npm run build --prefix client",
-    "seed": "node utils/seedData.js",
+    "start": "node dist/index.js",
+    "dev": "tsx watch index.ts",
+    "build:server": "tsc -p tsconfig.json",
+    "build:client": "npm ci --prefix client --include=dev && npm run build --prefix client",
+    "build": "npm run build:server && npm run build:client",
+    "typecheck": "tsc --noEmit -p tsconfig.json && npm run typecheck --prefix client",
+    "seed": "tsx utils/seedData.ts",
     "lint": "npm run lint --prefix client",
-    "review": "node tools/code-review-agent.js"
+    "review": "tsx tools/code-review-agent.ts"
   },
   "keywords": [
     "movie-reservation",
@@ -39,7 +42,18 @@
     "validator": "^13.15.35"
   },
   "devDependencies": {
-    "nodemon": "^3.1.14"
+    "@types/bcrypt": "^6.0.0",
+    "@types/cookie-parser": "^1.4.10",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^4.17.25",
+    "@types/hpp": "^0.2.7",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/multer": "^2.3.0",
+    "@types/node": "^26.6.11",
+    "@types/validator": "^13.15.11",
+    "nodemon": "^3.1.14",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2"
   },
   "overrides": {
     "minimatch": "^11.0.9"

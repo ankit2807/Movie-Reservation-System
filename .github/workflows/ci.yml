@@ -1,4 +1,4 @@
-name: CI — Lint, Audit & Build
+name: CI — Typecheck, Lint, Audit & Build
 
 on:
   push:
@@ -23,21 +23,18 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: npm
 
-      - name: Install backend dependencies & security audit
+      - name: Install backend dependencies, security audit & TypeScript build
         run: |
           npm ci
           npm audit --audit-level=moderate
+          npx tsc --noEmit -p tsconfig.json
+          npm run build:server
 
-      - name: Verify backend JavaScript syntax
-        run: |
-          for f in index.js database/*.js models/*.js controller/*.js routes/*.js utils/*.js tools/*.js; do
-            node --check "$f"
-          done
-
-      - name: Install client dependencies, security audit, ESLint & production build
+      - name: Install client dependencies, security audit, TypeScript check, ESLint & production build
         working-directory: ./client
         run: |
           npm ci
           npm audit --audit-level=moderate
+          npm run typecheck
           npm run lint
           npm run build
