@@ -51,6 +51,7 @@ const BuyTickets = () => {
   const { currentCity } = useSelector((state) => state.location);
 
   const [movie, setMovie] = useState(null);
+  const [dbShowtimes, setDbShowtimes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -71,29 +72,94 @@ const BuyTickets = () => {
   const [infoModalTheatre, setInfoModalTheatre] = useState(null);
 
   useEffect(() => {
+    let isMounted = true;
     const loadMovie = async () => {
       try {
-        setLoading(true);
         setError(null);
-        const res = await api.get(`/movie/find/${id}`);
-        const data = res.data;
+        const [movieRes, stRes] = await Promise.all([
+          api.get(`/movie/find/${id}`),
+          api.get('/showtimes').catch(() => ({ data: [] })),
+        ]);
+        if (!isMounted) return;
+        const data = movieRes.data;
         setMovie(data);
+        const allSt = Array.isArray(stRes.data) ? stRes.data : [];
+        setDbShowtimes(
+          allSt.filter((st) => String(st.movieId?._id || st.movieId) === String(data._id))
+        );
         setSelectedLang((prev) => prev || data.languages?.[0] || 'English');
       } catch (err) {
         console.error('Failed to fetch movie for BuyTickets:', err);
-        setError('Unable to load showtimes for this movie.');
+        if (isMounted) setError('Unable to load showtimes for this movie.');
       } finally {
-        setLoading(false);
+        if (isMounted) setLoading(false);
       }
     };
     loadMovie();
+    return () => {
+      isMounted = false;
+    };
   }, [id]);
 
   const activeDate = dates[selectedDateIdx] || dates[0];
-  const theatres = useMemo(
-    () => getTheatresForCity(currentCity || 'Noida', movie || {}),
-    [currentCity, movie]
-  );
+  const theatres = useMemo(() => {
+    const baseTheatres = getTheatresForCity(currentCity || 'Noida', movie || {}).map((t) => ({
+      ...t,
+      shows: [...t.shows],
+    }));
+
+    if (dbShowtimes.length === 0) return baseTheatres;
+
+    const primaryLang =
+      Array.isArray(movie?.languages) && movie.languages.length > 0 ? movie.languages[0] : 'Hindi';
+    const byName = new Map(baseTheatres.map((t) => [t.name.toLowerCase(), t]));
+
+    dbShowtimes.forEach((st) => {
+      const theatreName = st.theatre || 'PVR: Logix City Centre Mall, Noida';
+      const slot = {
+        _id: st._id,
+        time: st.startAt || '07:30 PM',
+        startAt: st.startAt || '07:30 PM',
+        format: st.format || '2D',
+        language: primaryLang,
+        screen: st.screen || 'AUDI 01',
+        status: 'AVAILABLE',
+        price: Number(st.price) || 500,
+        tiers: [
+          { label: 'MAX RECLINER', price: 1400, status: 'Available' },
+          { label: 'EXECUTIVE', price: 520, status: 'Available' },
+          { label: 'PRIME', price: 520, status: 'Available' },
+          { label: 'CLUB', price: 500, status: 'Available' },
+        ],
+      };
+
+      const existing = byName.get(theatreName.toLowerCase());
+      if (existing) {
+        const dup = existing.shows.some(
+          (s) => s.time.toLowerCase() === slot.time.toLowerCase() && s.format.toLowerCase() === slot.format.toLowerCase()
+        );
+        if (!dup) existing.shows.push(slot);
+      } else {
+        const slugId = theatreName
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, '-')
+          .replace(/^-|-$/g, '');
+        const added = {
+          id: slugId || `venue-${st._id}`,
+          name: theatreName,
+          address: currentCity || 'Noida',
+          tags: ['M-Ticket', 'Food & Beverage'],
+          cancellable: true,
+          facilities: ['Dolby Atmos', 'M-Ticket', 'Food & Beverage'],
+          shows: [slot],
+        };
+        baseTheatres.unshift(added);
+        byName.set(theatreName.toLowerCase(), added);
+      }
+    });
+
+    return baseTheatres;
+  }, [currentCity, movie, dbShowtimes]);
 
   const formatList = useMemo(() => {
     if (!movie?.format) return ['2D', 'IMAX 2D', '4DX'];
@@ -309,7 +375,10 @@ const BuyTickets = () => {
             <div className={styles.searchCinemaBox}>
               <Search size={16} className={styles.searchIcon} />
               <input
-                type="text"
+                id="cinema-search-input"
+                name="cinemaQuery"
+                type="search"
+                aria-label="Search for cinema"
                 placeholder="Search for cinema"
                 value={cinemaQuery}
                 onChange={(e) => setCinemaQuery(e.target.value)}

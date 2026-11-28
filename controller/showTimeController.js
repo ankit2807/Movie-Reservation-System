@@ -1,33 +1,50 @@
 const ShowTime = require("../models/showTimeModel");
 const Movie = require("../models/movieModel");
 
+const ALLOWED_SHOWTIME_FIELDS = [
+  "movieId",
+  "theatre",
+  "screen",
+  "format",
+  "price",
+  "startAt",
+  "startDate",
+  "endDate",
+];
+
 /**
- * Add a new showtime.
- * @param {Object} req - Express request object
- * @param {Object} res - Express response object
+ * Add a new showtime (admin only).
  */
 const addShowTime = async (req, res) => {
   try {
-    const { movieId } = req.body;
+    const { movieId, startAt } = req.body;
 
-    // Check if movie exists
-    const movie = await Movie.findById(movieId);
+    if (!movieId || !/^[0-9a-fA-F]{24}$/.test(String(movieId))) {
+      return res.status(400).json({ message: "Valid movieId is required" });
+    }
+
+    const movie = await Movie.findById(String(movieId));
     if (!movie) {
       return res.status(404).json({ message: "Movie not found" });
     }
 
-    // Check for duplicate showtime
     const existingShowtime = await ShowTime.findOne({
-      movieId,
-      startAt: req.body.startAt,
+      movieId: String(movieId),
+      startAt: String(startAt || "").trim(),
+      theatre: String(req.body.theatre || "PVR: Logix City Centre Mall, Noida").trim(),
     });
     if (existingShowtime) {
       return res.status(409).json({
-        message: "Details already exists for this movie at this start time",
+        message: "Showtime already exists for this movie, theatre, and start time",
       });
     }
 
-    const showtime = new ShowTime(req.body);
+    const payload = {};
+    for (const key of ALLOWED_SHOWTIME_FIELDS) {
+      if (req.body[key] !== undefined) payload[key] = req.body[key];
+    }
+
+    const showtime = new ShowTime(payload);
     const savedShowtime = await showtime.save();
     return res.status(201).json(savedShowtime);
   } catch (err) {
@@ -41,10 +58,8 @@ const addShowTime = async (req, res) => {
 
 /**
  * Get all showtimes.
- * @param {Object} req - Express request object
- * @param {Object} res - Express response object
  */
-const getShowTimes = async (req, res) => {
+const getShowTimes = async (_req, res) => {
   try {
     const showtimes = await ShowTime.find({}).populate("movieId");
     return res.status(200).json(showtimes);
@@ -56,8 +71,6 @@ const getShowTimes = async (req, res) => {
 
 /**
  * Get a showtime by ID.
- * @param {Object} req - Express request object
- * @param {Object} res - Express response object
  */
 const getShowTimeById = async (req, res) => {
   try {
@@ -96,16 +109,16 @@ const getShowTimeById = async (req, res) => {
 };
 
 /**
- * Update a showtime by ID.
- * @param {Object} req - Express request object
- * @param {Object} res - Express response object
+ * Update a showtime by ID (admin only).
  */
 const updateShowTimeById = async (req, res) => {
-  const allowedUpdates = ["startAt", "startDate", "endDate", "movieId"];
-  const updates = Object.keys(req.body);
-  const isValidOperation = updates.every((update) =>
-    allowedUpdates.includes(update)
-  );
+  if (!/^[0-9a-fA-F]{24}$/.test(req.params.id)) {
+    return res.status(400).json({ message: "Invalid showtime ID" });
+  }
+
+  const updates = Object.keys(req.body || {});
+  const isValidOperation =
+    updates.length > 0 && updates.every((update) => ALLOWED_SHOWTIME_FIELDS.includes(update));
 
   if (!isValidOperation) {
     return res.status(400).json({ message: "Invalid updates!" });
@@ -117,7 +130,9 @@ const updateShowTimeById = async (req, res) => {
       return res.status(404).json({ message: "Showtime not found" });
     }
 
-    updates.forEach((update) => (showtime[update] = req.body[update]));
+    updates.forEach((update) => {
+      showtime[update] = req.body[update];
+    });
     await showtime.save();
     return res.status(200).json(showtime);
   } catch (err) {
@@ -130,12 +145,13 @@ const updateShowTimeById = async (req, res) => {
 };
 
 /**
- * Delete a showtime by ID.
- * @param {Object} req - Express request object
- * @param {Object} res - Express response object
+ * Delete a showtime by ID (admin only).
  */
 const deleteShowTime = async (req, res) => {
   try {
+    if (!/^[0-9a-fA-F]{24}$/.test(req.params.id)) {
+      return res.status(400).json({ message: "Invalid showtime ID" });
+    }
     const deletedShowtime = await ShowTime.findByIdAndDelete(req.params.id);
     if (!deletedShowtime) {
       return res.status(404).json({ message: "Showtime not found" });

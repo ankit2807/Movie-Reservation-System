@@ -6,6 +6,7 @@ import {
   X, Check, Copy
 } from 'lucide-react';
 import { setAuthModalOpen } from '../redux/authSlice';
+import { showToast } from '../redux/locationSlice';
 import api from '../api/axios';
 import {
   createPosterFallback,
@@ -243,6 +244,7 @@ const MovieDetails = ({ initialMultimedia = false }) => {
   const handleShare = () => {
     navigator.clipboard?.writeText(window.location.href).catch(() => {});
     setCopiedShare(true);
+    dispatch(showToast({ message: 'Page link copied to clipboard!', type: 'info' }));
     setTimeout(() => setCopiedShare(false), 2200);
   };
 
@@ -269,8 +271,14 @@ const MovieDetails = ({ initialMultimedia = false }) => {
       setReviews((prev) => [savedReview, ...prev.filter((r) => r._id !== savedReview?._id)]);
       setReviewComment('');
       setIsReviewModalOpen(false);
+      dispatch(showToast({ message: 'Thank you! Your review has been published.', type: 'success' }));
     } catch (err) {
-      alert(err.response?.data?.message || 'Could not submit review.');
+      dispatch(
+        showToast({
+          message: err.response?.data?.message || 'Could not submit review.',
+          type: 'error',
+        })
+      );
     } finally {
       setSubmittingReview(false);
     }
@@ -382,6 +390,9 @@ const MovieDetails = ({ initialMultimedia = false }) => {
               <img
                 src={heroPosterUrl}
                 alt={movie.title}
+                width={261}
+                height={392}
+                fetchPriority="high"
                 className={styles.posterImg}
                 onError={(e) => {
                   e.target.onerror = null;

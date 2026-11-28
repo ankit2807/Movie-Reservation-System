@@ -111,17 +111,32 @@
 }
 
 .location {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 6px;
   font-size: 14px;
   color: #333333;
-  transition: color 0.15s;
+  background: transparent;
+  padding: 4px 6px;
+  border-radius: 6px;
+  transition: color 0.15s, background 0.15s;
   font-weight: 400;
 }
 
 .location:hover {
   color: #000000;
+  background: #f8fafc;
+}
+
+.locationLabel {
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mobileSearchBtn {
+  display: none;
 }
 
 .signInBtn {
@@ -207,14 +222,18 @@
 .menuTrigger {
   cursor: pointer;
   color: #333333;
+  background: transparent;
+  padding: 4px;
+  border-radius: 6px;
   margin-left: 2px;
-  transition: color 0.15s;
+  transition: color 0.15s, background 0.15s;
   display: flex;
   align-items: center;
 }
 
 .menuTrigger:hover {
   color: #000000;
+  background: #f8fafc;
 }
 
 /* ── City Dropdown (legacy, kept for reference) ── */
@@ -251,24 +270,91 @@
     display: none;
   }
 
+  .mobileSearchBtn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 38px;
+    min-height: 38px;
+    border-radius: 50%;
+    color: #334155;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+  }
+
   .logoSearch {
-    gap: 16px;
+    gap: 8px;
+    flex: 0 1 auto;
+    min-width: 0;
+  }
+
+  .logo {
+    font-size: 19px;
+  }
+
+  .logoBadgeRed {
+    font-size: 14px;
   }
 
   .navActions {
-    gap: 14px;
+    gap: 6px;
+    flex-shrink: 0;
   }
 
-  .locationWrapper {
+  .location {
+    font-size: 12.5px;
+    padding: 6px 6px;
+    min-height: 36px;
+  }
+
+  .locationLabel {
+    max-width: 74px;
+  }
+
+  .userNameLabel {
     display: none;
   }
 
   .navbar {
-    height: 56px;
+    min-height: 56px;
+    height: auto;
+    padding-top: env(safe-area-inset-top, 0px);
+    border-bottom: 1px solid #f1f5f9;
   }
 
   .signInBtn {
-    padding: 6px 16px;
+    padding: 0 11px;
+    min-height: 32px;
+    height: auto;
     font-size: 12px;
+  }
+}
+
+@media (pointer: coarse) {
+  .mobileSearchBtn,
+  .menuTrigger,
+  .location,
+  .signInBtn {
+    min-block-size: var(--target-size);
+    min-inline-size: var(--target-size);
+  }
+}
+
+@media (max-width: 375px) {
+  .logo {
+    font-size: 17px;
+  }
+
+  .logoBadgeRed {
+    font-size: 12.5px;
+    padding: 1px 4px;
+  }
+
+  .locationLabel {
+    max-width: 58px;
+  }
+
+  .navActions {
+    gap: 4px;
   }
 }

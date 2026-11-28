@@ -172,7 +172,7 @@ const LocationModal = ({ isOpen, onClose }) => {
                         detected = 'Mumbai';
                     } else if (latitude >= 12.8 && latitude <= 13.2 && longitude >= 77.4 && longitude <= 77.8) {
                         detected = 'Bengaluru';
-                    } else if (latitude >= 17.2 && latitude <= 17.6 && longitude >= 78.3 && longitude >= 78.7) {
+                    } else if (latitude >= 17.2 && latitude <= 17.6 && longitude >= 78.3 && longitude <= 78.7) {
                         detected = 'Hyderabad';
                     } else if (latitude >= 28.3 && latitude <= 28.9 && longitude >= 76.9 && longitude <= 77.6) {
                         detected = 'Noida';

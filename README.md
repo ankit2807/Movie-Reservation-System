@@ -1,10 +1,11 @@
 # 🎬 Movie Reservation System
 
-[![Node.js](https://img.shields.io/badge/Node.js-v18+-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
-[![Express.js](https://img.shields.io/badge/Express.js-4.21-000000?logo=express&logoColor=white)](https://expressjs.com/)
-[![React](https://img.shields.io/badge/React-19.2-61DAFB?logo=react&logoColor=black)](https://react.dev/)
-[![Vite](https://img.shields.io/badge/Vite-7.2-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
-[![MongoDB](https://img.shields.io/badge/MongoDB-Mongoose-47A248?logo=mongodb&logoColor=white)](https://www.mongodb.com/)
+[![Node.js](https://img.shields.io/badge/Node.js-v20+-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
+[![Express.js](https://img.shields.io/badge/Express.js-4.22-000000?logo=express&logoColor=white)](https://expressjs.com/)
+[![React](https://img.shields.io/badge/React-19.3-61DAFB?logo=react&logoColor=black)](https://react.dev/)
+[![Vite](https://img.shields.io/badge/Vite-7.3-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
+[![MongoDB](https://img.shields.io/badge/MongoDB-Mongoose_8.24-47A248?logo=mongodb&logoColor=white)](https://www.mongodb.com/)
+[![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?logo=docker&logoColor=white)](https://www.docker.com/)
 [![Redux Toolkit](https://img.shields.io/badge/Redux-Toolkit-764ABC?logo=redux&logoColor=white)](https://redux-toolkit.js.org/)
 [![License: ISC](https://img.shields.io/badge/License-ISC-blue.svg)](https://opensource.org/licenses/ISC)
 
@@ -266,7 +267,12 @@ cp .env.example .env
 | `MONGO_URI` | MongoDB connection connection string | **Yes** | `mongodb://localhost:27017/movie-reservation-system` |
 | `JWT_SECRET` | Secret key used to sign and verify JWT authentication tokens | **Yes** | `your_jwt_secret_key_here` |
 | `FRONTEND_URL`| Allowed frontend origin for CORS policies | No | `http://localhost:5173` |
-| `TMDB_API_KEY`| The Movie Database API key for dynamic movie lookups | No | `8265bd1679663a7ea12ac168da84d2e8` |
+| `STRIPE_SECRET_KEY`| Stripe secret API key (`sk_test_...` / `sk_live_...`) | Optional* | `sk_test_...` |
+| `STRIPE_PUBLISHABLE_KEY`| Stripe publishable key (`pk_test_...` / `pk_live_...`) | Optional* | `pk_test_...` |
+| `STRIPE_WEBHOOK_SECRET`| Stripe webhook signing secret (`whsec_...`) for `/api/payments/webhook` | Optional* | `whsec_...` |
+| `TMDB_API_KEY`| The Movie Database API key for dynamic movie lookups | No | `your_tmdb_api_key_here` |
+
+> \*When `STRIPE_SECRET_KEY` and `STRIPE_PUBLISHABLE_KEY` are set, Checkout automatically renders **Stripe Elements (`<PaymentElement />`)** with server-priced `PaymentIntents`, automatic refunds on seat conflicts or ticket cancellations, and raw-body signed webhook updates. Without Stripe keys, Checkout falls back to Demo Checkout Mode for local testing.
 | `GEMINI_API_KEY`| Google Gemini API key (for the AI Code Review tool) | No | `your_gemini_api_key_here` |
 
 ---
@@ -278,20 +284,43 @@ When the application auto-seeds, demo user accounts are pre-created with hashed 
 ### Test User Accounts
 | Name | Email | Password | Role |
 | :--- | :--- | :--- | :--- |
-| **Aditi Rao** | `aditi@example.com` | `password123` | User |
-| **Rahul Verma** | `rahul@example.com` | `password123` | User |
-| **Sneha Gupta** | `sneha@example.com` | `password123` | User |
-| **Vikram Singh** | `vikram@example.com` | `password123` | User |
-| **Priya Sharma** | `priya@example.com` | `password123` | User |
+| **Aditi Rao** | `aditi@example.com` | `demoUser2026!` | User |
+| **Rahul Verma** | `rahul@example.com` | `demoUser2026!` | User |
+| **Sneha Gupta** | `sneha@example.com` | `demoUser2026!` | User |
+| **Vikram Singh** | `vikram@example.com` | `demoUser2026!` | User |
+| **Priya Sharma** | `priya@example.com` | `demoUser2026!` | User |
 
-### Admin Account
-You can register an admin account directly using the API:
+### Admin Account (Pre-seeded Bootstrap Admin)
+| Name | Email | Password | Portal |
+| :--- | :--- | :--- | :--- |
+| **MovieBook Admin** | `admin@moviebook.com` | `adminBook2026!` | `/admin/login` → `/admin/dashboard` |
+
+> Override `DEMO_USER_PASSWORD`, `ADMIN_EMAIL`, and `ADMIN_PASSWORD` in `.env` before running `npm run seed` in production.
+
+---
+
+## 🐳 Production Build & Cloud Deployment
+
+### Option 1: Single-Origin Node.js Production Server
+Build the Vite frontend into `client/dist` and serve both the SPA and `/api` from a single Express instance:
 ```bash
-curl -X POST http://localhost:3000/api/admin/register \
-  -H "Content-Type: application/json" \
-  -d '{"name": "Master Admin", "email": "admin@example.com", "password": "adminpassword"}'
+npm install
+npm run build
+NODE_ENV=production npm start
 ```
-Then log in via the client portal at `/admin/login`.
+The production server serves static hashed assets with immutable caching, exposes `/health` (liveness + MongoDB readiness), and handles graceful `SIGTERM`/`SIGINT` shutdown.
+
+### Option 2: Docker & Docker Compose (Full Stack + MongoDB 7)
+```bash
+docker compose up --build -d
+```
+- **App + API**: `http://localhost:3000`
+- **Health Check**: `http://localhost:3000/health`
+
+### Option 3: Render / Cloud PaaS
+- Connect the repository to Render using the included `render.yaml` Blueprint (or deploy the multi-stage `Dockerfile` to Railway, Fly.io, AWS ECS, or Google Cloud Run).
+- Set `MONGO_URI` (e.g., MongoDB Atlas) and `JWT_SECRET` in your cloud environment variables.
+- If hosting the frontend on a separate domain (e.g., Vercel/Netlify), set `VITE_API_URL=https://your-api-domain.com/api`, `FRONTEND_URL=https://your-frontend-domain.com`, and `CROSS_ORIGIN_AUTH=true`.
 
 ---
 
@@ -304,14 +333,17 @@ All backend API routes are prefixed with `/api`.
 | :--- | :--- | :---: | :--- |
 | `POST` | `/api/user/register` | Public | Register a new user account |
 | `POST` | `/api/user/login` | Public (Rate-limited) | Authenticate user & set HTTP-only JWT cookie |
-| `POST` | `/api/user/logout` | Authenticated | Invalidate and clear auth cookie |
+| `POST` | `/api/user/logout` | Public (Idempotent) | Invalidate and clear auth cookie |
+| `GET` | `/api/user/session` | Public | Restore customer/admin session from HTTP-only JWT cookie |
+| `GET` | `/api/user/me` | Authenticated | Fetch authoritative profile for logged-in user or admin |
 | `PUT` | `/api/user/profile` | Authenticated | Update user name, phone, or password |
 
 ### 2. Admin Portal (`/api/admin`)
 | Method | Endpoint | Access | Description |
 | :--- | :--- | :---: | :--- |
-| `POST` | `/api/admin/register` | Public | Register a new administrator account |
-| `POST` | `/api/admin/login` | Public | Authenticate administrator & set admin JWT cookie |
+| `POST` | `/api/admin/register` | Admin | Register a new administrator account |
+| `POST` | `/api/admin/login` | Public (Rate-limited) | Authenticate administrator & set admin JWT cookie |
+| `GET` | `/api/admin/stats` | Admin | Fetch gross revenue, bookings, catalog counts & recent orders |
 
 ### 3. Movies Catalog (`/api/movie`)
 | Method | Endpoint | Access | Description |
@@ -347,10 +379,13 @@ All backend API routes are prefixed with `/api`.
 | `GET` | `/api/reviews/:movieId` | Public | Fetch all reviews and ratings for a movie |
 | `POST` | `/api/reviews` | Authenticated | Post an audience review and score (1–10) |
 
-### 7. File Uploads & Health Check
+### 7. Stripe Payments, File Uploads & Health Check
 | Method | Endpoint | Access | Description |
 | :--- | :--- | :---: | :--- |
-| `POST` | `/api/upload` | Public / Admin | Upload up to 10 image files (`jpg`, `png`, `jpeg`, `jfif` - max 1MB) |
+| `GET` | `/api/payments/config` | Public | Returns Stripe publishable key, active mode (`test`/`live`/`demo`), and currency |
+| `POST` | `/api/payments/create-payment-intent` | Authenticated | Creates a server-priced Stripe `PaymentIntent` in INR paise after checking seat availability |
+| `POST` | `/api/payments/webhook` | Stripe Signed | Verifies raw-body Stripe webhook signature (`payment_intent.succeeded`, `payment_intent.payment_failed`, `charge.refunded`) |
+| `POST` | `/api/upload` | Admin | Upload up to 10 validated image files (`jpg`, `png`, `jpeg`, `webp` - max 1MB) |
 | `GET` | `/health` | Public | Check if the backend server and database are operational |
 
 ---
@@ -398,8 +433,11 @@ The review agent:
 ### Root Backend Directory
 | Command | Purpose |
 | :--- | :--- |
-| `npm start` | Launches the Express server using `nodemon` with automatic reload |
-| `node utils/seedData.js` | Manually runs the database catalog seeder script |
+| `npm start` | Launches the production-safe Express server (`node index.js`) |
+| `npm run dev` | Launches the Express server with `nodemon` auto-reload |
+| `npm run build` | Installs client dependencies and builds `client/dist` for single-origin serving |
+| `npm run seed` | Seeds MongoDB with 41 catalog titles, showtimes, reviews, demo users & admin |
+| `npm run lint` | Runs ESLint 10 across the React frontend |
 | `npm run review` | Runs the automated AI code review audit |
 
 ### Client Directory (`client/`)

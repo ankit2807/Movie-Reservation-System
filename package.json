@@ -1,14 +1,26 @@
 {
-  "name": "server",
-  "version": "0.0.1",
-  "description": "",
+  "name": "moviebook-reservation-system",
+  "version": "1.0.0",
+  "description": "Production-ready full-stack Movie & Live Entertainment Reservation System (MovieBook)",
   "main": "index.js",
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "scripts": {
-    "start": "nodemon index.js",
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "build": "npm ci --prefix client --include=dev && npm run build --prefix client",
+    "seed": "node utils/seedData.js",
+    "lint": "npm run lint --prefix client",
     "review": "node tools/code-review-agent.js"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "movie-reservation",
+    "ticketing",
+    "react",
+    "express",
+    "mongodb"
+  ],
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^6.0.0",
@@ -23,9 +35,13 @@
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^8.24.11",
     "multer": "^2.5.0",
+    "stripe": "^23.2.0",
     "validator": "^13.15.35"
   },
   "devDependencies": {
     "nodemon": "^3.1.14"
+  },
+  "overrides": {
+    "minimatch": "^11.0.9"
   }
 }

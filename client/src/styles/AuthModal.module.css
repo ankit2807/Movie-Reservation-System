@@ -1,9 +1,7 @@
 .modalOverlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
+  inset: 0;
+  padding: 16px;
   background-color: rgba(0, 0, 0, 0.75);
   backdrop-filter: blur(4px);
   z-index: 1000;
@@ -17,8 +15,10 @@
   background: white;
   width: 100%;
   max-width: 420px;
+  max-height: 92dvh;
+  overflow-y: auto;
   border-radius: 12px;
-  padding: 32px;
+  padding: clamp(20px, 5vw, 32px);
   position: relative;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
   animation: slideUp 0.3s ease;

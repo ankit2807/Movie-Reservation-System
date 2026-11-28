@@ -4,7 +4,7 @@
 
 .homePage {
   background-color: #f5f5f5;
-  min-height: 90vh;
+  min-height: 85dvh;
 }
 
 .loadingState,
@@ -135,7 +135,7 @@
 }
 
 .bmsBannerTitle {
-  font-size: 34px;
+  font-size: clamp(1.375rem, 1rem + 1.8vw, 2.125rem);
   font-weight: 800;
   color: #ffffff;
   line-height: 1.15;
@@ -218,7 +218,7 @@
 
 .bannerDots {
   position: absolute;
-  bottom: 14px;
+  bottom: 18px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -396,12 +396,17 @@
   font-size: 13px;
   font-weight: 600;
   color: #ffffff;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .ratingVotes {
   font-size: 12px;
   color: #cbd5e1;
   margin-left: auto;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .dateStripOverlay {
@@ -1036,9 +1041,251 @@
   color: #f84464;
 }
 
+/* Interactive Offers, Gift Cards & Partner Hub Widgets */
+.hubCouponGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+  gap: 20px;
+}
+
+.hubCouponCard {
+  background: #ffffff;
+  border: 1.5px dashed #cbd5e1;
+  border-radius: 12px;
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04);
+}
+
+.hubCouponBadge {
+  align-self: flex-start;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  background: #fff0f3;
+  color: #f84464;
+}
+
+.hubCouponCard h3 {
+  font-size: 16px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.hubCouponCard p {
+  font-size: 13px;
+  color: #64748b;
+  flex: 1;
+}
+
+.hubCouponFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+  padding-top: 12px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.hubPromoCode {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  padding: 5px 10px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  color: #0f172a;
+}
+
+.hubCopyBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: 6px;
+  background: #f84464;
+  color: #ffffff;
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+.hubCopyBtn:hover {
+  background: #df3854;
+}
+
+.hubSplitGrid {
+  display: grid;
+  grid-template-columns: 1fr 1.15fr;
+  gap: 24px;
+  align-items: start;
+}
+
+.giftPreviewCard {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 55%, #be123c 100%);
+  border-radius: 16px;
+  padding: 28px;
+  color: #ffffff;
+  min-height: 250px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 16px 36px rgba(15, 23, 42, 0.22);
+}
+
+.giftPreviewTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.giftBrandBadge {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.giftAmountDisplay {
+  font-size: 28px;
+  font-weight: 800;
+}
+
+.giftPreviewTheme {
+  font-size: 22px;
+  font-weight: 800;
+  margin-top: 18px;
+}
+
+.giftPreviewMsg {
+  font-size: 14px;
+  color: #e2e8f0;
+  font-style: italic;
+  margin: 10px 0 20px;
+}
+
+.giftPreviewFooter {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  font-size: 12px;
+  color: #cbd5e1;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.hubInteractiveForm,
+.hubFaqStack {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.hubInteractiveForm h3,
+.hubFaqStack h3 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 16px;
+}
+
+.hubDenomRow {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.hubDenomPill {
+  padding: 7px 14px;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  background: #f8fafc;
+  color: #334155;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.hubDenomActive {
+  background: #f84464;
+  border-color: #f84464;
+  color: #ffffff;
+}
+
+.hubField {
+  margin-bottom: 14px;
+}
+
+.hubField label {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #475569;
+  margin-bottom: 5px;
+}
+
+.hubField input,
+.hubField select,
+.hubField textarea {
+  width: 100%;
+  padding: 9px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  color: #0f172a;
+}
+
+.hubFieldRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.faqItem {
+  border-bottom: 1px solid #f1f5f9;
+  padding: 12px 0;
+}
+
+.faqItem:last-child {
+  border-bottom: none;
+}
+
+.faqItem summary {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1e293b;
+  cursor: pointer;
+}
+
+.faqItem p {
+  font-size: 13px;
+  color: #64748b;
+  margin-top: 8px;
+  line-height: 1.55;
+}
+
+@media (max-width: 920px) {
+  .hubSplitGrid,
+  .hubFieldRow {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 920px) {
   .categoryPage {
     grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 20px 0 48px;
   }
 
   .filters {
@@ -1046,6 +1293,169 @@
   }
 
   .bmsBannerRight {
+    display: none;
+  }
+
+  .scrollArrow {
+    display: none;
+  }
+
+  .scrollTrack {
+    gap: 16px;
+    scroll-snap-type: x proximity;
+  }
+
+  .movieCard,
+  .premiereCard {
+    width: 184px;
+    scroll-snap-align: start;
+  }
+
+  .posterWrapper,
+  .premierePoster {
+    width: 184px;
+    height: auto;
+    aspect-ratio: 2 / 3;
+  }
+
+  .liveEventSquare {
+    width: 184px;
+    height: 184px;
+  }
+
+  .bmsStreamStrip {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 20px 22px;
+  }
+
+  .streamDividerPipe {
+    display: none;
+  }
+
+  .streamStripTagline {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 640px) {
+  .bmsBannerCardWrap {
+    padding: 0 10px;
+  }
+
+  .bmsBannerCard {
+    height: auto;
+    min-height: 260px;
+  }
+
+  .bmsBannerContent {
+    padding: 18px 18px 42px;
+  }
+
+  .bmsBannerTagline {
+    font-size: 13px;
+  }
+
+  .bmsBannerMeta {
+    font-size: 12px;
+    gap: 6px;
+  }
+
+  .bmsBannerCta {
+    padding: 9px 22px;
+    font-size: 13px;
+  }
+
+  .bannerEdgeArrow {
+    width: 30px;
+    height: 36px;
+  }
+
+  .section {
+    padding: 24px 0 6px;
+  }
+
+  .sectionHeader h2,
+  .premieresHeading,
+  .filtersHeading {
+    font-size: clamp(1.125rem, 1rem + 1vw, 1.45rem);
+  }
+
+  .movieCard,
+  .premiereCard {
+    width: 152px;
+  }
+
+  .posterWrapper,
+  .premierePoster {
+    width: 152px;
+    height: auto;
+    aspect-ratio: 2 / 3;
+  }
+
+  .liveEventSquare {
+    width: 156px;
+    height: 156px;
+    padding: 16px;
+  }
+
+  .squareTopText h3 {
+    font-size: 16px;
+  }
+
+  .movieTitle,
+  .premiereTitle {
+    font-size: 14px;
+  }
+
+  .movieGenre,
+  .premiereLang {
+    font-size: 12px;
+  }
+
+  .movieGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+  }
+
+  .movieGrid .movieCard,
+  .movieGrid .posterWrapper {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 2 / 3;
+  }
+
+  .movieGrid .movieCard {
+    aspect-ratio: auto;
+  }
+
+  .comingSoonStrip {
+    padding: 14px 16px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .comingSoonTitle {
+    font-size: 16px;
+  }
+
+  .specialBannerCard {
+    padding: 24px 18px;
+  }
+
+  .specialBannerText h1 {
+    font-size: clamp(1.35rem, 1rem + 1.5vw, 1.75rem);
+  }
+
+  .specialFeatureCard {
+    padding: 16px;
+  }
+}
+
+@media (pointer: coarse) {
+  .scrollArrow {
     display: none;
   }
 }

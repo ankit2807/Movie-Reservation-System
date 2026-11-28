@@ -71,22 +71,27 @@ const Navbar = () => {
           </div>
 
           <div className={styles.navActions}>
+            <Link
+              to="/search"
+              className={styles.mobileSearchBtn}
+              aria-label="Search movies, events, plays and sports"
+            >
+              <Search size={18} />
+            </Link>
+
             <div className={styles.locationWrapper}>
-              <div
+              <button
+                type="button"
                 className={styles.location}
                 onClick={() => setIsCityModalOpen(true)}
-                role="button"
-                tabIndex={0}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    setIsCityModalOpen(true);
-                  }
-                }}
                 id="location-selector"
+                aria-label="Change city"
               >
-                {hasSelectedCity && currentCity ? currentCity : 'Select City'} <ChevronDown size={14} />
-              </div>
+                <span className={styles.locationLabel}>
+                  {hasSelectedCity && currentCity ? currentCity : 'Select City'}
+                </span>
+                <ChevronDown size={14} />
+              </button>
             </div>
 
             {isAuthenticated ? (
@@ -94,7 +99,7 @@ const Navbar = () => {
                 <div className={styles.userAvatar}>
                   <User size={16} />
                 </div>
-                <span>{user?.name || 'User'}</span>
+                <span className={styles.userNameLabel}>{user?.name || 'User'}</span>
                 <div className={styles.dropdown}>
                   <Link to="/profile">My Profile</Link>
                   <Link to="/bookings">My Bookings</Link>
@@ -117,21 +122,14 @@ const Navbar = () => {
               </button>
             )}
 
-            <div
+            <button
+              type="button"
               className={styles.menuTrigger}
               onClick={() => setIsSideMenuOpen(true)}
-              role="button"
-              tabIndex={0}
               aria-label="Open menu"
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault();
-                  setIsSideMenuOpen(true);
-                }
-              }}
             >
               <Menu size={24} />
-            </div>
+            </button>
           </div>
         </div>
       </nav>

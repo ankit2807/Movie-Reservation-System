@@ -420,15 +420,28 @@
   }
 
   .modal {
-    width: 100vw;
+    width: 100%;
     max-width: none;
-    height: 100vh;
-    max-height: 100vh;
+    height: 100dvh;
+    max-height: 100dvh;
     border-radius: 0;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
   }
 
   .popularGrid {
     grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+  }
+
+  .cityIconWrapper,
+  .cityIcon {
+    width: 56px;
+    height: 56px;
+  }
+
+  .cityName {
+    font-size: 12px;
   }
 
   .otherCitiesGrid {

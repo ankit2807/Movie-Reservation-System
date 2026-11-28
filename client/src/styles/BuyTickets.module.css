@@ -50,7 +50,7 @@
 
 .movieTitleLink {
   display: inline-block;
-  font-size: 32px;
+  font-size: clamp(1.25rem, 1rem + 1.2vw, 2rem);
   font-weight: 700;
   color: #1f2533;
   line-height: 1.2;
@@ -108,6 +108,8 @@
   align-items: center;
   gap: 4px;
   padding: 6px 0;
+  max-width: 100%;
+  min-width: 0;
 }
 
 .dateNavArrow {
@@ -118,6 +120,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 
 .dateNavArrow:disabled {
@@ -129,6 +132,13 @@
   display: flex;
   align-items: center;
   gap: 4px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.datePillsRow::-webkit-scrollbar {
+  display: none;
 }
 
 .datePill {
@@ -141,6 +151,7 @@
   border-radius: 8px;
   background: transparent;
   color: #333333;
+  flex-shrink: 0;
   transition: all 0.15s;
 }
 
@@ -634,16 +645,92 @@
   border-radius: 6px;
 }
 
-@media (max-width: 860px) {
+@media (hover: none) {
+  .priceTooltip {
+    display: none;
+  }
+}
+
+@media (max-width: 960px) {
   .cinemaRow {
     grid-template-columns: 1fr;
+    gap: 14px;
+    padding: 16px;
   }
 
   .filterGroup {
     height: auto;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
     width: 100%;
     border-top: 1px solid #eeeeee;
-    padding: 8px 0;
+    padding: 10px 0;
+  }
+
+  .filterCell,
+  .searchCinemaBox {
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 8px 10px;
+    min-width: 0;
+    min-height: 40px;
+  }
+
+  .filterCell select {
+    width: 100%;
+  }
+
+  .filterCellActive {
+    border-color: #f84464;
+    border-bottom-width: 2px;
+  }
+}
+
+@media (max-width: 768px) {
+  .stickyControlsBar {
+    top: 56px;
+  }
+
+  .controlsInner {
+    gap: 4px;
+  }
+
+  .movieHeaderSection {
+    padding: 16px 0 14px;
+  }
+
+  .legendBar {
+    padding: 8px 4px;
+    gap: 8px;
+  }
+
+  .legendRight {
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .legendLeft {
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .showtimesGrid {
+    gap: 10px;
+  }
+
+  .showPillBtn {
+    min-width: 96px;
+    min-height: 44px;
+  }
+
+  .breadcrumbBar {
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 480px) {
+  .filterGroup {
+    grid-template-columns: 1fr;
   }
 }

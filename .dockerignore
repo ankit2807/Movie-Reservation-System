@@ -1,0 +1,11 @@
+node_modules
+client/node_modules
+client/dist
+.git
+.github
+.agent
+.env
+.DS_Store
+*.log
+coverage
+CODE_REVIEW_REPORT.md

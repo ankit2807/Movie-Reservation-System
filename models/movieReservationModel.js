@@ -83,6 +83,24 @@ const reservationSchema = new mongoose.Schema(
       trim: true,
     },
     paymentMethod: String,
+    paymentProvider: {
+      type: String,
+      enum: ["STRIPE", "DEMO"],
+      default: "DEMO",
+    },
+    paymentStatus: {
+      type: String,
+      enum: ["PENDING", "PAID", "FAILED", "REFUNDED", "PARTIALLY_REFUNDED"],
+      default: "PAID",
+    },
+    paymentIntentId: {
+      type: String,
+      trim: true,
+    },
+    stripeRefundId: {
+      type: String,
+      trim: true,
+    },
     contact: {
       email: String,
       phone: String,
@@ -118,5 +136,17 @@ reservationSchema.pre("save", function () {
 reservationSchema.index({ user: 1, showtime: 1 });
 reservationSchema.index({ showtime: 1, date: 1 });
 reservationSchema.index({ showKey: 1, status: 1 });
+reservationSchema.index({ paymentIntentId: 1 }, { unique: true, sparse: true });
+// Atomic multikey partial unique index preventing concurrent double-booking of any seat on a showKey
+reservationSchema.index(
+  { showKey: 1, seats: 1 },
+  {
+    unique: true,
+    partialFilterExpression: {
+      status: "CONFIRMED",
+      showKey: { $type: "string" },
+    },
+  }
+);
 
 module.exports = mongoose.model("Reservation", reservationSchema);

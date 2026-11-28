@@ -9,17 +9,17 @@ exports.addReview = async (req, res) => {
       return res.status(401).json({ status: "fail", message: "Please log in to submit a review" });
     }
 
-    if (!movieId) {
+    if (!movieId || String(movieId).trim().length === 0) {
       return res.status(400).json({ status: "fail", message: "movieId is required" });
     }
 
     const cleanRating = Math.min(10, Math.max(1, Number(rating) || 8));
-    const cleanComment = String(comment || "").trim() || "Great movie experience!";
+    const cleanComment = String(comment || "").trim().slice(0, 1000) || "Great movie experience!";
 
     const review = await Review.findOneAndUpdate(
-      { movieId: String(movieId), user: userId },
+      { movieId: String(movieId).slice(0, 80), user: userId },
       {
-        movieId: String(movieId),
+        movieId: String(movieId).slice(0, 80),
         user: userId,
         rating: cleanRating,
         comment: cleanComment,
@@ -35,13 +35,18 @@ exports.addReview = async (req, res) => {
     if (err.code === 11000) {
       return res.status(409).json({ status: "fail", message: "You have already reviewed this movie" });
     }
-    return res.status(400).json({ status: "fail", message: err.message });
+    if (err.name === "ValidationError") {
+      return res.status(400).json({ status: "fail", message: err.message });
+    }
+    console.error("Add review error:", err);
+    return res.status(500).json({ status: "fail", message: "Internal server error" });
   }
 };
 
 exports.getMovieReviews = async (req, res) => {
   try {
-    const reviews = await Review.find({ movieId: String(req.params.movieId) })
+    const movieId = String(req.params.movieId || "").slice(0, 80);
+    const reviews = await Review.find({ movieId })
       .populate("user", "name")
       .sort({ createdAt: -1 });
 
@@ -50,6 +55,7 @@ exports.getMovieReviews = async (req, res) => {
       data: reviews,
     });
   } catch (err) {
-    return res.status(400).json({ status: "fail", message: err.message });
+    console.error("Get reviews error:", err);
+    return res.status(500).json({ status: "fail", message: "Internal server error" });
   }
 };
