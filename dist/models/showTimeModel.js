@@ -69,7 +69,8 @@ const showTimeSchema = new mongoose_1.Schema({
         required: [true, "End date is required"],
         validate: {
             validator: function (value) {
-                return value > this.startDate;
+                const doc = this;
+                return !doc.startDate || value > doc.startDate;
             },
             message: "End date must be after start date",
         },

@@ -181,11 +181,11 @@
   border-bottom: 1px solid #eee;
 }
 
-.divider::not(:empty)::before {
+.divider:not(:empty)::before {
   margin-right: .5em;
 }
 
-.divider::not(:empty)::after {
+.divider:not(:empty)::after {
   margin-left: .5em;
 }
 
